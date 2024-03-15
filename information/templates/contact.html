@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Me</title>
+<style>
+    body {
+        background-color: #1a1a1a; /* light black background */
+        color: white; /* white text color */
+        font-family: Arial, sans-serif; /* default font */
+        margin: 0; /* remove default margin */
+        padding: 0; /* remove default padding */
+    }
+    .top-bar {
+        background-color: #1a1a1a; /* light black top bar */
+        padding: 10px; /* add padding to the top bar */
+        text-align: right; /* right align text */
+    }
+    .top-bar button {
+        background-color: #007bff; /* blue button background */
+        color: white; /* white text color */
+        border: none; /* remove button border */
+        padding: 10px 20px; /* add padding to button */
+        margin: 0 10px; /* add margin between buttons */
+        cursor: pointer; /* show pointer cursor on hover */
+        border-radius: 5px; /* rounded corners */
+    }
+    .top-bar button:hover {
+        background-color: #0056b3; /* darker blue on hover */
+    }
+    .content {
+        text-align: center; /* center align content */
+        margin-top: 100px; /* add margin from top */
+    }
+    .contact-info {
+        background-color: #111; /* slightly darker shade of black */
+        padding: 20px; /* add padding */
+        border-radius: 10px; /* rounded corners */
+        margin-bottom: 20px; /* add margin at the bottom */
+        width: 50%; /* 50% width */
+        margin-left: 25%; /* center horizontally */
+    }
+    .contact-info h2 {
+        margin-bottom: 10px; /* add margin below heading */
+    }
+    .contact-info p {
+        margin: 5px 0; /* add margin above and below paragraphs */
+    }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+    <a href={%url 'mainHL'%}><button>Home</button></a>
+</div>
+
+<div class="content">
+    <div class="contact-info">
+        <h2>Contact Information</h2>
+        <p>Email: andyprince251@gmail.com</p>
+        {% comment %} <p>Phone: +801.674.5743</p> {% endcomment %}
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,149 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Story</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #222; /* Light black background */
+            color: #fff; /* White text color */
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .title-container {
+            background-color: #333; /* Darker black box for the title */
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between; /* Space title and photo */
+            align-items: center;
+        }
+        .title {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .profile-photo {
+            width: 100px; /* Adjust size as needed */
+            height: 100px; /* Adjust size as needed */
+            border-radius: 50%; /* Make it round */
+            object-fit: cover; /* Display only a portion of the image without resizing */
+            object-position: center; /* Position the center of the image */
+        }
+        .button-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .button {
+            background-color: #007bff; /* Blue button */
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+        .button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        .button:last-child {
+            margin-right: 0;
+        }
+        .body-container {
+            background-color: #333; /* Darker black box for the body */
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        .section-header {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-container">
+            <h1 class="title">My Story</h1>
+            <img src="{% static 'profilephoto.png' %}" alt="Profile Photo" class="profile-photo">
+        </div>
+        
+        <div class="button-container">
+            <!-- Buttons for links -->
+            <a href="https://www.linkedin.com/in/andrew-w-prince/" class="button">LinkedIn</a>
+            <a href="https://github.com/AndyP251" class="button">GitHub</a>
+            <a href="{% static 'uvaSpring24Transcript.pdf' %}" class="button">Transcript</a>
+        </div>
+
+        <div class="body-container">
+            <div class="section">
+                <h2 class="section-header">Personal Information</h2>
+                <p>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Hello! I'm Andrew Prince, a second-year BACS student at the University of Virginia set to graduate in the Spring of 2026. Originally from Salt Lake City, UT, I have a deep appreciation for the outdoors. Skiing down the slopes or hitting the trails on my mountain bike are some of my favorite pastimes. However, since moving to Virginia, I've shifted my focus to rowing. Currently, I'm an active member of UVA's men's rowing team, dedicating around 20 hours per week to practice sessions starting bright and early at 6 am Monday through Friday. Rowing is an intensive activity that has profoundly shaped my character. The commitment required for a sport like rowing is unlike anything I've ever experienced, teaching me invaluable skills of persistence, dedication, and obsession.
+                    <br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;As for my interest in computer science, my journey traces back to my middle school days. Like many students, I was consumed by a passion for gaming. It was during this time that a friend and I embarked on a quest to create our own games. Armed with Unity 3D game engine and C# scripting, we collaborated tirelessly throughout middle school, churning out various projects. While none of our games reached the heights we envisioned, the experience sparked a lifelong fascination with coding that continues to drive me forward.
+                </p>
+            </div>
+            <div class="section">
+                <h2 class="section-header">Education</h2>
+                <p>
+                    University of Virginia (UVA), Charlottesville, VA
+Bachelor of Arts in Computer Science (BACS), Expected Graduation: Spring 2026
+<br><br>
+Relevant Coursework:
+<br><br>
+CS2100: Data Structures & Algorithms: Explored fundamental data structures and algorithms essential for efficient programming, implementing solutions in Python, Java, and C++.
+<br>
+CS2120: Discrete Mathematics through Type Theory:
+Studied discrete mathematics with a focus on type theory, while also being introduced to Lean4, a functional programming language. This course broadened my understanding of mathematical concepts and functional programming paradigms.
+<br>
+CS2130: Computer Systems & Organization: Delved into the architecture and organization of computer systems, including hands-on experience with x86 assembly language using AT&T syntax, and C programming.
+<br>
+CS3140: Software Development Essentials: Studied the principles and practices of software development, gaining proficiency in version control using Git and learning the basics of SQL for database management.
+<br><br>
+University of Utah, Salt Lake City, UT (Before Transfer to UVA)
+<br><br>
+CS1400/1410: Introduction to Programming: Introduced to programming fundamentals using Java, laying the groundwork for further exploration in computer science.
+<br><br>
+
+ Throughout these courses, I've gained practical experience in various programming languages, including Python, Java, C++, Lean4, and x86 assembly language. Each course has provided a unique perspective on computer science concepts, equipping me with a diverse skill set to tackle real-world problems in the field. Currently, I am expanding my knowledge further by delving into SQL in CS3140 and strengthening my C programming skills in CS2130.
+                </p>
+            </div>
+            <div class="section">
+                <h2 class="section-header">Experience</h2>
+                <p>
+                    Jewish Community Center, Salt Lake City, UT
+                    <br>
+                    Head Lifeguard, May 2022 - August 2023
+                    <br><br>
+                    Managed and trained fellow coworkers, ensuring adherence to safety protocols and standards while overseeing daily operations.
+                    Orchestrated the allocation of tasks among team members to maintain efficiency and uphold JCC standards.
+                    Provided leadership in auditing and managing initiatives to guarantee compliance with organizational protocols.
+                    <br><br><br>
+                    Mettel, Salt Lake City, UT
+                    <br>
+                    I.T Intern, January 2022 - Febuary 2022
+                    <br><br>
+                    Undertook short-term project-based initiatives involving software reset on approximately 100 computers, ensuring optimal performance and functionality.
+                    Facilitated the setup of new desktop stations with company hardware, contributing to seamless integration and operational efficiency.
+                    Assisted in various server maintenance tasks, gaining valuable insights into the daily operations of an IT specialist and enhancing technical proficiencies.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

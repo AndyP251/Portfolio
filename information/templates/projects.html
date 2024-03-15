@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Projects</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #222; /* Light black background */
+            color: #fff; /* White text color */
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .project {
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: #333; /* Darker grey background */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .project-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #fff; /* White text color */
+        }
+        .abstract {
+            margin-bottom: 20px;
+            color: #fff; /* White text color */
+        }
+        pre {
+            background-color: #444; /* Dark grey code background */
+            color: #fff; /* White text color */
+            padding: 10px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .github-link {
+            display: inline-block;
+            margin-top: 10px;
+            background-color: #007bff; /* Blue button */
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .github-link:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        .comment {
+            color: #aaa; /* Light grey comment color */
+        }
+        .string {
+            color: #0f0; /* Green string color */
+        }
+        .keyword {
+            color: #f0f; /* Purple keyword color */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="project">
+            <div class="project-title">AI TicTacToe with GUI</div>
+            <div class="abstract">
+                {% comment %} Abstract {% endcomment %}
+            </div>
+            This project, one of my earliest personal endeavors, showcases my initial exploration into the realms of computer science and artificial intelligence (AI). Consisting of two key components, it combines AI logic and a graphical user interface (GUI) implemented using Java's Swing library.
+            <br>
+            <br>
+            The AI Logic module employs hard-coded pattern detection algorithms to determine the computer player's moves. It analyzes the game board, utilizing the makeEducatedMove method to identify winning or blocking patterns. When identified, the AI makes strategic moves accordingly; otherwise, it resorts to random moves.
+            <br>     
+            <br>   
+            The GUI Implementation features a grid layout representing the TicTacToe board, enabling users to make moves with a simple click. Additionally, it includes player symbol selection buttons (X or O) and provides real-time feedback on game progress.
+            <br>
+            <br>
+            This project not only provided an interactive TicTacToe implementation but also sparked my interest in AI and machine learning, motivating me to pursue a degree in computer science. It stands as a testament to my early exploration and aspirations within the field.
+            <br>
+                <a href="https://github.com/AndyP251/TikTacToe" class="github-link">GitHub Repository</a>
+        </div>
+
+        {% comment %} <div class="project">
+            <div class="project-title">Project 2 Title</div>
+            <div class="abstract">
+                This is the abstract or description of Project 2. You can provide a brief overview here.
+            </div>
+            <pre><code>
+# Insert code excerpt for Project 2 here
+def project2_function():
+    return "This is a code snippet for Project 2"
+            </code></pre>
+            <a href="https://github.com/your-username/project2" class="github-link">GitHub Repository</a>
+        </div>
+
+        <div class="project">
+            <div class="project-title">Project 3 Title</div>
+            <div class="abstract">
+                This is the abstract or description of Project 3. You can provide a brief overview here.
+            </div>
+            <pre><code>
+# Insert code excerpt for Project 3 here
+def project3_function():
+    return "This is a code snippet for Project 3"
+            </code></pre>
+            <a href="https://github.com/your-username/project3" class="github-link">GitHub Repository</a>
+        </div>
+    </div> {% endcomment %}
+</body>
+</html>

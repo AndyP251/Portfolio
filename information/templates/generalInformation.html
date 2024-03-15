@@ -1,0 +1,116 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Portfolio</title>
+<style>
+    body {
+        background-color: #1a1a1a; /* light black background */
+        color: white; /* white text color */
+        font-family: Arial, sans-serif; /* default font */
+        margin: 0; /* remove default margin */
+        padding: 0; /* remove default padding */
+    }
+    .top-bar {
+        background-color: #1a1a1a; /* light black top bar */
+        padding: 10px; /* add padding to the top bar */
+        text-align: right; /* right align text */
+    }
+    .top-bar button {
+        background-color: #007bff; /* blue button background */
+        color: white; /* white text color */
+        border: none; /* remove button border */
+        padding: 10px 20px; /* add padding to button */
+        margin: 0 10px; /* add margin between buttons */
+        cursor: pointer; /* show pointer cursor on hover */
+        border-radius: 5px; /* rounded corners */
+    }
+    .top-bar button:hover {
+        background-color: #0056b3; /* darker blue on hover */
+    }
+    .content {
+        text-align: left; /* left align text */
+        margin-top: 100px; /* add margin from top */
+    }
+    .name-container {
+        background-color: #111; /* slightly darker shade of black */
+        padding: 20px; /* add padding */
+        border-radius: 10px; /* rounded corners */
+        margin-bottom: 20px; /* add margin at the bottom */
+        width: 95%; /* 95% width */
+        margin-left: 10%; /* move 10% away from the left edge */
+    }
+    .name {
+        font-size: 36px; /* slightly smaller font size */
+        font-weight: normal; /* less bold text */
+        text-transform: uppercase; /* convert text to uppercase */
+        margin: 0; /* remove default margin */
+    }
+    .highlight {
+        font-size: 95%; /* 20% smaller font size */
+        color: #66ccff; /* lighter blue color */
+    }
+    .highlight .smaller-text {
+        font-size:75%;
+    }
+    .welcome-text {
+        font-size: 24px; /* 40% size of the main text */
+        text-align: left; /* align with the main text */
+        text-transform: uppercase; /* convert text to uppercase */
+        margin-left: 10%; /* align horizontally with the main text */
+    }
+    .large-button-container {
+        text-align: left; /* left align buttons */
+        margin-left: 10%; /* align with the main text */
+        margin-top: 30px; /* add margin from top */
+    }
+    .large-button {
+        font-size: 20px; /* slightly smaller font size */
+        background-color: #007bff; /* blue button background */
+        color: white; /* white text color */
+        border: none; /* remove button border */
+        padding: 15px 30px; /* add padding to button */
+        margin: 10px 10px 10px 0; /* add margin between buttons */
+        cursor: pointer; /* show pointer cursor on hover */
+        border-radius: 5px; /* rounded corners */
+    }
+    .button-text {
+        font-size: 24px; /* original font size */
+        {% comment %} color: hotpink; /* hot pink color */ {% endcomment %}
+    }
+    .button-text .text-small {
+        font-size: 14px; /* smaller font size */
+        {% comment %} color: #ffcc00; {% endcomment %}
+    }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+    {% comment %} <a href="{%static 'RESUME-N16.pdf'%}" class="button" target="_blank">RESUME</a> {% endcomment %}
+    <a href="{%static 'RESUME-N16_NL.pdf'%}"><button>Resume</button></a>
+    <a href="{% url 'contactHL' %}"><button>Contact Me</button></a>
+</div>
+
+<div class="content">
+    <div class="name-container">
+        <div class="name">
+            HELLO,<br>
+            MY NAME IS ANDREW PRINCE<br>
+            I AM AN ASPIRING <span class="highlight">{<span class="smaller-text">&nbsp;&nbsp;software developer</span>}</span>
+        </div>
+    </div>
+    <div class="welcome-text">
+        &nbsp;&nbsp;WELCOME TO MY PORTFOLIO WEBSITE
+    </div>
+
+    <div class="large-button-container">
+        <a href="{% url 'storyHL' %}"><button class="large-button"><span class="button-text"> { <span class="text-small">&nbsp;&nbsp;MY STORY</span></span><span class="button-text">}</span></button></a>
+        <a href="{% url 'projectsHL' %}"><button class="large-button"><span class="button-text">{ <span class="text-small">&nbsp;&nbsp;PERSONAL PROJECTS</span></span><span class="button-text">}</span></button></a>
+    </div>
+</div>
+
+</body>
+</html>
