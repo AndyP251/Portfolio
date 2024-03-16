@@ -6,19 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Story</title>
     <style>
+        /* Define variables */
+        :root {
+            --background-color: #BBE1FA; /* Light black background */
+            --text-color: #fff; /* White text color */
+            --button-background-color: #0F4C75; /* Blue button */
+            --button-hover-color: #0056b3; /* Darker blue on hover */
+            --container-background-color: #1B262C; /* Darker black box */
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #222; /* Light black background */
-            color: #fff; /* White text color */
+            background-color: var(--background-color);
+            color: var(--text-color);
         }
         .container {
             max-width: 800px;
             margin: 0 auto;
         }
         .title-container {
-            background-color: #333; /* Darker black box for the title */
+            background-color: var(--container-background-color);
             padding: 20px;
             border-radius: 15px;
             margin-bottom: 20px;
@@ -43,8 +52,8 @@
             margin-bottom: 20px;
         }
         .button {
-            background-color: #007bff; /* Blue button */
-            color: #fff;
+            background-color: var(--button-background-color);
+            color: var(--text-color);
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
@@ -54,13 +63,13 @@
             margin: 0 5px;
         }
         .button:hover {
-            background-color: #0056b3; /* Darker blue on hover */
+            background-color: var(--button-hover-color);
         }
         .button:last-child {
             margin-right: 0;
         }
         .body-container {
-            background-color: #333; /* Darker black box for the body */
+            background-color: var(--container-background-color);
             padding: 20px;
             border-radius: 15px;
             margin-bottom: 20px;
