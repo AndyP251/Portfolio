@@ -14,6 +14,8 @@
         --name-container-color: #1B262C; /* Default name container background color */
         --welcome-container-color: #1B262C; /* Default welcome container background color */
         --software-developer-color: #BBE1FA; /* Default color for "software developer" text */
+        {% comment %} new {% endcomment %}
+        --container-background-color: #1B262C; /* Darker black box */
     }
 
     body {
@@ -121,6 +123,47 @@
     .button-text .text-small {
         font-size: 14px; /* smaller font size */
     }
+
+    {% comment %} new {% endcomment %}
+    .body-container {
+        background-color: var(--container-background-color);
+        padding: 20px;
+        {% comment %} border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px; {% endcomment %}
+        border-radius: 10px;
+        margin-bottom: 20px;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+    .section-header {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    .title-container {
+        background-color: var(--container-background-color);
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between; /* Space title and photo */
+        align-items: center;
+    }
+    .container {
+        margin-left: 5%;
+        margin-right:5%
+        
+    }
+    .profile-photo {
+        width: 100px; /* Adjust size as needed */
+        height: 100px; /* Adjust size as needed */
+        border-radius: 50%; /* Make it round */
+        object-fit: cover; /* Display only a portion of the image without resizing */
+        object-position: center; /* Position the center of the image */
+    }
+
+
 </style>
 </head>
 <body>
@@ -145,7 +188,27 @@
            WELCOME TO MY PORTFOLIO WEBSITE
         </div>
     </div>
+{% comment %}  {% endcomment %}
+    <div class = "container">
+    <div class="title-container">
+        <h1 class="title">My Story</h1>
+        <img src="{% static 'profilephoto.PNG' %}" alt="Profile Photo" class="profile-photo">
+    </div>
+</div>
 
+    <div class="body-container">
+        <div class="section">
+            <h2 class="section-header">Personal Information</h2>
+            <p>
+                &nbsp;&nbsp;&nbsp;&nbsp;Hello! I'm Andrew Prince, a second-year BACS student at the University of Virginia set to graduate in the Spring of 2026. Originally from Salt Lake City, UT, I have a deep appreciation for the outdoors. Skiing down the slopes or hitting the trails on my mountain bike are some of my favorite pastimes. However, since moving to Virginia, I've shifted my focus to rowing. Currently, I'm an active member of UVA's men's rowing team, dedicating around 20 hours per week to practice sessions starting bright and early at 6 am Monday through Friday. Rowing is an intensive activity that has profoundly shaped my character. The commitment required for a sport like rowing is unlike anything I've ever experienced, teaching me invaluable skills of persistence, dedication, and obsession.
+                <br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;As for my interest in computer science, my journey traces back to my middle school days. Like many students, I was consumed by a passion for gaming. It was during this time that a friend and I embarked on a quest to create our own games. Armed with Unity 3D game engine and C# scripting, we collaborated tirelessly throughout middle school, churning out various projects. While none of our games reached the heights we envisioned, the experience sparked a lifelong fascination with coding that continues to drive me forward.
+            </p>
+        </div>
+    </div>
+
+{% comment %}  {% endcomment %}
     <div class="large-button-container">
         <a href="{% url 'storyHL' %}"><button class="large-button"><span class="button-text"> { <span class="text-small">&nbsp;&nbsp;MY STORY</span></span><span class="button-text">}</span></button></a>
         <a href="{% url 'projectsHL' %}"><button class="large-button"><span class="button-text">{ <span class="text-small">&nbsp;&nbsp;PERSONAL PROJECTS</span></span><span class="button-text">}</span></button></a>
