@@ -48,6 +48,16 @@
         margin-left: 10px;
         margin-right:0;
     }
+    .school-emblem-left{
+        height: 40px;
+        width: auto;
+        margin-left:10px;
+        margin-right:0;
+
+        vertical-align:middle;
+        margin-left: 0;
+        margin-right:0;
+    }
     .content {
         text-align: left; /* left align text */
         margin-top: 100px; /* add margin from top */
@@ -117,6 +127,7 @@
 
 <div class="top-bar">
     <img src={%static 'school_emblem.png'%} alt = "School Emblem" class = "school-emblem">
+    <img src={%static 'school_emblem2.png'%} alt = "School Emblem2" class = "school-emblem-left">
     <a href="{%static 'RESUME-N20_NL.pdf'%}"><button>Resume</button></a>
     <a href="{% url 'contactHL' %}"><button>Contact Me</button></a>
 </div>
