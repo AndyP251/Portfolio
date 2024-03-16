@@ -6,21 +6,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Portfolio</title>
 <style>
+    /* Define variables */
+    :root {
+        --button-color: #0F4C75; /* Default button color */
+        --background-color: #BBE1FA; /* Default background color */
+        --text-color: white; /* Default text color */
+        --name-container-color: #1B262C; /* Default name container background color */
+        --welcome-container-color: #1B262C; /* Default welcome container background color */
+        --software-developer-color: #BBE1FA; /* Default color for "software developer" text */
+    }
+
     body {
-        background-color: #1a1a1a; /* light black background */
-        color: white; /* white text color */
+        background-color: var(--background-color); /* light black background */
+        color: var(--text-color); /* white text color */
         font-family: Arial, sans-serif; /* default font */
         margin: 0; /* remove default margin */
         padding: 0; /* remove default padding */
     }
     .top-bar {
-        background-color: #1a1a1a; /* light black top bar */
+        background-color: var(--background-color); /* light black top bar */
         padding: 10px; /* add padding to the top bar */
         text-align: right; /* right align text */
     }
     .top-bar button {
-        background-color: #007bff; /* blue button background */
-        color: white; /* white text color */
+        background-color: var(--button-color); /* blue button background */
+        color: var(--text-color); /* white text color */
         border: none; /* remove button border */
         padding: 10px 20px; /* add padding to button */
         margin: 0 10px; /* add margin between buttons */
@@ -35,7 +45,7 @@
         margin-top: 100px; /* add margin from top */
     }
     .name-container {
-        background-color: #111; /* slightly darker shade of black */
+        background-color: var(--name-container-color); /* slightly darker shade of black */
         padding: 20px; /* add padding */
         border-radius: 10px; /* rounded corners */
         margin-bottom: 20px; /* add margin at the bottom */
@@ -50,10 +60,21 @@
     }
     .highlight {
         font-size: 95%; /* 20% smaller font size */
-        color: #66ccff; /* lighter blue color */
+        color: var(--software-developer-color); /* lighter blue color */
     }
     .highlight .smaller-text {
         font-size:75%;
+    }
+    .welcome-container {
+        background-color: var(--welcome-container-color); /* slightly darker shade of black */
+        padding: 20px; /* add padding */
+        border-bottom-right-radius: 10px; /* rounded only on the right side */
+        border-top-right-radius: 10px; /* rounded only on the right side */
+        border-bottom-left-radius: 0; /* no rounding on the left side */
+        margin-bottom: 20px; /* add margin at the bottom */
+        width: fit-content; /* 80% width */
+        margin-left: 10%
+        margin-right: calc(100%-400px); 
     }
     .welcome-text {
         font-size: 24px; /* 40% size of the main text */
@@ -68,8 +89,8 @@
     }
     .large-button {
         font-size: 20px; /* slightly smaller font size */
-        background-color: #007bff; /* blue button background */
-        color: white; /* white text color */
+        background-color: var(--button-color); /* blue button background */
+        color: var(--text-color); /* white text color */
         border: none; /* remove button border */
         padding: 15px 30px; /* add padding to button */
         margin: 10px 10px 10px 0; /* add margin between buttons */
@@ -78,18 +99,15 @@
     }
     .button-text {
         font-size: 24px; /* original font size */
-        {% comment %} color: hotpink; /* hot pink color */ {% endcomment %}
     }
     .button-text .text-small {
         font-size: 14px; /* smaller font size */
-        {% comment %} color: #ffcc00; {% endcomment %}
     }
 </style>
 </head>
 <body>
 
 <div class="top-bar">
-    {% comment %} <a href="{%static 'RESUME-N18_NL.pdf'%}" class="button" target="_blank">RESUME</a> {% endcomment %}
     <a href="{%static 'RESUME-N20_NL.pdf'%}"><button>Resume</button></a>
     <a href="{% url 'contactHL' %}"><button>Contact Me</button></a>
 </div>
@@ -102,8 +120,10 @@
             I AM AN ASPIRING <span class="highlight">{<span class="smaller-text">&nbsp;&nbsp;software developer</span>}</span>
         </div>
     </div>
-    <div class="welcome-text">
-        &nbsp;&nbsp;WELCOME TO MY PORTFOLIO WEBSITE
+    <div class="welcome-container">
+        <div class="welcome-text">
+           WELCOME TO MY PORTFOLIO WEBSITE
+        </div>
     </div>
 
     <div class="large-button-container">
