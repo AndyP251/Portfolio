@@ -40,6 +40,14 @@
     .top-bar button:hover {
         background-color: #0056b3; /* darker blue on hover */
     }
+    .school-emblem {
+        height: 40px;
+        width: auto;
+
+        vertical-align:middle;
+        margin-left: 10px;
+        margin-right:0;
+    }
     .content {
         text-align: left; /* left align text */
         margin-top: 100px; /* add margin from top */
@@ -108,6 +116,7 @@
 <body>
 
 <div class="top-bar">
+    <img src={%static 'school_emblem.png'%} alt = "School Emblem" class = "school-emblem">
     <a href="{%static 'RESUME-N20_NL.pdf'%}"><button>Resume</button></a>
     <a href="{% url 'contactHL' %}"><button>Contact Me</button></a>
 </div>
