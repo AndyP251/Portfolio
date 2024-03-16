@@ -1,3 +1,4 @@
+{%load static%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,12 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Projects</title>
     <style>
+        /* Define variables */
+        :root {
+            --background-color: #BBE1FA; /* Light black background */
+            --text-color: #fff; /* White text color */
+            --project-background-color: #1B262C; /* Darker grey background */
+            --button-background-color: #0F4C75; /* Blue button */
+            --button-hover-color: #0056b3; /* Darker blue on hover */
+            --code-background-color: #444; /* Dark grey code background */
+            --comment-color: #aaa; /* Light grey comment color */
+            --string-color: #0f0; /* Green string color */
+            --keyword-color: #f0f; /* Purple keyword color */
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #222; /* Light black background */
-            color: #fff; /* White text color */
+            background-color: var(--background-color); /* Light black background */
+            color: var(--text-color); /* White text color */
         }
         .container {
             max-width: 800px;
@@ -19,7 +33,7 @@
         .project {
             margin-bottom: 40px;
             padding: 20px;
-            background-color: #333; /* Darker grey background */
+            background-color: var(--project-background-color); /* Darker grey background */
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
@@ -27,15 +41,15 @@
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 10px;
-            color: #fff; /* White text color */
+            color: var(--text-color); /* White text color */
         }
         .abstract {
             margin-bottom: 20px;
-            color: #fff; /* White text color */
+            color: var(--text-color); /* White text color */
         }
         pre {
-            background-color: #444; /* Dark grey code background */
-            color: #fff; /* White text color */
+            background-color: var(--code-background-color); /* Dark grey code background */
+            color: var(--text-color); /* White text color */
             padding: 10px;
             border-radius: 8px;
             overflow-x: auto;
@@ -43,29 +57,32 @@
         .github-link {
             display: inline-block;
             margin-top: 10px;
-            background-color: #007bff; /* Blue button */
-            color: #fff;
+            background-color: var(--button-background-color); /* Blue button */
+            color: var(--text-color);
             padding: 10px 20px;
             border-radius: 5px;
             text-decoration: none;
         }
         .github-link:hover {
-            background-color: #0056b3; /* Darker blue on hover */
+            background-color: var(--button-hover-color); /* Darker blue on hover */
         }
         .comment {
-            color: #aaa; /* Light grey comment color */
+            color: var(--comment-color); /* Light grey comment color */
         }
         .string {
-            color: #0f0; /* Green string color */
+            color: var(--string-color); /* Green string color */
         }
         .keyword {
-            color: #f0f; /* Purple keyword color */
+            color: var(--keyword-color); /* Purple keyword color */
+        }
+        .ast-text{
+            color:black;
         }
     </style>
 </head>
 <body>
     <center>
-    <h6><em>*UNABLE TO PUBLISH ACADEMIC PROJECTS DUE TO UVA HONOR CODE POLICIES*</em></h6>
+    <h6 class = "ast-text"><em>*UNABLE TO PUBLISH ACADEMIC PROJECTS DUE TO UVA HONOR CODE POLICIES*</em></h6>
     </center>
     <div class="container">
         <div class="project">
