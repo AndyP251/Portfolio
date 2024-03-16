@@ -8,14 +8,14 @@
 <style>
     /* Define variables */
     :root {
-        --button-color: #0F4C75; /* Default button color */
-        --background-color: #BBE1FA; /* Default background color */
-        --text-color: white; /* Default text color */
-        --name-container-color: #1B262C; /* Default name container background color */
-        --welcome-container-color: #1B262C; /* Default welcome container background color */
-        --software-developer-color: #BBE1FA; /* Default color for "software developer" text */
+        --button-color: white; /* Default button color */
+        --background-color: #babdc2; /* Default background color */
+        --text-color: #1B262C; /* Default text color */
+        --name-container-color: white; /* Default name container background color */
+        --welcome-container-color: white; /* Default welcome container background color */
+        --software-developer-color: #7CC3F2; /* Default color for "software developer" text */
         {% comment %} new {% endcomment %}
-        --container-background-color: #1B262C; /* Darker black box */
+        --container-background-color: white; /* Darker black box */
     }
 
     body {
@@ -29,6 +29,11 @@
         background-color: var(--background-color); /* light black top bar */
         padding: 10px; /* add padding to the top bar */
         text-align: right; /* right align text */
+    }
+    .middle-bar {
+        display: flex;
+        align-items: center;
+
     }
     .top-bar button {
         background-color: var(--button-color); /* blue button background */
@@ -65,12 +70,16 @@
         margin-top: 100px; /* add margin from top */
     }
     .name-container {
-        background-color: var(--name-container-color); /* slightly darker shade of black */
-        padding: 20px; /* add padding */
-        border-radius: 10px; /* rounded corners */
-        margin-bottom: 20px; /* add margin at the bottom */
-        width: 95%; /* 95% width */
-        margin-left: 10%; /* move 10% away from the left edge */
+        background-color: var(--name-container-color);
+        padding: 20px;
+        border-bottom-left-radius: 10px;
+        border-top-left-radius: 10px;
+        margin-bottom: 20px;
+        width: 90% /* Adjusted width */
+        max-width: 95%; /* Added max-width */
+        margin-left: 10%; /* Adjusted margin */
+        margin-right: auto; /* Adjusted margin */
+        white-space: nowrap;
     }
     .name {
         font-size: 36px; /* slightly smaller font size */
@@ -93,14 +102,14 @@
         border-bottom-left-radius: 0; /* no rounding on the left side */
         margin-bottom: 20px; /* add margin at the bottom */
         width: fit-content; /* 80% width */
-        margin-left: 10%
-        margin-right: calc(100%-400px); 
+        {% comment %} margin-left: 10%
+        margin-right: calc(100%-400px);  {% endcomment %}
     }
     .welcome-text {
         font-size: 24px; /* 40% size of the main text */
         text-align: left; /* align with the main text */
         text-transform: uppercase; /* convert text to uppercase */
-        margin-left: 10%; /* align horizontally with the main text */
+        {% comment %} margin-left: 10%; /* align horizontally with the main text */ {% endcomment %}
     }
     .large-button-container {
         text-align: left; /* left align buttons */
@@ -156,11 +165,16 @@
         
     }
     .profile-photo {
-        width: 100px; /* Adjust size as needed */
-        height: 100px; /* Adjust size as needed */
-        border-radius: 50%; /* Make it round */
-        object-fit: cover; /* Display only a portion of the image without resizing */
-        object-position: center; /* Position the center of the image */
+        position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    right: 10%; /* Align with the right edge of the page */
+    top: 50%; /* Center vertically */
+    transform: translateX(10%) translateY(-50%); /* Center vertically */
+    padding-left: 0;
     }
 
 
@@ -183,24 +197,27 @@
             I AM AN ASPIRING <span class="highlight">{<span class="smaller-text">&nbsp;&nbsp;software developer</span>}</span>
         </div>
     </div>
+
+    <div class="middle-bar">
+
     <div class="welcome-container">
         <div class="welcome-text">
-           WELCOME TO MY PORTFOLIO WEBSITE
+           HERE'S A LITTLE ABOUT ME
         </div>
     </div>
-{% comment %}  {% endcomment %}
-    <div class = "container">
-    <div class="title-container">
-        <h1 class="title">My Story</h1>
-        <img src="{% static 'profilephoto.PNG' %}" alt="Profile Photo" class="profile-photo">
+    <img src="{% static 'profilephoto.PNG' %}" alt="Profile Photo" class="profile-photo">
     </div>
+{% comment %}  {% endcomment %}
+    
 </div>
+
+<br><br><br><br>
 
     <div class="body-container">
         <div class="section">
-            <h2 class="section-header">Personal Information</h2>
+            {% comment %} <h2 class="section-header">About Me</h2> {% endcomment %}
             <p>
-                &nbsp;&nbsp;&nbsp;&nbsp;Hello! I'm Andrew Prince, a second-year BACS student at the University of Virginia set to graduate in the Spring of 2026. Originally from Salt Lake City, UT, I have a deep appreciation for the outdoors. Skiing down the slopes or hitting the trails on my mountain bike are some of my favorite pastimes. However, since moving to Virginia, I've shifted my focus to rowing. Currently, I'm an active member of UVA's men's rowing team, dedicating around 20 hours per week to practice sessions starting bright and early at 6 am Monday through Friday. Rowing is an intensive activity that has profoundly shaped my character. The commitment required for a sport like rowing is unlike anything I've ever experienced, teaching me invaluable skills of persistence, dedication, and obsession.
+                &nbsp;&nbsp;&nbsp;&nbsp;i am a second-year BACS student at the University of Virginia set to graduate in the Spring of 2026. Originally from Salt Lake City, UT, I have a deep appreciation for the outdoors. Skiing down the slopes or hitting the trails on my mountain bike are some of my favorite pastimes. However, since moving to Virginia, I've shifted my focus to rowing. Currently, I'm an active member of UVA's men's rowing team, dedicating around 20 hours per week to practice sessions starting bright and early at 6 am Monday through Friday. Rowing is an intensive activity that has profoundly shaped my character. The commitment required for a sport like rowing is unlike anything I've ever experienced, teaching me invaluable skills of persistence, dedication, and obsession.
                 <br>
                 <br>
                 &nbsp;&nbsp;&nbsp;&nbsp;As for my interest in computer science, my journey traces back to my middle school days. Like many students, I was consumed by a passion for gaming. It was during this time that a friend and I embarked on a quest to create our own games. Armed with Unity 3D game engine and C# scripting, we collaborated tirelessly throughout middle school, churning out various projects. While none of our games reached the heights we envisioned, the experience sparked a lifelong fascination with coding that continues to drive me forward.
