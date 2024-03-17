@@ -77,8 +77,9 @@
         margin-bottom: 20px;
         width: 90% /* Adjusted width */
         max-width: 95%; /* Added max-width */
-        margin-left: 10%; /* Adjusted margin */
-        margin-right: auto; /* Adjusted margin */
+        {% comment %} margin-left: 10%; /* Adjusted margin */
+        margin-right: auto; /* Adjusted margin */ {% endcomment %}
+        margin:0 auto;
         white-space: nowrap;
     }
     .name {
@@ -102,6 +103,8 @@
         border-bottom-left-radius: 0; /* no rounding on the left side */
         margin-bottom: 20px; /* add margin at the bottom */
         width: fit-content; /* 80% width */
+        
+        margin:0 auto;
         {% comment %} margin-left: 10%
         margin-right: calc(100%-400px);  {% endcomment %}
     }
@@ -223,6 +226,7 @@
         .welcome-container {
             margin-left: 0;
             margin-right: auto;
+            white-space:normal;
             
         }
 
