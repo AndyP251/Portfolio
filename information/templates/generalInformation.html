@@ -112,9 +112,18 @@
         {% comment %} margin-left: 10%; /* align horizontally with the main text */ {% endcomment %}
     }
     .large-button-container {
-        text-align: left; /* left align buttons */
+        {% comment %} text-align: left; /* left align buttons */
         margin-left: 10%; /* align with the main text */
-        margin-top: 30px; /* add margin from top */
+        margin-top: 30px; /* add margin from top */ {% endcomment %}
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: var(--background-color); /* Match the background color */
+        padding: 2px; /* Adjust padding as needed */
+        z-index: 999; /* Ensure it's above other content */
+        white-space: nowrap;
+        overflow-x: auto;
     }
     .large-button {
         font-size: 20px; /* slightly smaller font size */
@@ -125,6 +134,8 @@
         margin: 10px 10px 10px 0; /* add margin between buttons */
         cursor: pointer; /* show pointer cursor on hover */
         border-radius: 5px; /* rounded corners */
+        display: inline-block; /*prevent buttons from stacking*/
+        text-decoration: none;
     }
     .button-text {
         font-size: 24px; /* original font size */
@@ -133,12 +144,10 @@
         font-size: 14px; /* smaller font size */
     }
 
-    {% comment %} new {% endcomment %}
+    
     .body-container {
         background-color: var(--container-background-color);
         padding: 20px;
-        {% comment %} border-top-left-radius: 10px;
-        border-bottom-left-radius: 10px; {% endcomment %}
         border-radius: 10px;
         margin-bottom: 20px;
         margin-left: 5%;
@@ -176,6 +185,18 @@
     transform: translateX(10%) translateY(-50%); /* Center vertically */
     padding-left: 0;
     }
+    .learn-container {
+        background-color: var(--name-container-color);
+        padding: 20px;
+        border-bottom-left-radius: 10px;
+        border-top-left-radius: 10px;
+        margin-bottom: 20px;
+        width: 40% /* Adjusted width */
+        max-width: 45%; /* Added max-width */
+        margin-left: 50%; /* Adjusted margin */
+        margin-right: auto; /* Adjusted margin */
+        white-space: nowrap;
+    }
 
 
 </style>
@@ -194,7 +215,7 @@
         <div class="name">
             HELLO,<br>
             MY NAME IS ANDREW PRINCE<br>
-            I AM AN ASPIRING <span class="highlight">{<span class="smaller-text">&nbsp;&nbsp;software developer</span>}</span>
+            I AM AN ASPIRING <span class="highlight">{<span class="smaller-text">software developer</span>}</span>
         </div>
     </div>
 
@@ -215,7 +236,6 @@
 
     <div class="body-container">
         <div class="section">
-            {% comment %} <h2 class="section-header">About Me</h2> {% endcomment %}
             <p>
                 &nbsp;&nbsp;&nbsp;&nbsp;i am a second-year BACS student at the University of Virginia set to graduate in the Spring of 2026. Originally from Salt Lake City, UT, I have a deep appreciation for the outdoors. Skiing down the slopes or hitting the trails on my mountain bike are some of my favorite pastimes. However, since moving to Virginia, I've shifted my focus to rowing. Currently, I'm an active member of UVA's men's rowing team, dedicating around 20 hours per week to practice sessions starting bright and early at 6 am Monday through Friday. Rowing is an intensive activity that has profoundly shaped my character. The commitment required for a sport like rowing is unlike anything I've ever experienced, teaching me invaluable skills of persistence, dedication, and obsession.
                 <br>
@@ -225,11 +245,80 @@
         </div>
     </div>
 
-{% comment %}  {% endcomment %}
-    <div class="large-button-container">
-        <a href="{% url 'storyHL' %}"><button class="large-button"><span class="button-text"> { <span class="text-small">&nbsp;&nbsp;MY STORY</span></span><span class="button-text">}</span></button></a>
-        <a href="{% url 'projectsHL' %}"><button class="large-button"><span class="button-text">{ <span class="text-small">&nbsp;&nbsp;PERSONAL PROJECTS</span></span><span class="button-text">}</span></button></a>
+
+     <div class="name-container">
+        <div class="welcome-text">
+            HERE'S WHAT I HAVE LEARNED            
+        </div>
+    </div> 
+    <div class="body-container">
+        <div class="section">
+            
+            <p>
+                University of Virginia (UVA), Charlottesville, VA
+Bachelor of Arts in Computer Science (BACS), Expected Graduation: Spring 2026
+<br><br>
+Relevant Coursework:
+<br><br>
+CS2100: Data Structures & Algorithms: Explored fundamental data structures and algorithms essential for efficient programming, implementing solutions in Python, Java, and C++.
+<br>
+CS2120: Discrete Mathematics through Type Theory:
+Studied discrete mathematics with a focus on type theory, while also being introduced to Lean4, a functional programming language. This course broadened my understanding of mathematical concepts and functional programming paradigms.
+<br>
+CS2130: Computer Systems & Organization: Delved into the architecture and organization of computer systems, including hands-on experience with x86 assembly language using AT&T syntax, and C programming.
+<br>
+CS3140: Software Development Essentials: Studied the principles and practices of software development, gaining proficiency in version control using Git and learning the basics of SQL for database management.
+<br><br>
+University of Utah, Salt Lake City, UT (Before Transfer to UVA)
+<br><br>
+CS1400/1410: Introduction to Programming: Introduced to programming fundamentals using Java, laying the groundwork for further exploration in computer science.
+<br><br>
+
+Throughout these courses, I've gained practical experience in various programming languages, including Python, Java, C++, Lean4, and x86 assembly language. Each course has provided a unique perspective on computer science concepts, equipping me with a diverse skill set to tackle real-world problems in the field. Currently, I am expanding my knowledge further by delving into SQL in CS3140 and strengthening my C programming skills in CS2130.
+            </p>
+        </div>
     </div>
+
+    <div class="welcome-container">
+        <div class="welcome-text">
+           HERE'S SOME OF MY EXPERIENCE
+        </div>
+    </div>
+
+    <div class="body-container">
+        <div class="section">
+            <h2 class="section-header">Experience</h2>
+            <p>
+                Jewish Community Center, Salt Lake City, UT
+                <br>
+                Head Lifeguard, May 2022 - August 2023
+                <br><br>
+                Managed and trained fellow coworkers, ensuring adherence to safety protocols and standards while overseeing daily operations.
+                Orchestrated the allocation of tasks among team members to maintain efficiency and uphold JCC standards.
+                Provided leadership in auditing and managing initiatives to guarantee compliance with organizational protocols.
+                <br><br><br>
+                Mettel, Salt Lake City, UT
+                <br>
+                I.T Intern, January 2022 - Febuary 2022
+                <br><br>
+                Undertook short-term project-based initiatives involving software reset on approximately 100 computers, ensuring optimal performance and functionality.
+                Facilitated the setup of new desktop stations with company hardware, contributing to seamless integration and operational efficiency.
+                Assisted in various server maintenance tasks, gaining valuable insights into the daily operations of an IT specialist and enhancing technical proficiencies.
+            </p>
+        </div>
+    </div>
+
+    <div class="large-button-container">
+        {% comment %} <a href="{% url 'storyHL' %}"><button class="large-button"><span class="button-text"> {<span class="text-small">MY STORY</span></span><span class="button-text">}</span></button></a> {% endcomment %}
+        <a href="{% url 'projectsHL' %}"><button class="large-button"><span class="button-text">{<span class="text-small">PERSONAL PROJECTS</span></span><span class="button-text">}</span></button></a>
+        <a href="https://www.linkedin.com/in/andrew-w-prince/" class="large-button"><span class="button-text">{<span class="text-small">LINKEDIN</span></span><span class="button-text">}</span></a>
+    <a href="https://github.com/AndyP251" class="large-button"><span class="button-text">{<span class="text-small">GITHUB</span></span><span class="button-text">}</span></a>
+    <a href="{% static 'uvaSpring24Transcript.pdf' %}" class="large-button"><span class="button-text">{<span class="text-small">TRANSCRIPT</span></span><span class="button-text">}</span></a>
+    </div>
+    {% comment %} 
+    Spaces to allow scrolling for
+    {% endcomment %}
+    <br><br><br><br><br><br>
 </div>
 
 </body>
