@@ -153,6 +153,14 @@
         margin-left: 5%;
         margin-right: 5%;
     }
+    .body-containerTOP {
+        background-color: var(--container-background-color);
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
     .section-header {
         font-size: 24px;
         font-weight: bold;
@@ -198,6 +206,37 @@
         white-space: nowrap;
     }
 
+    @media screen and (max-width: 768px) {
+        
+        .name{
+            font-size:24px;
+        }
+        .welcome-text{
+            font-size:16px;
+        }
+
+        .middle-bar {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .welcome-container {
+            margin-left: 0;
+            margin-right: auto;
+            
+        }
+
+        .profile-photo {
+            position: static;
+            margin-top: 20px; /* Add space between photo and welcome header */
+            margin-bottom: 20px; /* Add space between photo and content */
+            transform: none; /* Reset transform */
+        }
+        .body-containerTOP {
+            margin-top:-55px;
+        }
+    }
+
 
 </style>
 </head>
@@ -220,13 +259,13 @@
     </div>
 
     <div class="middle-bar">
-
+        <img src="{% static 'profilephoto.PNG' %}" alt="Profile Photo" class="profile-photo">
     <div class="welcome-container">
         <div class="welcome-text">
            HERE'S A LITTLE ABOUT ME
         </div>
     </div>
-    <img src="{% static 'profilephoto.PNG' %}" alt="Profile Photo" class="profile-photo">
+    
     </div>
 {% comment %}  {% endcomment %}
     
@@ -234,7 +273,7 @@
 
 <br><br><br><br>
 
-    <div class="body-container">
+    <div class="body-containerTOP">
         <div class="section">
             <p>
                 &nbsp;&nbsp;&nbsp;&nbsp;i am a second-year BACS student at the University of Virginia set to graduate in the Spring of 2026. Originally from Salt Lake City, UT, I have a deep appreciation for the outdoors. Skiing down the slopes or hitting the trails on my mountain bike are some of my favorite pastimes. However, since moving to Virginia, I've shifted my focus to rowing. Currently, I'm an active member of UVA's men's rowing team, dedicating around 20 hours per week to practice sessions starting bright and early at 6 am Monday through Friday. Rowing is an intensive activity that has profoundly shaped my character. The commitment required for a sport like rowing is unlike anything I've ever experienced, teaching me invaluable skills of persistence, dedication, and obsession.
