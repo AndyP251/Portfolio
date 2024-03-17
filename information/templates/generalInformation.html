@@ -110,7 +110,7 @@
         margin-right: calc(100%-400px); 
     }
     .welcome-text {
-        font-size: 24px; /* 40% size of the main text */
+        font-size: 20px; /* 40% size of the main text */
         text-align: left; /* align with the main text */
         text-transform: uppercase; /* convert text to uppercase */
         {% comment %} margin-left: 10%; /* align horizontally with the main text */ {% endcomment %}
@@ -140,6 +140,10 @@
         border-radius: 5px; /* rounded corners */
         display: inline-block; /*prevent buttons from stacking*/
         text-decoration: none;
+
+        flex:1;
+        max-width: calc(50%-10px);
+        margin-right:10px;
         
     }
     .button-text {
@@ -250,6 +254,10 @@
         }
         .body-containerTOP {
             margin-top:-55px;
+        }
+        .large-button{
+            max-width:100%;
+            margin-right:0;
         }
     }
 
@@ -373,7 +381,7 @@ Throughout these courses, I've gained practical experience in various programmin
 
 
         <center>
-        <a href="{% url 'projectsHL' %}"><button class="large-button"><span class="welcome-text">PERSONAL PROJECTS</span></button></a>
+        <a href="{% url 'projectsHL' %}"><button class="large-button"><span class="welcome-text"> PERSONAL PROJECTS </span></button></a>
         <a href="{% static 'uvaSpring24Transcript.pdf' %}" class="large-button"><span class="welcome-text">ACADEMIC TRANSCRIPT</span></a>
         </center>
     </div>
