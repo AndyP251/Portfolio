@@ -198,7 +198,7 @@
     object-fit: cover;
     object-position: center;
     right: 10%; /* Align with the right edge of the page */
-    top: 50%; /* Center vertically */
+    {% comment %} top: 50%; /* Center vertically */ {% endcomment %}
     transform: translateX(10%) translateY(-50%); /* Center vertically */
     padding-left: 0;
     }
@@ -277,9 +277,9 @@
 <div class="content">
     <div class="name-container">
         <div class="name">
-            HELLO,<br>
-            MY NAME IS ANDREW PRINCE<br>
-            I AM AN ASPIRING <span class="highlight">{<span class="smaller-text">software developer</span>}</span>
+            HELLO, MY NAME IS <br>
+            ANDREW PRINCE
+            {% comment %} I AM AN ASPIRING <span class="highlight">{<span class="smaller-text">software developer</span>}</span> {% endcomment %}
         </div>
     </div>
 
@@ -292,7 +292,6 @@
     </div>
     
     </div>
-{% comment %}  {% endcomment %}
     
 </div>
 
