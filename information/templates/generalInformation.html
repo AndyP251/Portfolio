@@ -115,18 +115,18 @@
         {% comment %} margin-left: 10%; /* align horizontally with the main text */ {% endcomment %}
     }
     .large-button-container {
-        {% comment %} text-align: left; /* left align buttons */
-        margin-left: 10%; /* align with the main text */
-        margin-top: 30px; /* add margin from top */ {% endcomment %}
         position: fixed;
         bottom: 0;
-        left: 0;
+        right:0;
         width: 100%;
         background-color: var(--background-color); /* Match the background color */
         padding: 2px; /* Adjust padding as needed */
         z-index: 999; /* Ensure it's above other content */
+        display:flex;
+        justify-content:flex-end;
         white-space: nowrap;
         overflow-x: auto;
+        height:75px;
     }
     .large-button {
         font-size: 20px; /* slightly smaller font size */
@@ -139,6 +139,7 @@
         border-radius: 5px; /* rounded corners */
         display: inline-block; /*prevent buttons from stacking*/
         text-decoration: none;
+        
     }
     .button-text {
         font-size: 24px; /* original font size */
@@ -208,6 +209,16 @@
         margin-right: auto; /* Adjusted margin */
         white-space: nowrap;
     }
+    .button-logos{
+        margin-bottom:-24px;
+        height:66px;
+        width:auto;
+    }
+    .button-logos-Git{
+        margin-bottom:-30px;
+        height:75px;
+        width:auto;
+    }
 
     @media screen and (max-width: 768px) {
         
@@ -240,6 +251,7 @@
             margin-top:-55px;
         }
     }
+
 
 
 </style>
@@ -351,13 +363,17 @@ Throughout these courses, I've gained practical experience in various programmin
         </div>
     </div>
 
-    <div class="large-button-container">
-        {% comment %} <a href="{% url 'storyHL' %}"><button class="large-button"><span class="button-text"> {<span class="text-small">MY STORY</span></span><span class="button-text">}</span></button></a> {% endcomment %}
-        <a href="{% url 'projectsHL' %}"><button class="large-button"><span class="button-text">{<span class="text-small">PERSONAL PROJECTS</span></span><span class="button-text">}</span></button></a>
-        <a href="https://www.linkedin.com/in/andrew-w-prince/" class="large-button"><span class="button-text">{<span class="text-small">LINKEDIN</span></span><span class="button-text">}</span></a>
-    <a href="https://github.com/AndyP251" class="large-button"><span class="button-text">{<span class="text-small">GITHUB</span></span><span class="button-text">}</span></a>
-    <a href="{% static 'uvaSpring24Transcript.pdf' %}" class="large-button"><span class="button-text">{<span class="text-small">TRANSCRIPT</span></span><span class="button-text">}</span></a>
+    <div>
+        <center>
+        <a href="{% url 'projectsHL' %}"><button class="large-button"><span class="welcome-text">PERSONAL PROJECTS</span></button></a>
+        <a href="{% static 'uvaSpring24Transcript.pdf' %}" class="large-button"><span class="welcome-text">ACADEMIC TRANSCRIPT</span></a>
+        </center>
     </div>
+    
+    <div class="large-button-container">
+        <a href="https://www.linkedin.com/in/andrew-w-prince/"><img src={%static 'linkedinLogo.png'%} alt = "LinkedIn" class = "button-logos"></a>
+        <a href="https://github.com/AndyP251"><img src={%static 'githubLogo.png'%} alt = "GitHub" class = "button-logos-Git"></a>
+</div>
     {% comment %} 
     Spaces to allow scrolling for
     {% endcomment %}
