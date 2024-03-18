@@ -129,17 +129,18 @@
         font-size: 20px; /* slightly smaller font size */
         background-color: var(--button-color); /* blue button background */
         color: var(--text-color); /* white text color */
-        border: none; /* remove button border */
+        
         padding: 15px 30px; /* add padding to button */
         margin: 10px 10px 10px 0; /* add margin between buttons */
         cursor: pointer; /* show pointer cursor on hover */
-        border-radius: 5px; /* rounded corners */
+        border-radius: 25px; /* rounded corners */
         display: inline-block; /*prevent buttons from stacking*/
         text-decoration: none;
 
         flex:1;
         max-width: calc(50%-10px);
         margin-right:10px;
+        
         
     }
     .large-button:hover {
@@ -213,7 +214,7 @@
         white-space: nowrap;
     }
     .button-logos{
-        margin-bottom:-24px;
+        margin-bottom:-55px;
         height:66px;
         width:auto;
     }
@@ -377,8 +378,8 @@ Throughout these courses, I've gained practical experience in various programmin
 
 
         <center>
-        <a href="{% url 'projectsHL' %}"><button class="large-button"><span class="welcome-text"> PERSONAL PROJECTS </span></button></a>
-        <a href="{% static 'uvaSpring24Transcript.pdf' %}" class="large-button"><span class="welcome-text">ACADEMIC TRANSCRIPT</span></a>
+        <a href="{% url 'projectsHL' %}"><button class="large-button"><span class="welcome-text">&nbsp;PERSONAL PROJECTS&nbsp;</span></button></a>
+        <a href="{% static 'uvaSpring24Transcript.pdf' %}"><button class="large-button"><span class="welcome-text">ACADEMIC TRANSCRIPT</span></button></a>
         </center>
     </div>
     
