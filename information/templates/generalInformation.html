@@ -14,7 +14,6 @@
         --name-container-color: white; /* Default name container background color */
         --welcome-container-color: white; /* Default welcome container background color */
         --software-developer-color: #7CC3F2; /* Default color for "software developer" text */
-        {% comment %} new {% endcomment %}
         --container-background-color: white; /* Darker black box */
     }
 
@@ -44,9 +43,9 @@
         cursor: pointer; /* show pointer cursor on hover */
         border-radius: 5px; /* rounded corners */
     }
-    .top-bar button:hover {
+    {% comment %} .top-bar button:hover {
         background-color: #0056b3; /* darker blue on hover */
-    }
+    } {% endcomment %}
     .school-emblem {
         height: 40px;
         width: auto;
@@ -104,8 +103,6 @@
         border-bottom-left-radius: 0; /* no rounding on the left side */
         margin-bottom: 20px; /* add margin at the bottom */
         width: fit-content; /* 80% width */
-        
-        {% comment %} margin:0 auto; {% endcomment %}
         margin-left: 10%
         margin-right: calc(100%-400px); 
     }
@@ -113,7 +110,6 @@
         font-size: 20px; /* 40% size of the main text */
         text-align: left; /* align with the main text */
         text-transform: uppercase; /* convert text to uppercase */
-        {% comment %} margin-left: 10%; /* align horizontally with the main text */ {% endcomment %}
     }
     .large-button-container {
         position: fixed;
@@ -198,7 +194,6 @@
     object-fit: cover;
     object-position: center;
     right: 10%; /* Align with the right edge of the page */
-    {% comment %} top: 50%; /* Center vertically */ {% endcomment %}
     transform: translateX(10%) translateY(-50%); /* Center vertically */
     padding-left: 0;
     }
@@ -279,7 +274,6 @@
         <div class="name">
             HELLO, MY NAME IS <br>
             ANDREW PRINCE
-            {% comment %} I AM AN ASPIRING <span class="highlight">{<span class="smaller-text">software developer</span>}</span> {% endcomment %}
         </div>
     </div>
 
