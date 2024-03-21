@@ -194,7 +194,7 @@
         
     }
     .profile-photo {
-        position: absolute;
+    position: absolute;
     width: 150px;
     height: 150px;
     border-radius: 50%;
@@ -244,19 +244,26 @@
     .name {
         animation: fadeOut 1s ease-out 5s forwards; /* Fade out the old text */
     }
-    
+
     .new-text {
         opacity: 0;
         font-size:0;
-        animation: increaseFontSize 1s ease-out 7s forwards;
-        {% comment %} , slideIn 1s ease-out 6s forwards; {% endcomment %}
-        
+        animation: increaseFontSize 1s ease-out 7s forwards;        
     }
+    @keyframes pulse {
+        0%, 100% { transform: translateY(0); }
+        25% { transform: translateY(-6px); }
+        50%, 75% { transform: translateY(0); }
+    }
+    .welcome-text-bounce {
+        animation: pulse 4s ease-in-out infinite;       
+    }
+
 
     @media screen and (max-width: 768px) {
         
         .name{
-            font-size:24px;
+            font-size:20px;
         }
         .welcome-text{
             font-size:16px;
@@ -276,12 +283,12 @@
 
         .profile-photo {
             position: static;
-            margin-top: 20px; /* Add space between photo and welcome header */
-            margin-bottom: 20px; /* Add space between photo and content */
+            margin-top: -10px; /* Add space between photo and welcome header */
+            margin-bottom: 8px; /* Add space between photo and content */
             transform: none; /* Reset transform */
         }
         .body-containerTOP {
-            margin-top:-55px;
+            margin-top:-80px;
         }
         .large-button{
             max-width:100%;
@@ -407,8 +414,8 @@ Throughout these courses, I've gained practical experience in various programmin
 
     <div>
         <div class="name-container">
-            <div class="welcome-text">
-                CHECK THESE OUT            
+            <div class="welcome-text welcome-text-bounce">
+                &nbsp;&nbsp;&nbsp;&nbsp;CHECK THESE OUT            
             </div>
         </div> 
 
