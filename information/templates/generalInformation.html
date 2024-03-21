@@ -227,6 +227,32 @@
         width:auto;
     }
 
+    @keyframes fadeOut {
+        0% { opacity: 1; font-size:36;}
+        100% { opacity: 0; font-size:0;}
+    }
+    
+    @keyframes slideIn {
+        0% { transform: translateY(-100%); opacity:0;  }
+        100% { transform: translateY(0); opacity:1;}
+    }
+    @keyframes increaseFontSize {
+        0% { font-size: 0; opacity:0;}
+        100% { font-size: 24px; opacity:1;} /* Increase font size to 28px */
+    }
+    
+    .name {
+        animation: fadeOut 1s ease-out 5s forwards; /* Fade out the old text */
+    }
+    
+    .new-text {
+        opacity: 0;
+        font-size:0;
+        animation: increaseFontSize 1s ease-out 7s forwards;
+        {% comment %} , slideIn 1s ease-out 6s forwards; {% endcomment %}
+        
+    }
+
     @media screen and (max-width: 768px) {
         
         .name{
@@ -281,6 +307,9 @@
         <div class="name">
             HELLO, MY NAME IS <br>
             ANDREW PRINCE
+        </div>
+        <div class="new-text">
+            WELCOME TO MY PORTFOLIO
         </div>
     </div>
 
@@ -395,6 +424,20 @@ Throughout these courses, I've gained practical experience in various programmin
     {% endcomment %}
     <br><br><br><br><br><br>
 </div>
+
+
+<script>
+    // JavaScript to change the text after the animation completes
+    document.addEventListener("DOMContentLoaded", function() {
+        var name = document.querySelector('.name');
+        name.addEventListener('animationend', function() {
+            document.querySelector('.name').innerHTML = 'WELCOME TO MY PORTFOLIO';
+        });
+    });
+</script>
+
+
+
 
 </body>
 </html>
