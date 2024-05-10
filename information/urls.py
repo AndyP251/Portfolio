@@ -7,7 +7,6 @@ urlpatterns = [
     path("resume/", views.getResumeTemplate, name='resumeHL'),
     path("story/", views.getStory, name='storyHL'),
     path("projects/", views.getProjects, name='projectsHL'),
-    path("contactForm/", views.getContactForm, name='contactHL')
+    path("contactForm/", views.getContactForm, name='contact')
     
-    # path("", views.index,{"Author":"Andrew Prince"}, name="index"),
 ]

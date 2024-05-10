@@ -78,7 +78,7 @@ ROOT_URLCONF = 'projectWebsite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/"information"/"templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -147,6 +147,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# with open("misc/key.txt") as f:
-#     SECRET_KEY = f.read().strip()
-
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "andyprince251@gmail.com"
+NOTIFY_EMAIL = "andyprince251@gmail.com"

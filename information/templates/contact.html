@@ -40,7 +40,7 @@
         background-color: var(--button-hover-color); /* darker blue on hover */
     }
     .content {
-        text-align: center; /* center align content */
+        text-align: center``; /* center align content */
         margin-top: 100px; /* add margin from top */
     }
     .contact-info {
@@ -69,9 +69,22 @@
 
 <div class="content">
     <div class="contact-info">
-        <h2>Contact Information</h2>
-        <p>Email: andyprince251@gmail.com</p>
-        {% comment %} <p>Phone: +801.674.5743</p> {% endcomment %}
+        
+    <h1>Contact Me</h1>
+    
+{% comment %} change action for success html template {% endcomment %}
+    <form action="/information/contactForm" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="fieldWrapper">
+                {{ field.errors }}
+                {{ field.label_tag }} {{ field }}
+            </div>
+        {% endfor %}
+        <input type="submit" value="Submit">
+     </form>
+
+
     </div>
 </div>
 

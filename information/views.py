@@ -1,8 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-def index(request):
-    return HttpResponse("//Information Index\\")
+#mail form imports
+from django.conf import settings
+from django.core.mail import send_mail
+from django.shortcuts import reverse
+from django.views.generic import TemplateView, FormView
+from .forms import ContactForm
+
+
 def getGeneralInformationTemplate(request):
     return render(request, 'generalInformation.html')
 def getResumeTemplate(request):
@@ -15,3 +21,28 @@ def getContactForm(request):
     return render(request, 'contact.html')
 
 
+class ContactView(FormView):
+    form_class = ContactForm
+    template_name = "contact.html"
+
+    def get_success_url(self):
+        return HttpResponse("Success!")
+    
+    def form_valid(self,form):
+        email = form.cleaned_data.get("email")
+        subject = form.cleaned_data.get("subject")
+        message = form.cleaned_data.get("message")
+
+        full_message = f"""
+            Recieved message below from {email}, {subject}
+            -----------------------------------------------
+
+            {message}
+        """
+        send_mail(
+            subject="Recieved contact from form submission",
+            message=full_message,
+            form_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.NOTIFY_EMAIL],
+        )
+        return super(ContactView,self).form_valid(form)
