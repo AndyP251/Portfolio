@@ -69,20 +69,34 @@
 
 <div class="content">
     <div class="contact-info">
-        
-    <h1>Contact Me</h1>
-   
-<form method="post">
-  {% csrf_token %}
-  {{ form }}
-  <div class="form-actions">
-    <button type="submit">Send</button>
-  </div>
-</form>
+    
+    <center>
 
+    <h1>Contact Me</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-field">
+            <label for="{{ form.Subject.id_for_label }}"></label>
+            {{ form.Subject }}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.email.id_for_label }}"></label>
+            {{ form.email }}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.message.id_for_label }}"></label>
+            {{ form.message }}
+        </div>
+        <div class="form-actions">
+            <button type="submit">Send</button>
+        </div>
+    </form>
+
+</center>
 
     </div>
 </div>
+
 
 </body>
 </html>
