@@ -15,7 +15,7 @@ import os
 from django.core.management.utils import get_random_secret_key
 
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -159,7 +159,7 @@ NOTIFY_EMAIL = "andyprince2004@outlook.com"
 EMAIL_HOST = "smtp.sendgrid.net"  # new
 EMAIL_HOST_USER = "apikey"  # new
 
-load_dotenv()
+# load_dotenv()
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_API_KEY')
 
 EMAIL_PORT = 587  # new
