@@ -14,6 +14,9 @@ from pathlib import Path
 import os
 from django.core.management.utils import get_random_secret_key
 
+import os
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -149,12 +152,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Use this for testing
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-DEFAULT_FROM_EMAIL = "andyprince251@gmail.com"
-NOTIFY_EMAIL = "andyprince251@gmail.com"
+DEFAULT_FROM_EMAIL = "andrewprincewebsite@gmail.com"
+NOTIFY_EMAIL = "andyprince2004@outlook.com"
 
 # SENDGRIP email hosting
 EMAIL_HOST = "smtp.sendgrid.net"  # new
 EMAIL_HOST_USER = "apikey"  # new
-EMAIL_HOST_PASSWORD = "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"  # new
+
+load_dotenv()
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_API_KEY')
+
 EMAIL_PORT = 587  # new
 EMAIL_USE_TLS = True  # new
