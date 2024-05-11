@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
 #mail form imports
@@ -17,32 +17,33 @@ def getStory(request):
     return render(request, 'mystory.html')
 def getProjects(request):
     return render(request, 'projects.html')
-def getContactForm(request):
-    return render(request, 'contact.html')
-
 
 class ContactView(FormView):
     form_class = ContactForm
     template_name = "contact.html"
 
     def get_success_url(self):
-        return HttpResponse("Success!")
-    
-    def form_valid(self,form):
+        return reverse("contact")
+
+    def form_valid(self, form):
         email = form.cleaned_data.get("email")
         subject = form.cleaned_data.get("subject")
         message = form.cleaned_data.get("message")
 
         full_message = f"""
-            Recieved message below from {email}, {subject}
-            -----------------------------------------------
+            Received message below from {email}, {subject}
+            ________________________
+
 
             {message}
-        """
+            """
         send_mail(
-            subject="Recieved contact from form submission",
+            subject="Received contact form submission",
             message=full_message,
-            form_email=settings.DEFAULT_FROM_EMAIL,
+            from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[settings.NOTIFY_EMAIL],
         )
-        return super(ContactView,self).form_valid(form)
+        return super(ContactView, self).form_valid(form)
+
+class SuccessView(TemplateView):
+    template_name = "success.html"
