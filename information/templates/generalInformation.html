@@ -2,453 +2,497 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Portfolio</title>
-<style>
-    /* Define variables */
-    :root {
-        --button-color: white; /* Default button color */
-        --background-color: #E5E9EB; /* Default background color */
-        --text-color: #1B262C; /* Default text color */
-        --name-container-color: white; /* Default name container background color */
-        --welcome-container-color: white; /* Default welcome container background color */
-        --software-developer-color: #7CC3F2; /* Default color for "software developer" text */
-        --container-background-color: white; /* Darker black box */
-    }
-
-    body {
-        background-color: var(--background-color); /* light black background */
-        color: var(--text-color); /* white text color */
-        font-family: Arial, sans-serif; /* default font */
-        margin: 0; /* remove default margin */
-        padding: 0; /* remove default padding */
-    }
-    .top-bar {
-        background-color: var(--background-color); /* light black top bar */
-        padding: 10px; /* add padding to the top bar */
-        text-align: right; /* right align text */
-    }
-    .middle-bar {
-        display: flex;
-        align-items: center;
-
-    }
-    .top-bar button {
-        background-color: var(--button-color); /* blue button background */
-        color: var(--text-color); /* white text color */
-        border: none; /* remove button border */
-        padding: 10px 20px; /* add padding to button */
-        margin: 0 10px; /* add margin between buttons */
-        cursor: pointer; /* show pointer cursor on hover */
-        border-radius: 5px; /* rounded corners */
-    }
-    .top-bar button:hover {
-        background-color: #CBCDCE; /* darker blue on hover */
-    } 
-    .school-emblem {
-        height: 40px;
-        width: auto;
-
-        vertical-align:middle;
-        margin-left: 10px;
-        margin-right:0;
-    }
-    .school-emblem-left{
-        height: 40px;
-        width: auto;
-        margin-left:10px;
-        margin-right:0;
-
-        vertical-align:middle;
-        margin-left: 0;
-        margin-right:0;
-    }
-    .content {
-        text-align: left; /* left align text */
-        margin-top: 100px; /* add margin from top */
-    }
-    .name-container {
-        background-color: var(--name-container-color);
-        padding: 20px;
-        border-bottom-left-radius: 10px;
-        border-top-left-radius: 10px;
-        margin-bottom: 20px;
-        width: 90%; /* Adjusted width */
-        max-width: 95%; /* Added max-width */
-        margin-left: 5%; /* Adjusted margin */
-        margin-right: auto; /* Adjusted margin */
-        white-space: nowrap;
-
-        box-sizing: border-box;
-    }
-    .name {
-        font-size: 36px; /* slightly smaller font size */
-        font-weight: normal; /* less bold text */
-        text-transform: uppercase; /* convert text to uppercase */
-        margin: 0; /* remove default margin */
-    }
-    .highlight {
-        font-size: 95%; /* 20% smaller font size */
-        color: var(--software-developer-color); /* lighter blue color */
-    }
-    .highlight .smaller-text {
-        font-size:75%;
-    }
-    .welcome-container {
-        background-color: var(--welcome-container-color); /* slightly darker shade of black */
-        padding: 20px; /* add padding */
-        border-bottom-right-radius: 10px; /* rounded only on the right side */
-        border-top-right-radius: 10px; /* rounded only on the right side */
-        border-bottom-left-radius: 0; /* no rounding on the left side */
-        margin-bottom: 20px; /* add margin at the bottom */
-        width: fit-content; /* 80% width */
-        margin-left: 10%;
-        margin-right: calc(100%-400px); 
-    }
-    .welcome-text {
-        font-size: 20px; /* 40% size of the main text */
-        text-align: left; /* align with the main text */
-        text-transform: uppercase; /* convert text to uppercase */
-    }
-    .large-button-container {
-        position: fixed;
-        bottom: 0;
-        right:0;
-        width: 100%;
-        background-color: var(--background-color); /* Match the background color */
-        padding: 2px; /* Adjust padding as needed */
-        z-index: 999; /* Ensure it's above other content */
-        display:flex;
-        justify-content:flex-end;
-        white-space: nowrap;
-        overflow-x: auto;
-        height:75px;
-    }
-    .large-button {
-        font-size: 20px; /* slightly smaller font size */
-        background-color: var(--button-color); /* blue button background */
-        color: var(--text-color); /* white text color */
-        
-        padding: 15px 30px; /* add padding to button */
-        margin: 10px 10px 10px 0; /* add margin between buttons */
-        cursor: pointer; /* show pointer cursor on hover */
-        border-radius: 25px; /* rounded corners */
-        display: inline-block; /*prevent buttons from stacking*/
-        text-decoration: none;
-
-        flex:1;
-        max-width: calc(50%-10px);
-        margin-right:10px;
-        
-        
-    }
-    .large-button:hover {
-        background-color: #CBCDCE; /* darker blue on hover */
-    } 
-    .button-text {
-        font-size: 24px; /* original font size */
-    }
-    .button-text .text-small {
-        font-size: 14px; /* smaller font size */
-    }
-
-    
-    .body-container {
-        background-color: var(--container-background-color);
-        padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        margin-left: 5%;
-        margin-right: 5%;
-    }
-    .body-containerTOP {
-        background-color: var(--container-background-color);
-        padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        margin-left: 5%;
-        margin-right: 5%;
-        margin-top: -75px;
-        
-    }
-    .section-header {
-        font-size: 24px;
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-    .title-container {
-        background-color: var(--container-background-color);
-        padding: 20px;
-        border-radius: 15px;
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: space-between; /* Space title and photo */
-        align-items: center;
-    }
-    .container {
-        margin-left: 5%;
-        margin-right:5%
-        
-    }
-    .profile-photo {
-    position: absolute;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    object-position: center;
-    right: 10%; /* Align with the right edge of the page */
-    transform: translateX(10%) translateY(-50%); /* Center vertically */
-    padding-left: 0;
-    }
-    .learn-container {
-        background-color: var(--name-container-color);
-        padding: 20px;
-        border-bottom-left-radius: 10px;
-        border-top-left-radius: 10px;
-        margin-bottom: 20px;
-        width: 40%; /* Adjusted width */
-        max-width: 45%; /* Added max-width */
-        margin-left: 50%; /* Adjusted margin */
-        margin-right: auto; /* Adjusted margin */
-        white-space: nowrap;
-    }
-    .button-logos{
-        margin-bottom:-55px;
-        height:66px;
-        width:auto;
-    }
-    .button-logos-Git{
-        margin-bottom:-30px;
-        height:75px;
-        width:auto;
-    }
-
-    @keyframes fadeOut {
-        0% { opacity: 1; font-size:36;}
-        100% { opacity: 0; font-size:0;}
-    }
-    
-    @keyframes slideIn {
-        0% { transform: translateY(-100%); opacity:0;  }
-        100% { transform: translateY(0); opacity:1;}
-    }
-    @keyframes increaseFontSize {
-        0% { font-size: 0; opacity:0;}
-        100% { font-size: 28px; opacity:1;} /* Increase font size to 28px */
-    }
-    
-    .name {
-        animation: fadeOut 1s ease-out 5s forwards; /* Fade out the old text */
-    }
-
-    .new-text {
-        opacity: 0;
-        font-size:0;
-        animation: increaseFontSize 1s ease-out 7s forwards;        
-    }
-    @keyframes pulse {
-        0%, 100% { transform: translateY(0); }
-        25% { transform: translateY(-6px); }
-        50%, 75% { transform: translateY(0); }
-    }
-    .welcome-text-bounce {
-        animation: pulse 4s ease-in-out infinite;       
-    }
-
-
-    @media screen and (max-width: 768px) {
-        
-        .name{
-            font-size:20px;
-        }
-        .welcome-text{
-            font-size:16px;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andrew Prince - Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5f5f5;
+            --text-color: #333;
+            --accent-color: #e74c3c;
+            --light-bg: #f5f5f5;
+            --dark-bg: #ffffff;
+            --header-bg: #696969;
+            --text-color: #333333;
         }
 
-        .middle-bar {
-            flex-direction: column;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: var(--secondary-color);
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .light-bg {
+            background-color: var(--light-bg);
+        }
+        
+        .dark-bg {
+            background-color: var(--dark-bg);
+        }
+        
+        .section-header {
+            background-color: #f5f5f5; /* Slightly darker shade of white */
+            padding: 10px 20px;
+            border-radius: 10px; /* Rounded edges */
+            display: inline-block; /* Makes the background fit the content */
+            margin-bottom: 20px; /* Space between header and content */
+        }
+        
+        .dark-section-header{
+            background-color: #fff; /* Slightly darker shade of white */
+            padding: 10px 20px;
+            border-radius: 10px; /* Rounded edges */
+            display: inline-block; /* Makes the background fit the content */
+            margin-bottom: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .school-emblems {
+            display: flex;
+            margin-left: 5px;
+            gap: 20px;
+            
+        }
+        
+        .school-logo {
+            width: auto; /* Adjust size as needed */
+            height: 40px; /* Maintain aspect ratio */
+        }
+
+        .hero {
+            background-color: var(--secondary-color);
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .profile-section {
+            padding: 80px 0;
+        }
+
+        .profile-content {
+            display: flex;
+            gap: 40px;
             align-items: center;
         }
 
-        .welcome-container {
-            margin-left: 0;
-            margin-right: auto;
-            white-space:normal;
+        .profile-image {
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .profile-image img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .profile-text {
+            flex: 2;
+        }
+
+        .profile-text h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .profile-text p {
+            margin-bottom: 15px;
+        }
+        
             
+        .content-box {
+            background-color: var(--dark-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .content-box h3 {
+            color: var(--header-bg);
+            margin-bottom: 10px;
+        }
+        
+        .content-box h4 {
+            color: var(--header-bg);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .content-box ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .content-box li {
+            margin-bottom: 10px;
+        }
+        
+        .content-box p {
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        
+
+        .skills-section {
+            background-color: var(--secondary-color);
+            padding: 80px 0;
         }
 
-        .profile-photo {
-            position: static;
-            margin-top: -10px; /* Add space between photo and welcome header */
-            margin-bottom: 8px; /* Add space between photo and content */
-            transform: none; /* Reset transform */
+        .skills-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
         }
-        .body-containerTOP {
-            margin-top:-80px;
-        }
-        .large-button{
-            max-width:100%;
-            margin-right:0;
-        }
-        @keyframes increaseFontSize {
-            0% { font-size: 0; opacity:0;}
-            100% { font-size: 18px; opacity:1;} /* Increase font size to 28px */
-        }
-    }
 
+        .skill-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
 
+        .skill-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
 
-</style>
+        .skill-card p {
+            font-size: 14px;
+        }
+
+        .projects-section {
+            padding: 80px 0;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .project-card {
+            background-color: var(--secondary-color);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+        
+        .project-info {
+            flex-grow: 1;
+        }
+        
+        .project-info h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .project-info p {
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .project-link {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: var(--primary-color);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            align-self: flex-start;
+            margin-top: auto;
+        }
+        
+        .project-link:hover {
+            background-color: var(--accent-color);
+        }
+
+        footer {
+            background-color: var(--secondary-color);
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .social-icon {
+            width: auto; /* Adjust size as needed */
+            height: 40px; /* Maintain aspect ratio */
+            transition: transform 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            transform: scale(1.1); /* Slightly enlarge on hover */
+        }
+        
+        .email-button {
+            display: inline-block;
+            height: 40px;
+            width: auto;
+            padding: 10px 10px;
+            background-color: var(--primary-color); /* Use your primary color */
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-weight: bold; /* Make the text bold */
+        }
+        
+        .email-button:hover {
+            background-color: var(--accent-color); /* Change to your accent color on hover */
+        }
+        .footer-text {
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .profile-content {
+        flex-direction: column;
+        align-items: center;
+            }
+        
+            .profile-image {
+                max-width: 70%; /* Make the image half its original size */
+                padding: 0 10%; /* Add padding from the sides */
+                margin-bottom: 20px; /* Add some space below the image */
+            }
+        
+            .profile-text {
+                width: 100%; /* Full width for the text content */
+                padding: 0 5%; /* Add some padding to the sides of the text */
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+        }
+    </style>
 </head>
 <body>
-
-<div class="top-bar">
-    <img src={%static 'school_emblem.png'%} alt = "School Emblem" class = "school-emblem">
-    <img src={%static 'school_emblem2.png'%} alt = "School Emblem2" class = "school-emblem-left">
-    <a href="{%static 'RESUME-JN1.pdf'%}"><button>Resume</button></a>
-    <a href="{% url 'contact' %}"><button>Contact Me</button></a>
-</div>
-
-<div class="content">
-    <div class="name-container">
-        <div class="name">
-            HELLO, MY NAME IS <br>
-            ANDREW PRINCE
+    <header>
+    <div class="container">
+        <div class="header-content">
+            <div class="school-emblems">
+            <img src="{% static 'school_emblem.png' %}" alt="UVA Logo" class="school-logo">
+            <img src="{% static 'school_emblem2.png' %}" alt="University of Utah Logo" class="school-logo">
         </div>
-        <div class="new-text">
-            WELCOME TO MY PORTFOLIO
+            <nav class="nav-links">
+                <a href="#about">About</a>
+                <a href="#skills">Skills</a>
+                <a href="{% url 'projectsHL' %}">Projects</a>
+                <a href="#contact">Contact</a>
+            </nav>
         </div>
+        
     </div>
-
-    <div class="middle-bar">
-        <img src="{% static 'headshot2.jpeg' %}" alt="Profile Photo" class="profile-photo">
-    <div class="welcome-container">
-        <div class="welcome-text">
-           HERE'S A LITTLE ABOUT ME
-        </div>
-    </div>
-    
-    </div>
-    
-</div>
-
-<br><br><br><br>
-
-    <div class="body-containerTOP">
-        <div class="section">
-            <p>
-                &nbsp;&nbsp;&nbsp;&nbsp;I'm currently a third-year student at the University of Virginia, pursuing a Bachelor of Arts in Computer Science with an expected graduation in Spring 2026. Originally from Salt Lake City, UT, I’ve always had a love for the outdoors—whether it's skiing down mountain slopes or tackling trails on my mountain bike. Since moving to Virginia, though, I’ve traded those pursuits for rowing. I’m now a dedicated member of UVA’s men’s rowing team, putting in about 20 hours a week for early morning practices at 6 a.m., Monday through Friday. Rowing has been an intense but rewarding experience, pushing me to new levels of persistence and dedication that have shaped who I am today.
-                <br>
-                <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;My passion for computer science began back in middle school. Like many others, I was really into video games, but instead of just playing them, a friend and I decided to make our own. We dove headfirst into Unity 3D and C# scripting, spending countless hours working on various game projects. While none of our creations turned into the next big hit, those early efforts sparked a lasting love for coding that continues to drive me forward in my career.
-            </p>
-        </div>
-    </div>
-
-
-    <div class="welcome-container">
-        <div class="welcome-text">
-           HERE'S SOME OF MY EXPERIENCE
-        </div>
-    </div>
-
-    <div class="body-container">
-        <div class="section">
-            
-            <p>
-                Mettel, New York City, NY
-                <br>
-                Software Engineering Intern, June 2024 - Present
-                <br><br>
-                During my internship at MetTel on the 'data-pipeline' team, I have worked on various exciting projects using technologies such as Apache Kafka, Apache Iceberg, Dagster, AWS S3, AWS ECR, Trino, and Solr. I successfully integrated SpaceX's Starlink telemetry data using their API and engineered a core service library that provides S3 data lake sink functionality for universal implementation across repositories. Additionally, I developed and orchestrated multiple high-performance data pipelines, including an SD-WAN monitoring pipeline that automatically generates support tickets for gateway issues and a network configuration monitoring pipeline that tracks over 30,000 devices, ensuring seamless data integration into MetTel's critical systems.
-                <br><br><br>
-                Jewish Community Center, Salt Lake City, UT
-                <br>
-                Head Lifeguard, May 2022 - August 2023
-                <br><br>
-                Managed and trained fellow coworkers, ensuring adherence to safety protocols and standards while overseeing daily operations.
-                Orchestrated the allocation of tasks among team members to maintain efficiency and uphold JCC standards.
-                Provided leadership in auditing and managing initiatives to guarantee compliance with organizational protocols.
-                
-
-            </p>
-        </div>
-    </div>
-
-     <div class="name-container">
-        <div class="welcome-text">
-            HERE'S WHAT I HAVE LEARNED            
-        </div>
-    </div> 
-    <div class="body-container">
-        <div class="section">
-            
-            <p>
-                University of Virginia (UVA), Charlottesville, VA
-Bachelor of Arts in Computer Science (BACS), Expected Graduation: Spring 2026
-<br><br>
-Relevant Coursework:
-<br><br>
-CS2100: Data Structures & Algorithms: Explored fundamental data structures and algorithms essential for efficient programming, implementing solutions in Python, Java, and C++.
-<br>
-CS2120: Discrete Mathematics through Type Theory:
-Studied discrete mathematics with a focus on type theory, while also being introduced to Lean4, a functional programming language. This course broadened my understanding of mathematical concepts and functional programming paradigms.
-<br>
-CS2130: Computer Systems & Organization: Delved into the architecture and organization of computer systems, including hands-on experience with x86 assembly language using AT&T syntax, and C programming.
-<br>
-CS3140: Software Development Essentials: Studied the principles and practices of software development, gaining proficiency in version control using Git and learning the basics of SQL for database management.
-<br><br>
-University of Utah, Salt Lake City, UT (Before Transfer to UVA)
-<br><br>
-CS1400/1410: Introduction to Programming: Introduced to programming fundamentals using Java, laying the groundwork for further exploration in computer science.
-<br><br>
-
-Throughout these courses, I've gained practical experience in various programming languages, including Python, Java, C++, Lean4, and x86 assembly language. Each course has provided a unique perspective on computer science concepts, equipping me with a diverse skill set to tackle real-world problems in the field. Currently, I am expanding my knowledge further by delving into SQL in CS3140 and strengthening my C programming skills in CS2130.
-            </p>
-        </div>
-    </div>
-
-
-    <div>
-        <div class="name-container">
-            <div class="welcome-text welcome-text-bounce">
-                CHECK THESE OUT            
+</header>
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1 style="color: #618685;">Andrew Prince</h1>
+                <p>Computer Science Student & Software Engineering Intern</p>
             </div>
-        </div> 
+        </section>
 
+        <section id="about" class="profile-section">
+            <div class="container">
+                <div class="profile-content">
+                    <div class="profile-image">
+                        <img src="{% static 'headshot2.jpeg' %}" alt="Andrew Prince">
+                    </div>
+                    <div class="profile-text">
+                        <h2 class="section-header" style="color: #618685;">About Me</h2>
+                        <p>I'm currently a third-year student at the University of Virginia, pursuing a Bachelor of Arts in Computer Science with an expected graduation in Spring 2026. Originally from Salt Lake City, UT, I've always had a love for the outdoors—whether it's skiing down mountain slopes or tackling trails on my mountain bike.</p>
+                        <p>Since moving to Virginia, I've traded those pursuits for rowing. I'm now a dedicated member of UVA's men's rowing team, putting in about 20 hours a week for early morning practices at 6 a.m., Monday through Friday. Rowing has been an intense but rewarding experience, pushing me to new levels of persistence and dedication that have shaped who I am today.</p>
+                        <p>My passion for computer science began back in middle school. Like many others, I was really into video games, but instead of just playing them, a friend and I decided to make our own. We dove headfirst into Unity 3D and C# scripting, spending countless hours working on various game projects. While none of our creations turned into the next big hit, those early efforts sparked a lasting love for coding that continues to drive me forward in my career.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <center>
-        <a href="{% url 'projectsHL' %}"><button class="large-button"><span class="welcome-text">&nbsp;PERSONAL PROJECTS&nbsp;</span></button></a>
-        {% comment %} <a href="{% static 'transcript.pdf' %}"><button class="large-button"><span class="welcome-text">ACADEMIC TRANSCRIPT</span></button></a> {% endcomment %}
-        </center>
-    </div>
+        <section id="skills" class="skills-section">
+            <div class="container">
+                <h2 class="dark-section-header" style="color: #618685;">Skills & Technologies</h2>
+                <div class="skills-content">
+                    <div class="skill-card">
+                        <h3 style="color: #618685;">Programming Languages</h3>
+                        <p>Python, Java, C++, C, Lean4, x86 Assembly, Bash</p>
+                    </div>
+                    <div class="skill-card">
+                        <h3 style="color: #618685;">Web Technologies</h3>
+                        <p>HTML, CSS, SQL</p>
+                    </div>
+                    <div class="skill-card">
+                        <h3 style="color: #618685;">Tools & Frameworks</h3>
+                        <p>Kubernetes, Git, Apache Kafka, Apache Iceberg, Dagster</p>
+                    </div>
+                    <div class="skill-card">
+                        <h3 style="color: #618685;">Cloud Services</h3>
+                        <p>AWS, Docker, Trino, Solr</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="experience" class="profile-section">
     
-    <div class="large-button-container">
-        <a href="https://www.linkedin.com/in/andrew-w-prince/"><img src={%static 'linkedinLogo.png'%} alt = "LinkedIn" class = "button-logos"></a>
-        <a href="https://github.com/AndyP251"><img src={%static 'githubLogo.png'%} alt = "GitHub" class = "button-logos-Git"></a>
-</div>
-    {% comment %} 
-    Spaces to allow scrolling for
-    {% endcomment %}
-    <br><br><br><br><br><br>
-</div>
+    <div class="container">
+        <div class="profile-content">
+            <div class="profile-text">
+                <h2 class="section-header" style="color: #618685; font-size: 24px">Experience</h2>
+        <h3 >Software Engineering Intern</h3>
+        <p><strong>Mettel, New York City, NY</strong> | June 2024 - Present</p>
+        <p>During my internship at MetTel on the 'data-pipeline' team, I have worked on various exciting projects using technologies such as Apache Kafka, Apache Iceberg, Dagster, AWS S3, AWS ECR, Trino, and Solr. I successfully integrated SpaceX's Starlink telemetry data using their API and engineered a core service library that provides S3 data lake sink functionality for universal implementation across repositories. Additionally, I developed and orchestrated multiple high-performance data pipelines, including an SD-WAN monitoring pipeline that automatically generates support tickets for gateway issues and a network configuration monitoring pipeline that tracks over 30,000 devices, ensuring seamless data integration into MetTel's critical systems.</p>
+    </div>
+        </div>
+    </div>
+</section>
+        
+        
+<section id="education" class="skills-section">
+            <div class="container">
+                <h2 class="dark-section-header" style="color: #618685;">Education</h2>
+                    <div class="content-box">
+        <h3>Bachelor of Arts in Computer Science</h3>
+        <p><strong>University of Virginia (UVA), Charlottesville, VA</strong> | Expected Graduation: Spring 2026</p>
+        <h4>Relevant Coursework:</h4>
+        <ul>
+            <li><strong>CS2100: Data Structures & Algorithms:</strong> Explored fundamental data structures and algorithms essential for efficient programming, implementing solutions in Python, Java, and C++.</li>
+            <li><strong>CS2120: Discrete Mathematics through Type Theory:</strong> Studied discrete mathematics with a focus on type theory, while also being introduced to Lean4, a functional programming language. This course broadened my understanding of mathematical concepts and functional programming paradigms.</li>
+            <li><strong>CS2130: Computer Systems & Organization:</strong> Delved into the architecture and organization of computer systems, including hands-on experience with x86 assembly language using AT&T syntax, and C programming.</li>
+            <li><strong>CS3140: Software Development Essentials:</strong> Studied the principles and practices of software development, gaining proficiency in version control using Git and learning the basics of SQL for database management.</li>
+        </ul>
+           <strong>Summary</strong>             
+        <p>Throughout these courses, I've gained practical experience in various programming languages, including Python, Java, C++, Lean4, and x86 assembly language. Each course has provided a unique perspective on computer science concepts, equipping me with a diverse skill set to tackle real-world problems in the field. </p>
+            </div>
+            </div>
+        </section>
+        
+        <section id="projects" class="projects-section">
+            <div class="container">
+                <h2 class="section-header" style="color: #618685;">Recent Projects</h2>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <div class="project-info">
+                            <h3 style="color: #618685;">OptimalHS Website</h3>
+                            <p>Developed a fully functional website using Django, featuring scheduling logic, database queries, recurring emailing systems, and administrative capabilities through the UI. Built with actual business use in mind, adhering to DRY principles and maintaining loose coupling between classes.</p>
+                        </div>
+                        <a href="{% url 'projectsHL' %}" class="project-link">Learn More</a>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-info">
+                            <h3 style="color: #618685;">CRUD Course Review Application</h3>
+                            <p>Created a JavaFX CRUD application for course reviews as a final project for CS3140. Implemented using JavaFX, SQL, and Mockito, this project enhanced problem-solving skills and provided hands-on experience with database management and user interface development.</p>
+                        </div>
+                        <a href="{% url 'projectsHL' %}" class="project-link">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
+    <footer id="contact">
+    <div class="container">
+        <div class="social-links">
+            <a href="{% url 'contact' %}" class="email-button">
+                Contact Me
+            </a>
+            <a href="https://www.linkedin.com/in/andrew-w-prince/" target="_blank">
+                <img src="{% static 'linkedinLogo.png' %}" alt="LinkedIn" class="social-icon">
+            </a>
+            <a href="https://github.com/AndyP251" target="_blank">
+                <img src="{% static 'githubLogo.png' %}" alt="GitHub" class="social-icon">
+            </a>
+        </div>
+        <p class="footer-text">&copy; 2024 Andrew Prince. All rights reserved.</p>
+    </div>
+</footer>
 
-<script>
-    // JavaScript to change the text after the animation completes
-    document.addEventListener("DOMContentLoaded", function() {
-        var name = document.querySelector('.name');
-        name.addEventListener('animationend', function() {
-            document.querySelector('.name').innerHTML = 'WELCOME TO MY PORTFOLIO';
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+    <script>
+        // Add any necessary JavaScript here
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
         });
-    });
-</script>
-
-
-
-
+    </script>
 </body>
 </html>
