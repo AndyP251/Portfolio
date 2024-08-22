@@ -1,102 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact Me</title>
-<style>
-    /* Define variables */
-    :root {
-        --background-color: #E5E9EB; /* light black background */
-        --text-color: 1B262C; /* white text color */
-        --button-background-color: white; /* blue button background */
-        --button-hover-color: #0056b3; /* darker blue on hover */
-        --content-background-color: white; /* slightly darker shade of black */
-    }
-
-    body {
-        background-color: var(--background-color); /* light black background */
-        color: var(--text-color); /* white text color */
-        font-family: Arial, sans-serif; /* default font */
-        margin: 0; /* remove default margin */
-        padding: 0; /* remove default padding */
-    }
-    .top-bar {
-        background-color: var(--background-color); /* light black top bar */
-        padding: 10px; /* add padding to the top bar */
-        text-align: right; /* right align text */
-    }
-    .top-bar button {
-        background-color: var(--button-background-color); /* blue button background */
-        color: #1B262C; /* white text color */
-        border: none; /* remove button border */
-        padding: 10px 20px; /* add padding to button */
-        margin: 0 10px; /* add margin between buttons */
-        cursor: pointer; /* show pointer cursor on hover */
-        border-radius: 5px; /* rounded corners */
-        text-decoration:none;
-    }
-    .top-bar button:hover {
-        background-color: var(--button-hover-color); /* darker blue on hover */
-    }
-    .content {
-        text-align: center``; /* center align content */
-        margin-top: 100px; /* add margin from top */
-    }
-    .contact-info {
-        background-color: var(--content-background-color); /* slightly darker shade of black */
-        padding: 20px; /* add padding */
-        border-radius: 10px; /* rounded corners */
-        margin-bottom: 20px; /* add margin at the bottom */
-        width: 100%; 
-        
-        margin-left: 0; /* center horizontally */
-        margin-right: 0;
-    }   
-    .contact-info h2 {
-        margin-bottom: 10px; /* add margin below heading */
-    }
-    .contact-info p {
-        margin: 5px 0; /* add margin above and below paragraphs */
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Me - Andrew Prince</title>
+    <style>
+        :root {
+            --light-bg: #f5f5f5;
+            --dark-bg: #ffffff;
+            --header-bg: #696969;
+            --text-color: #333333;
+            --button-color: #696969;
+            --button-hover-color: #555555;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-bg);
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        .top-bar {
+            background-color: var(--dark-bg);
+            padding: 10px 0;
+            text-align: right;
+        }
+        .top-bar a {
+            text-decoration: none;
+        }
+        .top-bar button {
+            background-color: var(--button-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .top-bar button:hover {
+            background-color: var(--button-hover-color);
+        }
+        .content {
+            padding: 40px 0;
+        }
+        .contact-info {
+            background-color: var(--dark-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .contact-info h1 {
+            color: var(--header-bg);
+            margin-bottom: 20px;
+        }
+        .form-field {
+            margin-bottom: 15px;
+        }
+        .form-field input, .form-field textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-actions button {
+            background-color: var(--button-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .form-actions button:hover {
+            background-color: var(--button-hover-color);
+        }
+    </style>
 </head>
 <body>
-
-<div class="top-bar">
-    <a href={%url 'mainHL'%}><button>Home</button></a>
-</div>
-
-<div class="content">
-    <div class="contact-info">
-    
-    <center>
-
-    <h1>Contact Me</h1>
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-field">
-            <label for="{{ form.Subject.id_for_label }}"></label>
-            {{ form.Subject }}
+    <div class="top-bar">
+        <div class="container">
+            <a href="{% url 'mainHL' %}"><button>Home</button></a>
         </div>
-        <div class="form-field">
-            <label for="{{ form.email.id_for_label }}"></label>
-            {{ form.email }}
-        </div>
-        <div class="form-field">
-            <label for="{{ form.message.id_for_label }}"></label>
-            {{ form.message }}
-        </div>
-        <div class="form-actions">
-            <button type="submit">Send</button>
-        </div>
-    </form>
-
-</center>
-
     </div>
-</div>
 
-
+    <div class="content">
+        <div class="container">
+            <div class="contact-info">
+                <h1>Contact Me</h1>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-field">
+                        <label for="{{ form.Subject.id_for_label }}"></label>
+                        {{ form.Subject }}
+                    </div>
+                    <div class="form-field">
+                        <label for="{{ form.email.id_for_label }}"></label>
+                        {{ form.email }}
+                    </div>
+                    <div class="form-field">
+                        <label for="{{ form.message.id_for_label }}"></label>
+                        {{ form.message }}
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
