@@ -40,7 +40,7 @@ class ContactView(FormView):
             {message}
             """
         send_mail(
-            subject="Received contact form submission",
+            subject="Personal Portfolio Website has recieved a submission",
             message=full_message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[settings.NOTIFY_EMAIL],
