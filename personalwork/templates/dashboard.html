@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+
+{% block title %}Personal Work Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .dashboard-title {
+        font-size: 28px;
+        color: #333;
+    }
+    .dashboard-actions button {
+        margin-left: 10px;
+    }
+    .dashboard-content {
+        display: flex;
+        gap: 20px;
+    }
+    .todo-list, .schedule {
+        flex: 1;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h2 {
+        color: #007bff;
+        margin-bottom: 15px;
+    }
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    .todo-item, .schedule-item {
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .todo-title, .schedule-title {
+        font-weight: bold;
+    }
+    .todo-due, .schedule-time {
+        font-size: 0.9em;
+        color: #6c757d;
+    }
+    .btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+    .btn:hover {
+        opacity: 0.9;
+    }
+    .schedule-grid {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: repeat(12, 60px);
+        gap: 5px;
+        border: 1px solid #ccc;
+    }
+    .schedule-item {
+        background-color: #e0f7fa;
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    .day-separator {
+        border-bottom: 1px solid lightblue; /* Thin line for days */
+        margin: 10px 0;
+        padding: 5px 0;
+        font-weight: normal; /* Keep text weight normal */
+    }
+    .week-separator {
+        border-bottom: 2px solid blue; /* Bold line for weeks */
+        margin: 15px 0;
+        padding: 10px 0;
+        font-weight: bold; /* Make week text bold */
+        font-size: 1.2em;
+    }
+    .current-time-line {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: #007bff;
+        z-index: 1;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Personal Work Dashboard</h1>
+        <div class="dashboard-actions">
+            <button id="pull-canvas" class="btn btn-primary">Pull Canvas Data</button>
+            <button id="sort-todos" class="btn btn-secondary">Sort by Date</button>
+            <button id="refresh-button" class="btn btn-secondary" onclick="refreshData()">Refresh Data</button>
+        </div>
+    </div>
+    <div class="dashboard-content">
+        <div class="todo-list">
+            <h2>Todo List</h2>
+            <ul id="todo-list">
+                {% for todo in todos %}
+                <li class="todo-item" data-date="{{ todo.due_date|date:'Y-m-d' }}">
+                    <span class="todo-title">{{ todo.title }}</span>
+                    <span class="todo-due">Due: {{ todo.due_date|default:"No due date"|date:"M d, Y" }}</span>
+                </li>
+                {% empty %}
+                <li>No todos available</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="schedule">
+            <h2>Weekly Schedule</h2>
+            <div class="schedule-grid" id="schedule">
+                {% for cls in weekly_schedule %}
+                <div class="schedule-item" style="grid-column: {{ cls.day }}; grid-row: {{ cls.grid_row_start }} / {{ cls.grid_row_end }}">
+                    <div>
+                        <strong>{{ cls.course }}</strong><br>
+                        {{ cls.time }}<br>
+                        {{ cls.location }}
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="current-time-line" id="current-time-line"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateCurrentTimeLine() {
+    const now = new Date();
+    const currentTime = now.getHours() * 60 + now.getMinutes();
+    const gridHeight = document.querySelector('.schedule-grid').offsetHeight;
+    const totalMinutes = 12 * 60; // Assuming the grid covers 12 hours
+    const percentageOfDay = currentTime / totalMinutes;
+    const linePosition = percentageOfDay * gridHeight;
+    const currentTimeLine = document.getElementById('current-time-line');
+    currentTimeLine.style.top = `${linePosition}px`;
+}
+
+updateCurrentTimeLine();
+setInterval(updateCurrentTimeLine, 60000); // Update every minute
+
+document.getElementById('pull-canvas').addEventListener('click', function() {
+    this.disabled = true;
+    this.textContent = 'Pulling data...';
+    fetch('/personalwork/pull_canvas/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert('Canvas data pulled successfully!');
+                location.reload();
+            } else {
+                alert('Failed to pull Canvas data: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while pulling Canvas data.');
+        })
+        .finally(() => {
+            this.disabled = false;
+            this.textContent = 'Pull Canvas Data';
+        });
+});
+
+function refreshData() {
+    location.reload();
+}
+document.getElementById('sort-todos').addEventListener('click', function() {
+    const todoList = document.getElementById('todo-list');
+    const todos = Array.from(todoList.children);
+
+    todos.sort((a, b) => {
+        const dateA = new Date(a.dataset.date);
+        const dateB = new Date(b.dataset.date);
+        return dateA - dateB;
+    });
+
+    todoList.innerHTML = '';
+    let currentDate = null;
+    let currentWeek = null;
+
+    todos.forEach(todo => {
+        const todoDate = new Date(todo.dataset.date);
+        if (!isNaN(todoDate.getTime())) {
+            const formattedDate = todoDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const weekNumber = getWeekNumber(todoDate);
+
+            if (currentWeek !== weekNumber) {
+                const weekSeparator = document.createElement('li');
+                weekSeparator.className = 'week-separator';
+                weekSeparator.textContent = `Week of ${todoDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
+                todoList.appendChild(weekSeparator);
+                currentWeek = weekNumber;
+            }
+
+            if (currentDate !== formattedDate) {
+                const daySeparator = document.createElement('li');
+                daySeparator.className = 'day-separator';
+                daySeparator.textContent = formattedDate;
+                todoList.appendChild(daySeparator);
+                currentDate = formattedDate;
+            }
+        }
+        todoList.appendChild(todo);
+    });
+});
+
+function getWeekNumber(d) {
+    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+}
+</script>
+{% endblock %}

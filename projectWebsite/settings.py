@@ -31,8 +31,8 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = True
+# DEBUG = os.getenv("DEBUG", "False") == "True"
 
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
@@ -49,8 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'information'
-    
+    'information',
+    'personalwork',    
 ]
 
 MIDDLEWARE = [
@@ -81,7 +81,8 @@ ROOT_URLCONF = 'projectWebsite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR/"information"/"templates"],
+        'DIRS': [BASE_DIR/"information"/"templates",
+                BASE_DIR/"personalwork"/"templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -161,6 +162,8 @@ EMAIL_HOST_USER = "apikey"  # new
 
 # load_dotenv()
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_API_KEY')
-
+PERPLEXITY_API_TOKEN = "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"#os.getenv("PERPLEXITY_API_TOKEN")
+CANVAS_API_TOKEN="22119~TK2cfcmw9KWeTnD966T6hBUD9fLvwCG2PY8GxJArzZcnAVfeMmm8C8Ga2PPrR8aa"#os.getenv("CANVAS_API_TOKEN")
+CANVAS_DOMAIN = 'canvas.its.virginia.edu'
 EMAIL_PORT = 587  # new
 EMAIL_USE_TLS = True  # new

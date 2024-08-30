@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}AI Assistant{% endblock %}
+
+{% block content %}
+<div class="ai-container">
+    <h1>AI Assistant</h1>
+    <form method="post" class="ai-form">
+        {% csrf_token %}
+        <input type="text" name="prompt" placeholder="Ask me anything..." required>
+        <button type="submit">Ask</button>
+    </form>
+    {% if response %}
+    <div class="ai-response">
+        <h2>Response:</h2>
+        <p>{{ response }}</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .ai-container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #f0f0f0;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+        color: #333;
+        text-align: center;
+    }
+    .ai-form {
+        display: flex;
+        margin-bottom: 20px;
+    }
+    input[type="text"] {
+        flex-grow: 1;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 5px 0 0 5px;
+    }
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    .ai-response {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    .ai-response h2 {
+        color: #007bff;
+        margin-top: 0;
+    }
+</style>
+{% endblock %}
