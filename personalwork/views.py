@@ -128,7 +128,8 @@ def pull_canvas_data(request):
                 todos.append({
                     'course': course["name"],
                     'title': assignment['name'],
-                    'due_date': assignment['due_at']
+                    'due_date': assignment['due_at'],
+                    'submitted': assignment['has_submitted_submissions']
                 })
         
         # Fetch course schedule (you might need to adjust this based on available endpoints)

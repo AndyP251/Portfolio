@@ -31,8 +31,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
@@ -157,7 +156,7 @@ EMAIL_HOST_USER = "apikey"  # new
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_API_KEY')
 PERPLEXITY_API_TOKEN =os.getenv("PERPLEXITY_API_TOKEN")
 CANVAS_API_TOKEN=os.getenv("CANVAS_API_TOKEN")
-USER_PASSWORD = os.getenv("USER_PASSWORD")
+USER_PASSWORD =os.getenv("USER_PASSWORD")
 CANVAS_DOMAIN = 'canvas.its.virginia.edu'
 EMAIL_PORT = 587  # new
 EMAIL_USE_TLS = True  # new
