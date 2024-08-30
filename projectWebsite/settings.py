@@ -96,18 +96,11 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'projectWebsite.wsgi.application'
-
+SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+SESSION_FILE_PATH = BASE_DIR
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -164,7 +157,7 @@ EMAIL_HOST_USER = "apikey"  # new
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_API_KEY')
 PERPLEXITY_API_TOKEN =os.getenv("PERPLEXITY_API_TOKEN")
 CANVAS_API_TOKEN=os.getenv("CANVAS_API_TOKEN")
-USER_PASSWORD = "uva"# os.getenv("USER_PASSWORD")
+USER_PASSWORD = os.getenv("USER_PASSWORD")
 CANVAS_DOMAIN = 'canvas.its.virginia.edu'
 EMAIL_PORT = 587  # new
 EMAIL_USE_TLS = True  # new
