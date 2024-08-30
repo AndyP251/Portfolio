@@ -103,5 +103,155 @@
         "course": "24F Managing Innovation - Sections 1 and 2",
         "title": "A New Way to SIT (and INNOVATE) - Systematic Inventive Thinking",
         "due_date": "2024-10-01T03:59:59Z"
+    },
+    {
+        "course": "CS 3240: Software Engineering - F24",
+        "title": "GP-A: GitHub Tutorial",
+        "due_date": "2024-09-04T03:59:59Z"
+    },
+    {
+        "course": "CS 3240: Software Engineering - F24",
+        "title": "GP-B: Polar Chart",
+        "due_date": "2024-09-10T19:30:00Z"
+    },
+    {
+        "course": "CS 3240: Software Engineering - F24",
+        "title": "GP-C: The Planning Game",
+        "due_date": "2024-09-24T19:30:00Z"
+    },
+    {
+        "course": "CS 3240: Software Engineering - F24",
+        "title": "GP-D: Framework Research",
+        "due_date": "2024-10-10T03:59:59Z"
+    },
+    {
+        "course": "CS 3240: Software Engineering - F24",
+        "title": "GP-E: Reading Design Diagrams",
+        "due_date": "2024-10-22T19:30:00Z"
+    },
+    {
+        "course": "CS 3240: Software Engineering - F24",
+        "title": "GP-F: Wireframes",
+        "due_date": "2024-10-24T19:30:00Z"
+    },
+    {
+        "course": "CS 3240: Software Engineering - F24",
+        "title": "GP-G: Acceptance Testing",
+        "due_date": "2024-11-07T20:30:00Z"
+    },
+    {
+        "course": "CS 3240: Software Engineering - F24",
+        "title": "GP-H: Ethics",
+        "due_date": "2024-11-14T20:30:00Z"
+    },
+    {
+        "course": "CS 3240: Software Engineering - F24",
+        "title": "GP-I: Django Security Check",
+        "due_date": "2024-11-27T04:59:59Z"
+    },
+    {
+        "course": "CS 3240: Software Engineering - F24",
+        "title": "GP-J: Project Licenses",
+        "due_date": "2024-12-06T04:59:59Z"
+    },
+    {
+        "course": "Data Structures and Algorithms 2",
+        "title": "PS0",
+        "due_date": "2024-09-05T03:59:59Z"
+    },
+    {
+        "course": "Data Structures and Algorithms 2",
+        "title": "PS1",
+        "due_date": "2024-09-12T03:59:59Z"
+    },
+    {
+        "course": "Data Structures and Algorithms 2",
+        "title": "PS2",
+        "due_date": "2024-09-19T03:59:59Z"
+    },
+    {
+        "course": "Data Structures and Algorithms 2",
+        "title": "PS3",
+        "due_date": "2024-09-26T03:59:59Z"
+    },
+    {
+        "course": "Data Structures and Algorithms 2",
+        "title": "PS4",
+        "due_date": "2024-10-03T03:59:59Z"
+    },
+    {
+        "course": "Data Structures and Algorithms 2",
+        "title": "PS5",
+        "due_date": "2024-10-10T03:59:59Z"
+    },
+    {
+        "course": "Data Structures and Algorithms 2",
+        "title": "PS6",
+        "due_date": "2024-10-17T03:59:59Z"
+    },
+    {
+        "course": "Data Structures and Algorithms 2",
+        "title": "PS7",
+        "due_date": "2024-10-24T03:59:59Z"
+    },
+    {
+        "course": "Data Structures and Algorithms 2",
+        "title": "PS8",
+        "due_date": "2024-10-31T03:59:59Z"
+    },
+    {
+        "course": "Data Structures and Algorithms 2",
+        "title": "PS9",
+        "due_date": "2024-11-07T04:59:59Z"
+    },
+    {
+        "course": "SPAN 2020 - Fall 2024",
+        "title": "Proof of placement TR",
+        "due_date": "2024-08-30T03:59:59Z"
+    },
+    {
+        "course": "SPAN 2020 - Fall 2024",
+        "title": "Libro de texto (eBook)",
+        "due_date": null
+    },
+    {
+        "course": "SPAN 2020 - Fall 2024",
+        "title": "Paso 1 - versi\u00f3n final",
+        "due_date": null
+    },
+    {
+        "course": "SPAN 2020 - Fall 2024",
+        "title": "Paso 2 TR",
+        "due_date": "2024-10-29T12:00:00Z"
+    },
+    {
+        "course": "SPAN 2020 - Fall 2024",
+        "title": "Paso 3 - versi\u00f3n final",
+        "due_date": null
+    },
+    {
+        "course": "SPAN 2020 - Fall 2024",
+        "title": "Paso 4 TR",
+        "due_date": "2024-11-26T13:00:00Z"
+    },
+    {
+        "course": "SPAN 2020 - Fall 2024",
+        "title": "Paso 5 TR",
+        "due_date": "2024-12-05T13:00:00Z"
+    },
+    {
+        "course": "SPAN 2020 - Fall 2024",
+        "title": "Participaci\u00f3n",
+        "due_date": null
+    },
+    {
+        "course": "SPAN 2020 - Fall 2024",
+        "title": "Connect",
+        "due_date": null
+    },
+    {
+        "course": "SPAN 2020 - Fall 2024",
+        "title": "Reflexi\u00f3n inicial TR",
+        "due_date": "2024-08-29T12:00:00Z"
     }
 ]

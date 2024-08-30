@@ -91,22 +91,34 @@ def pull_canvas_data(request):
     }
     
     # Fetch courses
-    courses_url = f'https://{canvas_domain}/api/v1/courses'
-    courses_response = requests.get(courses_url, headers=headers)
+    courses = []
+    url = f'https://{canvas_domain}/api/v1/courses'
     
-    if courses_response.status_code != 200:
-        return JsonResponse({'status': 'error', 'message': 'Failed to fetch courses'}, status=400)
-    
-    courses = courses_response.json()
-    
+    while url:
+        response = requests.get(url, headers=headers)
+        if response.status_code != 200:
+            return JsonResponse({'status': 'error', 'message': 'Failed to fetch courses'}, status=400)
+        
+        courses.extend(response.json())
+        
+        # Check for pagination
+        if 'next' in response.links:
+            url = response.links['next']['url']
+        else:
+            url = None
+
+
     todos = []
     schedules = []
-    
-    for course in courses:
+    cutoff_date = datetime.datetime.strptime("2024-01-01T10:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
 
-        # Fetch assignments for each course
-        if course["id"] not in ["116443", "117250", "111463", "111439"]:
-            continue #cyber, relc, comm
+    for course in courses:
+        # Parse the course's createdAt date
+        course_created_at = datetime.datetime.strptime(course["created_at"], "%Y-%m-%dT%H:%M:%SZ")
+
+        if course_created_at < cutoff_date:
+            continue
+
         assignments_url = f'https://{canvas_domain}/api/v1/courses/{course["id"]}/assignments'
         assignments_response = requests.get(assignments_url, headers=headers)
         
