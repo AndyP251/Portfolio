@@ -87,15 +87,17 @@
         border: 1px solid #ccc;
     }
     .schedule-item {
+        position: absolute;
         background-color: #e0f7fa;
         border-radius: 8px;
-        padding: 10px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+        padding: 5px;
         text-align: center;
+        left: 0;
+        right: 0;
+        overflow: hidden; /* Ensures content does not overflow the box */
+        white-space: nowrap; /* Prevents text from wrapping to the next line */
+        text-overflow: ellipsis; /* Adds ellipsis (...) for overflowing text */
     }
     .day-separator {
         border-bottom: 1px solid lightblue; /* Thin line for days */
@@ -118,6 +120,51 @@
         background-color: #007bff;
         z-index: 1;
     }
+    .schedule-container {
+    display: flex;
+}
+
+.time-scale {
+    width: 60px; /* Adjusted width for time labels */
+    display: flex;
+    flex-direction: column;
+}
+
+.time-slot {
+    height: 30px; /* 30 minutes height for each slot */
+    border-bottom: 1px solid #ccc;
+    text-align: right;
+    padding-right: 5px;
+    font-size: 0.8em;
+}
+
+.schedule-grid {
+    flex: 1;
+    position: relative;
+    display: grid;
+    grid-template-rows: repeat(48, 30px); /* 48 half-hour slots */
+    border-left: 1px solid #ccc;
+}
+
+.schedule-item {
+    position: absolute;
+    background-color: #e0f7fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 5px;
+    text-align: center;
+    left: 0;
+    right: 0;
+}
+
+.current-time-line {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #007bff;
+    z-index: 1;
+}
 </style>
 {% endblock %}
 
@@ -137,6 +184,7 @@
             <ul id="todo-list">
                 {% for todo in todos %}
                 <li class="todo-item" data-date="{{ todo.due_date|date:'Y-m-d' }}">
+                    <span class="todo-title">{{ todo.course }}</span>
                     <span class="todo-title">{{ todo.title }}</span>
                     <span class="todo-due">Due: {{ todo.due_date|default:"No due date"|date:"M d, Y" }}</span>
                 </li>
@@ -146,37 +194,63 @@
             </ul>
         </div>
         <div class="schedule">
-            <h2>Weekly Schedule</h2>
-            <div class="schedule-grid" id="schedule">
-                {% for cls in weekly_schedule %}
-                <div class="schedule-item" style="grid-column: {{ cls.day }}; grid-row: {{ cls.grid_row_start }} / {{ cls.grid_row_end }}">
-                    <div>
+            <h2>Daily Schedule</h2>
+            <div class="schedule-container">
+                <div class="time-scale">
+                    {% for time in time_slots %}
+                        <div class="time-slot">{{ time }}</div>
+                    {% endfor %}
+                </div>
+                <div class="schedule-grid" id="schedule">
+                    {% for cls in daily_schedule %}
+                    <div class="schedule-item" style="top: calc({{ cls.start_position }} * 30px); height: calc({{ cls.duration }} * 30px);">
                         <strong>{{ cls.course }}</strong><br>
                         {{ cls.time }}<br>
                         {{ cls.location }}
                     </div>
+                    {% endfor %}
+                    <div class="current-time-line" id="current-time-line"></div>
                 </div>
-                {% endfor %}
-                <div class="current-time-line" id="current-time-line"></div>
             </div>
         </div>
     </div>
 </div>
 
+
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const scheduleItems = document.querySelectorAll('.schedule-item');
+    scheduleItems.forEach(item => {
+        const time = item.querySelector('strong + br').nextSibling.textContent.trim(); // Get course time
+        const [start, end] = time.split(' - ');
+        const [startHour, startMinute] = parseTime(start);
+        const [endHour, endMinute] = parseTime(end);
+        const startPosition = (startHour * 2) + (startMinute / 30); // Calculate grid position
+        const height = ((endHour * 60 + endMinute) - (startHour * 60 + startMinute)) / 30; // Duration in 30 min slots
+
+        item.style.top = `${startPosition * 30}px`; // Set top position based on start
+        item.style.height = `${height * 30}px`; // Set height based on duration
+    });
+
+    updateCurrentTimeLine();
+    setInterval(updateCurrentTimeLine, 60000); // Update every minute
+});
+
+function parseTime(time) {
+    const [hourMinute, modifier] = time.split(' ');
+    let [hour, minute] = hourMinute.split(':').map(Number);
+    if (modifier === 'PM' && hour !== 12) hour += 12;
+    if (modifier === 'AM' && hour === 12) hour = 0;
+    return [hour, minute];
+}
+
 function updateCurrentTimeLine() {
     const now = new Date();
     const currentTime = now.getHours() * 60 + now.getMinutes();
-    const gridHeight = document.querySelector('.schedule-grid').offsetHeight;
-    const totalMinutes = 12 * 60; // Assuming the grid covers 12 hours
-    const percentageOfDay = currentTime / totalMinutes;
-    const linePosition = percentageOfDay * gridHeight;
+    const linePosition = currentTime / 30; // Calculate position based on 30-minute slots
     const currentTimeLine = document.getElementById('current-time-line');
-    currentTimeLine.style.top = `${linePosition}px`;
+    currentTimeLine.style.top = `${linePosition * 30}px`;
 }
-
-updateCurrentTimeLine();
-setInterval(updateCurrentTimeLine, 60000); // Update every minute
 
 document.getElementById('pull-canvas').addEventListener('click', function() {
     this.disabled = true;

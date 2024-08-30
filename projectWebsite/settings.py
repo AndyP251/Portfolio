@@ -164,6 +164,7 @@ EMAIL_HOST_USER = "apikey"  # new
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_API_KEY')
 PERPLEXITY_API_TOKEN = "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"#os.getenv("PERPLEXITY_API_TOKEN")
 CANVAS_API_TOKEN="22119~TK2cfcmw9KWeTnD966T6hBUD9fLvwCG2PY8GxJArzZcnAVfeMmm8C8Ga2PPrR8aa"#os.getenv("CANVAS_API_TOKEN")
+USER_PASSWORD = "schedulelogin" #os.getenv("USER_PASSWORD")
 CANVAS_DOMAIN = 'canvas.its.virginia.edu'
 EMAIL_PORT = 587  # new
 EMAIL_USE_TLS = True  # new
