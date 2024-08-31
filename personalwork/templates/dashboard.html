@@ -45,7 +45,7 @@
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     h2 {
-        color: #007bff;
+        color: #011425;
         margin-bottom: 15px;
     }
     ul {
@@ -69,6 +69,10 @@
         font-size: 0.9em;
         color: #6c757d;
     }
+    .todo-list a {
+    text-decoration: underline;
+    color: inherit; /* Keeps the text color the same as the surrounding text */
+  }
     .todo-item.submitted {
         background-color: #d4edda; 
     }
@@ -90,6 +94,26 @@
     }
     .btn:hover {
         opacity: 0.9;
+    }
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: #f8f9fa;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        border-radius: 4px;
+        z-index: 1000;
+    }
+    .dropdown-menu.active {
+        display: block;
+    }
+    .dropdown-menu input,
+    .dropdown-menu select {
+        margin-bottom: 10px;
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
     }
     .schedule-grid {
         position: relative;
@@ -191,6 +215,26 @@
             <button id="pull-canvas" class="btn btn-primary">Pull Canvas Data</button>
             <button id="sort-todos" class="btn btn-secondary">Sort by Date</button>
             <button id="refresh-button" class="btn btn-secondary" onclick="refreshData()">Refresh Data</button>
+            <button id="add-schedule-button" class="btn btn-secondary">Add Schedule</button>
+            <div id="schedule-dropdown" class="dropdown-menu">
+                <form id="schedule-form">
+                    <select name="day">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                    <input type="time" name="start_time" required>
+                    <input type="time" name="end_time" required>
+                    <input type="text" name="course" placeholder="Course" required>
+                    <input type="text" name="location" placeholder="Location">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+          
+            </div>
         </div>
     </div>
     <div class="dashboard-content">
@@ -269,6 +313,41 @@ function updateCurrentTimeLine() {
     currentTimeLine.style.top = `${linePosition * 30}px`;
 }
 
+
+document.addEventListener('DOMContentLoaded', function() {
+    const addScheduleButton = document.getElementById('add-schedule-button');
+    const scheduleDropdown = document.getElementById('schedule-dropdown');
+    const scheduleForm = document.getElementById('schedule-form');
+
+    addScheduleButton.addEventListener('click', function() {
+        scheduleDropdown.classList.toggle('active');
+    });
+
+    scheduleForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(scheduleForm);
+        fetch('/personalwork/add_schedule/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: new URLSearchParams(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert('Schedule added successfully!');
+                scheduleDropdown.classList.remove('active');
+                scheduleForm.reset();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+});
+
+
 document.getElementById('pull-canvas').addEventListener('click', function() {
     this.disabled = true;
     this.textContent = 'Pulling data...';
@@ -290,7 +369,7 @@ document.getElementById('pull-canvas').addEventListener('click', function() {
             this.disabled = false;
             this.textContent = 'Pull Canvas Data';
         });
-});
+})
 
 function refreshData() {
     location.reload();

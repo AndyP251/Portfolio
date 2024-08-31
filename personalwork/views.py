@@ -1,12 +1,47 @@
 import datetime
+import logging
 import os
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import requests
 from django.conf import settings
-from .forms import PasswordForm
+from .forms import PasswordForm, ScheduleForm
 from .utils import read_json, write_json, TODO_JSON_FILE, SCHEDULE_JSON_FILE
+
+logger = logging.getLogger(__name__)
+
+def add_schedule(request):
+    if request.method == 'POST':
+        logger.debug('Received POST request with data: %s', request.POST)
+        form = ScheduleForm(request.POST)
+        if form.is_valid():
+            logger.info('Form is valid, processing data...')
+            # Load existing schedule data
+            schedule = read_json(SCHEDULE_JSON_FILE)
+
+            # Append new schedule entry
+            new_entry = {
+                'day': form.cleaned_data['day'],
+                'start_time': form.cleaned_data['start_time'].strftime('%H:%M'),
+                'end_time': form.cleaned_data['end_time'].strftime('%H:%M'),
+                'course': form.cleaned_data['course'],
+                'location': form.cleaned_data['location'],
+            }
+            schedule.append(new_entry)
+            logger.info('New schedule entry added: %s', new_entry)
+
+            # Save updated schedule data
+            write_json(SCHEDULE_JSON_FILE, schedule)
+            logger.info('Schedule data saved successfully.')
+
+            return JsonResponse({'status': 'success'})
+        else:
+            logger.warning('Form is invalid: %s', form.errors)
+    else:
+        logger.debug('Received non-POST request.')
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid data'}, status=400)
 
 
 def dashboard(request):
@@ -76,6 +111,8 @@ def dashboard(request):
         'daily_schedule': daily_schedule,
         'time_slots': time_slots
     })
+
+
 def pull_canvas_data(request):
     # Get the access token from your environment variables or settings
     access_token = settings.CANVAS_API_TOKEN
