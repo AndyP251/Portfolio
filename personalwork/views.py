@@ -24,9 +24,6 @@ def dashboard(request):
     if not request.session.get('authenticated'):
         return render(request, 'password_protect.html', {'form': form})
 
-
-
-
     schedule = {
     'Monday': [
         {'course': 'CS 3710', 'time': '10:00 AM - 10:50 AM', 'location': 'Olsson Hall 120'},
@@ -129,7 +126,8 @@ def pull_canvas_data(request):
                     'course': course["name"],
                     'title': assignment['name'],
                     'due_date': assignment['due_at'],
-                    'submitted': assignment['has_submitted_submissions']
+                    'submitted': assignment['has_submitted_submissions'],
+                    'html_link': assignment['html_url']
                 })
         
         # Fetch course schedule (you might need to adjust this based on available endpoints)
