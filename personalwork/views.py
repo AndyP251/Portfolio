@@ -1,4 +1,5 @@
 import datetime
+import uuid
 from django.utils.dateformat import DateFormat
 import logging
 import os
@@ -11,6 +12,27 @@ from .forms import PasswordForm, ScheduleForm
 from .utils import read_json, write_json, TODO_JSON_FILE, SCHEDULE_JSON_FILE
 
 logger = logging.getLogger(__name__)
+
+
+
+def update_event_layer(request):
+    logger.info("update_event_layer view called")
+    if request.method == 'POST':
+        event_id = request.POST.get('id')
+        logger.info(f"Received event_id: {event_id}")
+        schedule = read_json(SCHEDULE_JSON_FILE)
+        for event in schedule:
+            if event['id'] == event_id:
+                schedule.remove(event)
+                schedule.append(event)
+                logger.info(f"Event {event_id} moved to the end of the list")
+                break
+        write_json(SCHEDULE_JSON_FILE, schedule)
+        logger.info("Schedule updated successfully")
+        return JsonResponse({'status': 'success'})
+    logger.warning("Invalid request method for update_event_layer")
+    return JsonResponse({'status': 'error'}, status=400)
+
 
 def add_schedule(request):
     if request.method == 'POST':
@@ -31,6 +53,7 @@ def add_schedule(request):
 
             # Create new entry
             new_entry = {
+                'id': str(uuid.uuid4()),
                 'day': form.cleaned_data['day'],
                 'recurring': form.cleaned_data['recurring'],
                 'dateSet': datetime.date.today().isoformat(),
@@ -46,7 +69,7 @@ def add_schedule(request):
             write_json(SCHEDULE_JSON_FILE, schedule)
             logger.info('Schedule data saved successfully.')
 
-            return JsonResponse({'status': 'success'})
+            return JsonResponse({'status': 'success', 'id': new_entry['id']})
         else:
             logger.warning('Form is invalid: %s', form.errors)
             return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)

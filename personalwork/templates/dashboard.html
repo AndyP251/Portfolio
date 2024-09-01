@@ -204,6 +204,16 @@
   content: none; /* This removes the dot */
 }
    
+.schedule-event {
+    position: relative;
+    z-index: 1;
+    transition: z-index 0.3s;
+}
+
+.schedule-event:hover {
+    z-index: 2;
+}
+
 /* Increase the width of the dropdown container */
 .dropdown-menu {
   width: auto;
@@ -240,6 +250,8 @@
 .dropdown-menu .date-picker {
   width: 100%;
 }
+
+
 
 
     .time-input {
@@ -337,7 +349,10 @@
                 </div>
                 <div class="schedule-grid" id="schedule">
                     {% for cls in daily_schedule %}
-                    <div class="schedule-item" style="top: calc({{ cls.start_position }} * 30px); height: calc({{ cls.duration }} * 30px);">
+                    <div class="schedule-item" 
+                        style="top: calc({{ cls.start_position }} * 30px); height: calc({{ cls.duration }} * 30px);" 
+                        data-id="{{ event.id }}" 
+                        onclick="updateEventLayer(this)">
                         <strong>{{ cls.course }}</strong><br>
                         {{ cls.time }}<br>
                         {{ cls.location }}
@@ -346,7 +361,10 @@
 
                     {% for cls in schedules %}
                         {% if cls.recurring or cls.dateSet >= current_date %}
-                            <div class="schedule-item {% if cls.recurring == 'True' or cls.recurring %}recurring{% endif %}" style="top: calc({{ cls.start_position }} * 30px); height: calc({{ cls.duration }} * 30px);">
+                            <div class="schedule-item {% if cls.recurring == 'True' or cls.recurring %}recurring{% endif %}" 
+                                style="top: calc({{ cls.start_position }} * 30px); height: calc({{ cls.duration }} * 30px);"
+                                data-id="{{ event.id }}" 
+                                onclick="updateEventLayer(this)">
                                 <strong>{{ cls.course }}</strong><br>
                                 {{ cls.time }}<br>
                                 {{ cls.location }}
@@ -362,6 +380,48 @@
 
 
 <script>
+
+
+
+function updateEventLayer(element) {
+    const eventId = element.dataset.id;
+    console.log("Updating event layer for ID:", eventId);
+    fetch('update_event_layer/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: `id=${eventId}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            console.log("Event layer updated successfully");
+            element.parentNode.appendChild(element);
+        } else {
+            console.error("Failed to update event layer:", data);
+        }
+    })
+    .catch(error => console.error("Error updating event layer:", error));
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
 document.addEventListener('DOMContentLoaded', function() {
     const scheduleItems = document.querySelectorAll('.schedule-item');
     scheduleItems.forEach(item => {
