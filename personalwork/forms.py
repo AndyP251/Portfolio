@@ -1,3 +1,4 @@
+from datetime import datetime
 from django import forms
 
 class PasswordForm(forms.Form):
@@ -13,7 +14,15 @@ class ScheduleForm(forms.Form):
         ('Saturday', 'Saturday'),
         ('Sunday', 'Sunday'),
     ])
-    start_time = forms.TimeField(widget=forms.TimeInput(format='%H:%M'))
-    end_time = forms.TimeField(widget=forms.TimeInput(format='%H:%M'))
-    course = forms.CharField(max_length=100)
+    start_time = forms.TimeField(
+        widget=forms.TimeInput(format='%I:%M %p', attrs={'placeholder': '00:00 AM'}),
+        input_formats=['%I:%M %p'],
+    )
+    end_time = forms.TimeField(
+        widget=forms.TimeInput(format='%I:%M %p', attrs={'placeholder': '00:00 PM'}),
+        input_formats=['%I:%M %p'],
+    )
+    event = forms.CharField(max_length=100)
     location = forms.CharField(max_length=100, required=False)
+    recurring = forms.BooleanField(required=False)
+

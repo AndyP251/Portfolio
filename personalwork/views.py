@@ -1,4 +1,5 @@
 import datetime
+from django.utils.dateformat import DateFormat
 import logging
 import os
 from django.utils import timezone
@@ -20,14 +21,24 @@ def add_schedule(request):
             # Load existing schedule data
             schedule = read_json(SCHEDULE_JSON_FILE)
 
-            # Append new schedule entry
+            # Convert start_time and end_time to datetime objects
+            start_time = form.cleaned_data['start_time']
+            end_time = form.cleaned_data['end_time']
+
+            # Format the times
+            formatted_start_time = start_time.strftime('%I:%M %p')
+            formatted_end_time = end_time.strftime('%I:%M %p')
+
+            # Create new entry
             new_entry = {
                 'day': form.cleaned_data['day'],
-                'start_time': form.cleaned_data['start_time'].strftime('%H:%M'),
-                'end_time': form.cleaned_data['end_time'].strftime('%H:%M'),
-                'course': form.cleaned_data['course'],
-                'location': form.cleaned_data['location'],
+                'recurring': form.cleaned_data['recurring'],
+                'dateSet': datetime.date.today().isoformat(),
+                'course': form.cleaned_data['event'],  # Changed from 'course' to 'event'
+                'time': f'{formatted_start_time} - {formatted_end_time}',
+                'location': form.cleaned_data['location']
             }
+
             schedule.append(new_entry)
             logger.info('New schedule entry added: %s', new_entry)
 
@@ -38,11 +49,11 @@ def add_schedule(request):
             return JsonResponse({'status': 'success'})
         else:
             logger.warning('Form is invalid: %s', form.errors)
+            return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
     else:
         logger.debug('Received non-POST request.')
-
-    return JsonResponse({'status': 'error', 'message': 'Invalid data'}, status=400)
-
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+    
 
 def dashboard(request):
     if request.method == 'POST':
@@ -84,7 +95,7 @@ def dashboard(request):
         {'course': 'CS 3710', 'time': '10:00 AM - 10:50 AM', 'location': 'Olsson Hall 120'},
         ]
     }
-    
+
     todos = read_json(TODO_JSON_FILE)
     schedules = read_json(SCHEDULE_JSON_FILE)
 
@@ -105,11 +116,18 @@ def dashboard(request):
     current_day = datetime.datetime.now().strftime('%A')
     daily_schedule = schedule.get(current_day, [])
 
+    #Get today's schedules:
+    todays_schedule: list = []
+    for event in schedules:
+        if event.get("day", None) == current_day:
+            todays_schedule.append(event)
+
     return render(request, 'dashboard.html', {
         'todos': todos,
-        'schedules': schedules,
+        'schedules': todays_schedule,
         'daily_schedule': daily_schedule,
-        'time_slots': time_slots
+        'time_slots': time_slots,
+        'current_date': datetime.date.today().isoformat(),
     })
 
 

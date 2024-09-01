@@ -196,6 +196,58 @@
     right: 0;
 }
 
+.schedule-item.recurring {
+    background-color: #9fd5dc;
+}
+
+.schedule-item::before {
+  content: none; /* This removes the dot */
+}
+   
+/* Increase the width of the dropdown container */
+.dropdown-menu {
+  width: auto;
+  min-width: 300px;
+  padding: 15px;
+}
+
+/* Ensure form inputs fit within the container */
+.dropdown-menu .form-control {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Adjust padding and margins of form elements */
+.dropdown-menu .form-group {
+  margin-bottom: 10px;
+}
+
+.dropdown-menu label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Make the dropdown responsive */
+@media (max-width: 768px) {
+  .dropdown-menu {
+    width: 100%;
+  }
+}
+
+/* Adjust specific inputs if needed */
+.dropdown-menu .time-picker,
+.dropdown-menu .date-picker {
+  width: 100%;
+}
+
+
+    .time-input {
+        width: 100%;
+        padding: 5px;
+        margin-bottom: 10px;
+    }
+
 .current-time-line {
     position: absolute;
     left: 0;
@@ -216,30 +268,51 @@
             <button id="sort-todos" class="btn btn-secondary">Sort by Date</button>
             <button id="refresh-button" class="btn btn-secondary" onclick="refreshData()">Refresh Data</button>
             <button id="add-schedule-button" class="btn btn-secondary">Add Schedule</button>
-            <div id="schedule-dropdown" class="dropdown-menu">
-                <form id="schedule-form">
-                    <select name="day">
-                        <option value="Monday">Monday</option>
-                        <option value="Tuesday">Tuesday</option>
-                        <option value="Wednesday">Wednesday</option>
-                        <option value="Thursday">Thursday</option>
-                        <option value="Friday">Friday</option>
-                        <option value="Saturday">Saturday</option>
-                        <option value="Sunday">Sunday</option>
-                    </select>
-                    <input type="time" name="start_time" required>
-                    <input type="time" name="end_time" required>
-                    <input type="text" name="course" placeholder="Course" required>
-                    <input type="text" name="location" placeholder="Location">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </form>
-          
-            </div>
+                <div id="schedule-dropdown" class="dropdown-menu p-3" style="width: 300px;">
+                    <form id="schedule-form">
+                        <div class="mb-3">
+                            <label for="day" class="form-label">Day</label>
+                            <select id="day" name="day" class="form-select" required>
+                                <option value="" disabled selected>Select a day</option>
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                                <option value="Saturday">Saturday</option>
+                                <option value="Sunday">Sunday</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="start_time" class="form-label">Start Time</label>
+                            <input type="text" id="start_time" name="start_time" class="form-control time-input" placeholder="00:00 AM" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="end_time" class="form-label">End Time</label>
+                            <input type="text" id="end_time" name="end_time" class="form-control time-input" placeholder="00:00 PM" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="event" class="form-label">Event</label>
+                            <input type="text" id="event" name="event" class="form-control" placeholder="Enter event name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Location</label>
+                            <input type="text" id="location" name="location" class="form-control" placeholder="Enter location">
+                        </div>
+                        <div class="mb-3 form-check" style="display: flex; align-items: center;">
+                            <label for="recurring" class="form-check-label">Recurring</label>
+                            <input type="checkbox" id="recurring" name="recurring" class="form-check-input" style="margin-right: 0.5rem;">
+                            
+                        </div>
+                        <button id="submit-schedule" type="submit" class="btn btn-primary w-100">Save</button>
+                    </form>
+                </div>
         </div>
     </div>
     <div class="dashboard-content">
         <div class="todo-list">
-            <h2>Todo List</h2>
+           
+            <h2>Assignments</h2>
             <ul id="todo-list">
                 {% for todo in todos %}
                 <li class="todo-item {% if todo.submitted %}submitted{% endif %}" data-date="{{ todo.due_date|date:'Y-m-d' }}">
@@ -269,6 +342,16 @@
                         {{ cls.time }}<br>
                         {{ cls.location }}
                     </div>
+                    {% endfor %}
+
+                    {% for cls in schedules %}
+                        {% if cls.recurring or cls.dateSet >= current_date %}
+                            <div class="schedule-item {% if cls.recurring == 'True' or cls.recurring %}recurring{% endif %}" style="top: calc({{ cls.start_position }} * 30px); height: calc({{ cls.duration }} * 30px);">
+                                <strong>{{ cls.course }}</strong><br>
+                                {{ cls.time }}<br>
+                                {{ cls.location }}
+                            </div>
+                        {% endif %}
                     {% endfor %}
                     <div class="current-time-line" id="current-time-line"></div>
                 </div>
