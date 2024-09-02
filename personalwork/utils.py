@@ -1,8 +1,9 @@
 import json
 
 # Define file paths for JSON storage
-TODO_JSON_FILE = 'todos.json'
-SCHEDULE_JSON_FILE = 'schedule.json'
+CANVAS_TASKS_FILE = 'canvasTasks.json'
+GRADESCOPE_TASK_FILE = 'gradescopeTasks.json'
+SCHEDULE_JSON_FILE = 'Schedule.json'
 
 # Function to read from JSON files
 def read_json(file_path):

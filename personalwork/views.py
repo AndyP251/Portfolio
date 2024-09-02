@@ -1,4 +1,5 @@
 import datetime
+from datetime import timedelta
 import uuid
 from django.utils.dateformat import DateFormat
 import logging
@@ -6,10 +7,12 @@ import os
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
+import pytz
 import requests
 from django.conf import settings
+from gradescopeapi.classes.connection import GSConnection
 from .forms import PasswordForm, ScheduleForm
-from .utils import read_json, write_json, TODO_JSON_FILE, SCHEDULE_JSON_FILE
+from .utils import GRADESCOPE_TASK_FILE, read_json, write_json, CANVAS_TASKS_FILE, SCHEDULE_JSON_FILE
 
 logger = logging.getLogger(__name__)
 
@@ -136,7 +139,7 @@ def dashboard(request):
         ]
     }
 
-    todos = read_json(TODO_JSON_FILE)
+    todos = read_json(CANVAS_TASKS_FILE)
     schedules = read_json(SCHEDULE_JSON_FILE)
 
     # Convert date strings to datetime objects and handle missing dates
@@ -171,46 +174,77 @@ def dashboard(request):
     })
 
 
-def pull_canvas_data(request):
-    # Get the access token from your environment variables or settings
-    access_token = settings.CANVAS_API_TOKEN
-    # Your Canvas domain
-    canvas_domain = settings.CANVAS_DOMAIN
+def get_gradescope_data():
+    connection = GSConnection()
+    connection.login(settings.GRADESCOPE_USER_KEY, settings.GRADESCOPE_USER_SECRET)
+    courses = connection.account.get_courses()
+    current_date = datetime.now(pytz.UTC)
+    cutoff_date = current_date - timedelta(days=120)  # Assuming a semester is about 4 months
+
+    def safe_compare_dates(date1, date2):
+        if date1 is None or date2 is None:
+            return False
+        if date1.tzinfo is None:
+            date1 = pytz.UTC.localize(date1)
+        if date2.tzinfo is None:
+            date2 = pytz.UTC.localize(date2)
+        return date1 > date2
+
+    collected_data = []
+
+    for course_id in courses["student"]:
+        print(f"Course ID: {course_id}")
+        try:
+            assignments = connection.account.get_assignments(course_id)
+            print(f"Assignments for course {course_id}:")
+            for assignment in assignments:
+                try:
+                    if safe_compare_dates(assignment.due_date, cutoff_date):
+                        print(f"- {assignment.name}: Due {assignment.due_date}, Status: {assignment.submissions_status}")
+                        curr_assignment = {
+                            "course": course_id,
+                            "title": assignment.name,
+                            "due_date": assignment.due_date,
+                            "submitted": assignment.submissions_status == "Submitted",
+                            "html_link": f"https://www.gradescope.com/courses/{course_id}/assignments/{assignment.assignment_id}"
+                        }
+                        collected_data.append(curr_assignment)
+                except AttributeError as e:
+                    print(f"  Error processing assignment: {e}")
+        except Exception as e:
+            print(f"Error fetching assignments for course {course_id}: {e}")
     
+    write_json(GRADESCOPE_TASK_FILE, collected_data)
+    
+    return collected_data
+
+
+def pull_canvas_data(request):
+    access_token = settings.CANVAS_API_TOKEN
+    canvas_domain = settings.CANVAS_DOMAIN
     headers = {
         'Authorization': f'Bearer {access_token}',
         'Accept': 'application/json+canvas-string-ids'
     }
-    
-    # Fetch courses
     courses = []
     url = f'https://{canvas_domain}/api/v1/courses'
-    
     while url:
         response = requests.get(url, headers=headers)
         if response.status_code != 200:
             return JsonResponse({'status': 'error', 'message': 'Failed to fetch courses'}, status=400)
-        
         courses.extend(response.json())
-        
-        # Check for pagination
         if 'next' in response.links:
             url = response.links['next']['url']
         else:
             url = None
-
-
     todos = []
     schedules = []
     cutoff_date = datetime.datetime.strptime("2024-01-01T10:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
 
     for course in courses:
-        # Parse the course's createdAt date
         course_created_at = datetime.datetime.strptime(course["created_at"], "%Y-%m-%dT%H:%M:%SZ")
-
         if course_created_at < cutoff_date:
             continue
-
         assignments_url = f'https://{canvas_domain}/api/v1/courses/{course["id"]}/assignments'
         assignments_response = requests.get(assignments_url, headers=headers)
         
@@ -224,11 +258,8 @@ def pull_canvas_data(request):
                     'submitted': assignment['has_submitted_submissions'],
                     'html_link': assignment['html_url']
                 })
-        
-        # Fetch course schedule (you might need to adjust this based on available endpoints)
         schedule_url = f'https://{canvas_domain}/api/v1/courses/{course["id"]}/calendar_events'
         schedule_response = requests.get(schedule_url, headers=headers)
-        
         if schedule_response.status_code == 200:
             events = schedule_response.json()
             for event in events:
@@ -237,9 +268,7 @@ def pull_canvas_data(request):
                     'start_time': event['start_at'],
                     'end_time': event['end_at']
                 })
-    
-    # Save to JSON files (you can adjust this based on your needs)
-    write_json(TODO_JSON_FILE, todos)
+    write_json(CANVAS_TASKS_FILE, todos)
     write_json(SCHEDULE_JSON_FILE, schedules)
     
     return JsonResponse({'status': 'success', 'message': 'Canvas data pulled and saved successfully.'})
