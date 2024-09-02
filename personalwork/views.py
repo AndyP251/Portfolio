@@ -14,6 +14,23 @@ from .utils import read_json, write_json, TODO_JSON_FILE, SCHEDULE_JSON_FILE
 logger = logging.getLogger(__name__)
 
 
+def delete_event(request):
+    if request.method == 'POST':
+        event_id = request.POST.get('id')
+        logger.info(f"Attempting to delete event with ID: {event_id}")
+        schedule = read_json(SCHEDULE_JSON_FILE)
+        original_length = len(schedule)
+        schedule = [event for event in schedule if event['id'] != event_id]
+        if len(schedule) < original_length:
+            write_json(SCHEDULE_JSON_FILE, schedule)
+            logger.info(f"Event with ID {event_id} deleted successfully")
+            return JsonResponse({'status': 'success'})
+        else:
+            logger.warning(f"Event with ID {event_id} not found in schedule")
+            return JsonResponse({'status': 'error', 'message': 'Event not found'}, status=404)
+    logger.warning("Invalid request method for delete_event")
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+
 
 def update_event_layer(request):
     logger.info("update_event_layer view called")

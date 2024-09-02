@@ -213,7 +213,13 @@
 .schedule-event:hover {
     z-index: 2;
 }
-
+.delete-icon {
+        cursor: pointer;
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        display: none;
+    }
 /* Increase the width of the dropdown container */
 .dropdown-menu {
   width: auto;
@@ -251,14 +257,11 @@
   width: 100%;
 }
 
-
-
-
-    .time-input {
-        width: 100%;
-        padding: 5px;
-        margin-bottom: 10px;
-    }
+.time-input {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
 
 .current-time-line {
     position: absolute;
@@ -351,11 +354,12 @@
                     {% for cls in daily_schedule %}
                     <div class="schedule-item" 
                         style="top: calc({{ cls.start_position }} * 30px); height: calc({{ cls.duration }} * 30px);" 
-                        data-id="{{ event.id }}" 
-                        onclick="updateEventLayer(this)">
+                        data-id="{{ cls.id }}" 
+                        onclick="handleEventClick(this)">
                         <strong>{{ cls.course }}</strong><br>
                         {{ cls.time }}<br>
                         {{ cls.location }}
+                        <span class="delete-icon" style="display:none;" onclick="deleteEvent(event, '{{ cls.id }}')">🗑️</span>
                     </div>
                     {% endfor %}
 
@@ -363,11 +367,12 @@
                         {% if cls.recurring or cls.dateSet >= current_date %}
                             <div class="schedule-item {% if cls.recurring == 'True' or cls.recurring %}recurring{% endif %}" 
                                 style="top: calc({{ cls.start_position }} * 30px); height: calc({{ cls.duration }} * 30px);"
-                                data-id="{{ event.id }}" 
-                                onclick="updateEventLayer(this)">
+                                data-id="{{ cls.id }}" 
+                                onclick="handleEventClick(this)">
                                 <strong>{{ cls.course }}</strong><br>
                                 {{ cls.time }}<br>
                                 {{ cls.location }}
+                                <span class="delete-icon" style="display:none;" onclick="deleteEvent(event, '{{ cls.id }}')">🗑️</span>
                             </div>
                         {% endif %}
                     {% endfor %}
@@ -380,7 +385,70 @@
 
 
 <script>
+function handleEventClick(element, event) {
+    updateEventLayer(element);
+    showDeleteIcon(element);
+}
 
+function showDeleteIcon(element) {
+    const deleteIcon = element.querySelector('.delete-icon');
+    if (deleteIcon) {
+        deleteIcon.style.display = 'inline';
+        setTimeout(() => {
+            deleteIcon.style.display = 'none';
+        }, 3000); // Hide after 3 seconds
+    } else {
+        console.error('Delete icon not found in the element');
+    }
+}
+
+
+function deleteEvent(event, eventId) {
+    event.stopPropagation(); // Prevent triggering the onclick of the parent div
+    console.log("Attempting to delete event with ID:", eventId);
+    
+    if (!eventId) {
+        console.error("Event ID is undefined or empty");
+        alert("Cannot delete event: ID is missing");
+        return;
+    }
+
+    if (confirm('Are you sure you want to delete this event?')) {
+        fetch('personalwork/delete_event/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: `id=${eventId}`
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                console.log("Event deleted successfully on server");
+                const eventElement = document.querySelector(`.schedule-event[data-id="${eventId}"]`);
+                if (eventElement) {
+                    eventElement.remove();
+                    console.log("Event element removed from DOM");
+                } else {
+                    console.error(`Could not find the event element to remove. ID: ${eventId}`);
+                }
+            } else {
+                console.error("Failed to delete event:", data.message);
+                alert(`Failed to delete event: ${data.message}`);
+            }
+        })
+        .catch(error => {
+            console.error("Error deleting event:", error);
+            alert(`An error occurred while deleting the event: ${error.message}`);
+        });
+    }
+}
 
 
 function updateEventLayer(element) {
