@@ -307,7 +307,7 @@
         <h1 class="dashboard-title">Andrew's Dashboard</h1>
         <div class="dashboard-actions">
             <button onclick="pullCombinedData()" id='pull-all-data' class="btn btn-primary">Pull Data</button>
-            <button id="sort-todos" class="btn btn-secondary">Sort by Date</button>
+            <button onclick="sortData()" id="sort-todos" class="btn btn-secondary">Sort by Date</button>
             <button id="refresh-button" class="btn btn-secondary" onclick="refreshData()">Refresh Data</button>
             <button id="add-schedule-button" class="btn btn-secondary">Add Schedule</button>
                 <div id="schedule-dropdown" class="dropdown-menu p-3" style="width: 300px;">
@@ -359,6 +359,7 @@
             <form method="GET" id="filter-form">
                 <select name="data_source" id="data-source-dropdown" onchange="document.getElementById('filter-form').submit();">
                     <option value="">Select Data Source</option>
+                    <option value="sum">All</option>
                     <option value="gradescope">Gradescope</option>
                     <option value="canvas">Canvas</option>
                 </select>
@@ -366,7 +367,6 @@
             <ul id="todo-list">
                 {% for todo in todos %}
                 <li class="todo-item {% if todo.submitted %}submitted{% endif %}" data-date="{{ todo.due_date|date:'Y-m-d' }}">
-
                     <span class="todo-title">
                         {{ todo.courseName }}
                     </span>
@@ -454,6 +454,7 @@ function pullCombinedData(event) {
     .finally(() => {
         button.disabled = false;
         button.textContent = 'Update Data';
+        sortData()
     });
 }
 
@@ -682,7 +683,9 @@ document.getElementById('pull-gradescope').addEventListener('click', function() 
 function refreshData() {
     location.reload();
 }
-document.getElementById('sort-todos').addEventListener('click', function() {
+
+
+function sortData() {
     const todoList = document.getElementById('todo-list');
     const todos = Array.from(todoList.children);
 
@@ -720,7 +723,7 @@ document.getElementById('sort-todos').addEventListener('click', function() {
         }
         todoList.appendChild(todo);
     });
-});
+}
 
 function getWeekNumber(d) {
     d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));

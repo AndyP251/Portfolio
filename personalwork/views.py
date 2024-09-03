@@ -133,13 +133,13 @@ def dashboard(request):
         ]
     }
 
-    selected_source = request.GET.get('data_source', 'canvas')
+    selected_source = request.GET.get('data_source', 'sum')
 
     todos = read_json(CANVAS_TASKS_FILE) + read_json(GRADESCOPE_TASK_FILE)
     
     if selected_source:
-        todos = [todo for todo in todos if todo['source'] == selected_source]
-
+        todos = [todo for todo in todos if todo['source'] == selected_source or selected_source == 'sum']
+        
 
     schedules = read_json(SCHEDULE_JSON_FILE)
 
@@ -207,10 +207,8 @@ def pull_gradescope_data(request):
     collected_data = []
 
     for course_id in courses["student"]:
-        print(f"Course ID: {course_id}")
         try:
             assignments = connection.account.get_assignments(course_id)
-            print(f"Assignments for course {course_id}:")
             for assignment in assignments:
                 try:
                     if safe_compare_dates(assignment.due_date, cutoff_date):
