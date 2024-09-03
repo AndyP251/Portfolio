@@ -60,18 +60,13 @@ def add_schedule(request):
         form = ScheduleForm(request.POST)
         if form.is_valid():
             logger.info('Form is valid, processing data...')
-            # Load existing schedule data
+
             schedule = read_json(SCHEDULE_JSON_FILE)
 
-            # Convert start_time and end_time to datetime objects
             start_time = form.cleaned_data['start_time']
             end_time = form.cleaned_data['end_time']
-
-            # Format the times
             formatted_start_time = start_time.strftime('%I:%M %p')
             formatted_end_time = end_time.strftime('%I:%M %p')
-
-            # Create new entry
             new_entry = {
                 'id': str(uuid.uuid4()),
                 'day': form.cleaned_data['day'],
@@ -85,7 +80,6 @@ def add_schedule(request):
             schedule.append(new_entry)
             logger.info('New schedule entry added: %s', new_entry)
 
-            # Save updated schedule data
             write_json(SCHEDULE_JSON_FILE, schedule)
             logger.info('Schedule data saved successfully.')
 
@@ -139,7 +133,10 @@ def dashboard(request):
         ]
     }
 
+    
+
     todos = read_json(CANVAS_TASKS_FILE)
+    # todos = read_json(GRADESCOPE_TASK_FILE)
     schedules = read_json(SCHEDULE_JSON_FILE)
 
     # Convert date strings to datetime objects and handle missing dates
@@ -174,11 +171,11 @@ def dashboard(request):
     })
 
 
-def get_gradescope_data():
+def pull_gradescope_data(request):
     connection = GSConnection()
     connection.login(settings.GRADESCOPE_USER_KEY, settings.GRADESCOPE_USER_SECRET)
     courses = connection.account.get_courses()
-    current_date = datetime.now(pytz.UTC)
+    current_date = datetime.datetime.now(pytz.UTC)
     cutoff_date = current_date - timedelta(days=120)  # Assuming a semester is about 4 months
 
     def safe_compare_dates(date1, date2):
@@ -202,9 +199,10 @@ def get_gradescope_data():
                     if safe_compare_dates(assignment.due_date, cutoff_date):
                         print(f"- {assignment.name}: Due {assignment.due_date}, Status: {assignment.submissions_status}")
                         curr_assignment = {
+                            "source": "gradescope",
                             "course": course_id,
                             "title": assignment.name,
-                            "due_date": assignment.due_date,
+                            "due_date": str(assignment.due_date),
                             "submitted": assignment.submissions_status == "Submitted",
                             "html_link": f"https://www.gradescope.com/courses/{course_id}/assignments/{assignment.assignment_id}"
                         }
@@ -216,8 +214,7 @@ def get_gradescope_data():
     
     write_json(GRADESCOPE_TASK_FILE, collected_data)
     
-    return collected_data
-
+    return JsonResponse({'status': 'success', 'message': 'Gradescope data pulled and saved successfully.'})
 
 def pull_canvas_data(request):
     access_token = settings.CANVAS_API_TOKEN
@@ -252,6 +249,7 @@ def pull_canvas_data(request):
             assignments = assignments_response.json()
             for assignment in assignments:
                 todos.append({
+                    "source": "canvas",
                     'course': course["name"],
                     'title': assignment['name'],
                     'due_date': assignment['due_at'],

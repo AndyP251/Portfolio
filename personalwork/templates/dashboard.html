@@ -329,6 +329,15 @@
         <div class="todo-list">
            
             <h2>Assignments</h2>
+
+            <form method="GET" id="filter-form">
+                <select name="data_source" id="data-source-dropdown" onchange="document.getElementById('filter-form').submit();">
+                    <option value="">Select Data Source</option>
+                    <option value="gradescope">Gradescope</option>
+                    <option value="canvas">Canvas</option>
+                </select>
+            </form>
+
             <ul id="todo-list">
                 {% for todo in todos %}
                 <li class="todo-item {% if todo.submitted %}submitted{% endif %}" data-date="{{ todo.due_date|date:'Y-m-d' }}">
