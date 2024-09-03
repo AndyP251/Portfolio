@@ -76,6 +76,25 @@
     .todo-item.submitted {
         background-color: #d4edda; 
     }
+    .todo-source {
+        font-weight: bold;
+        background-color: #f0f0f0; /* Slightly darker white */
+        padding: 2px 4px; /* Add some padding for better readability */
+        border-radius: 3px; /* Optional: Add rounded corners */
+    }
+
+    .todo-source-canvas {
+        color: red;
+    }
+
+    .todo-source-gradescope {
+        color: blue;
+    }
+
+    .todo-title {
+        display: inline-block;
+        vertical-align: middle;
+    }
     .btn {
         padding: 8px 16px;
         border: none;
@@ -287,8 +306,7 @@
     <div class="dashboard-header">
         <h1 class="dashboard-title">Andrew's Dashboard</h1>
         <div class="dashboard-actions">
-            <button id="pull-canvas" class="btn btn-primary">Pull Canvas Data</button>
-            <button id="pull-gradescope" class="btn btn-primary">Pull Gradescope Data</button>
+            <button onclick="pullCombinedData()" id='pull-all-data' class="btn btn-primary">Pull Data</button>
             <button id="sort-todos" class="btn btn-secondary">Sort by Date</button>
             <button id="refresh-button" class="btn btn-secondary" onclick="refreshData()">Refresh Data</button>
             <button id="add-schedule-button" class="btn btn-secondary">Add Schedule</button>
@@ -345,15 +363,20 @@
                     <option value="canvas">Canvas</option>
                 </select>
             </form>
-
             <ul id="todo-list">
                 {% for todo in todos %}
                 <li class="todo-item {% if todo.submitted %}submitted{% endif %}" data-date="{{ todo.due_date|date:'Y-m-d' }}">
-                    <span class="todo-title">{{ todo.course }}</span>
+
+                    <span class="todo-title">
+                        {{ todo.courseName }}
+                    </span>
                     <a href="{{ todo.html_link }}" target="_blank">
-                    <span class="todo-title">{{ todo.title }}</span>
+                        <span class="todo-title">{{ todo.title }}</span>
                     </a>
                     <span class="todo-due">Due: {{ todo.due_date|default:"No due date"|date:"M d, Y" }}</span>
+                    <span class="todo-source {% if todo.source == 'canvas' %}todo-source-canvas{% elif todo.source == 'gradescope' %}todo-source-gradescope{% endif %}">
+                        {{ todo.source|upper }}
+                    </span>
                 </li>
                 {% empty %}
                 <li>No todos available</li>
@@ -403,6 +426,38 @@
 
 
 <script>
+document.getElementById('pull-all-data').addEventListener('click', pullCombinedData);
+function pullCombinedData(event) {
+    const button = event.currentTarget;
+    button.disabled = true;
+    button.textContent = 'Updating data...';
+    
+    fetch('pull-all-data/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert(data.message);
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while updating data.');
+    })
+    .finally(() => {
+        button.disabled = false;
+        button.textContent = 'Update Data';
+    });
+}
+
+
 function handleEventClick(element, event) {
     updateEventLayer(element);
     showDeleteIcon(element);

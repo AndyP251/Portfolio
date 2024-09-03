@@ -178,6 +178,16 @@ def dashboard(request):
     })
 
 
+def pull_combined_data(request):
+    canvas_response = pull_canvas_data(request)
+    gradescope_response = pull_gradescope_data(request)
+
+    if canvas_response.status_code == 200 and gradescope_response.status_code == 200:
+        return JsonResponse({'status': 'success', 'message': 'Data pulled successfully from both sources.'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Failed to pull data from one or both sources.'})
+
+
 def pull_gradescope_data(request):
     connection = GSConnection()
     connection.login(settings.GRADESCOPE_USER_KEY, settings.GRADESCOPE_USER_SECRET)
@@ -208,6 +218,7 @@ def pull_gradescope_data(request):
                         curr_assignment = {
                             "source": "gradescope",
                             "course": course_id,
+                            "courseName": courses["student"][course_id].name,
                             "title": assignment.name,
                             "due_date": str(assignment.due_date),
                             "submitted": assignment.submissions_status == "Submitted",
@@ -255,9 +266,17 @@ def pull_canvas_data(request):
         if assignments_response.status_code == 200:
             assignments = assignments_response.json()
             for assignment in assignments:
+
+                course_code = course["course_code"]
+                course_parts = course_code.split('_')
+                if len(course_parts) >= 2:
+                    formatted_course_code = course_parts[0] + ' ' + course_parts[1].split('-')[0]
+                else:
+                    formatted_course_code = course_code
                 todos.append({
                     "source": "canvas",
-                    'course': course["name"],
+                    'course': course["id"],
+                    'courseName': formatted_course_code,
                     'title': assignment['name'],
                     'due_date': assignment['due_at'],
                     'submitted': assignment['has_submitted_submissions'],
