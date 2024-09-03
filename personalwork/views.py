@@ -133,16 +133,23 @@ def dashboard(request):
         ]
     }
 
-    
+    selected_source = request.GET.get('data_source', 'canvas')
 
-    todos = read_json(CANVAS_TASKS_FILE)
-    # todos = read_json(GRADESCOPE_TASK_FILE)
+    todos = read_json(CANVAS_TASKS_FILE) + read_json(GRADESCOPE_TASK_FILE)
+    
+    if selected_source:
+        todos = [todo for todo in todos if todo['source'] == selected_source]
+
+
     schedules = read_json(SCHEDULE_JSON_FILE)
 
     # Convert date strings to datetime objects and handle missing dates
     for todo in todos:
         if 'due_date' in todo and todo['due_date']:
-            todo['due_date'] = datetime.datetime.strptime(todo['due_date'], '%Y-%m-%dT%H:%M:%SZ')
+            if todo['source'] == 'canvas':
+                todo['due_date'] = datetime.datetime.strptime(todo['due_date'], '%Y-%m-%dT%H:%M:%SZ')
+            elif todo['source'] == 'gradescope':
+                todo['due_date'] = datetime.datetime.strptime(todo['due_date'], '%Y-%m-%d %H:%M:%S%z')
         else:
             todo['due_date'] = None
 
