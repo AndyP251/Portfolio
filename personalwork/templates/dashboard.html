@@ -170,7 +170,7 @@
 }
 
 .time-slot {
-    height: 30px; /* 30 minutes height for each slot */
+    height: 29.2px; /* 30 minutes height for each slot */
     border-bottom: 1px solid #ccc;
     text-align: right;
     padding-right: 5px;
@@ -280,6 +280,7 @@
         <h1 class="dashboard-title">Andrew's Dashboard</h1>
         <div class="dashboard-actions">
             <button id="pull-canvas" class="btn btn-primary">Pull Canvas Data</button>
+            <button id="pull-gradescope" class="btn btn-primary">Pull Gradescope Data</button>
             <button id="sort-todos" class="btn btn-secondary">Sort by Date</button>
             <button id="refresh-button" class="btn btn-secondary" onclick="refreshData()">Refresh Data</button>
             <button id="add-schedule-button" class="btn btn-secondary">Add Schedule</button>
@@ -345,7 +346,7 @@
         <div class="schedule">
             <h2>Daily Schedule</h2>
             <div class="schedule-container">
-                <div class="time-scale" style="height:50px">
+                <div class="time-scale">
                     {% for time in time_slots %}
                         <div class="time-slot">{{ time }}</div>
                     {% endfor %}
@@ -579,6 +580,30 @@ document.getElementById('pull-canvas').addEventListener('click', function() {
         .finally(() => {
             this.disabled = false;
             this.textContent = 'Pull Canvas Data';
+        });
+})
+
+
+document.getElementById('pull-gradescope').addEventListener('click', function() {
+    this.disabled = true;
+    this.textContent = 'Pulling data...';
+    fetch('/personalwork/pull_gradescope/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert('Gradescope data pulled successfully!');
+                location.reload();
+            } else {
+                alert('Failed to pull Gradescope data: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while pulling Gradescope data.');
+        })
+        .finally(() => {
+            this.disabled = false;
+            this.textContent = 'Pull Gradescope Data';
         });
 })
 
