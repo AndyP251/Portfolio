@@ -187,13 +187,15 @@ def pull_combined_data(request):
     else:
         return JsonResponse({'status': 'error', 'message': 'Failed to pull data from one or both sources.'})
 
+# TODO: Implement cengage mindtap, matlabs, MAA workweb
+
 
 def pull_gradescope_data(request):
     connection = GSConnection()
     connection.login(settings.GRADESCOPE_USER_KEY, settings.GRADESCOPE_USER_SECRET)
     courses = connection.account.get_courses()
     current_date = datetime.datetime.now(pytz.UTC)
-    cutoff_date = current_date - timedelta(days=120)  # Assuming a semester is about 4 months
+    cutoff_date = current_date - timedelta(days=90)  # Assuming a semester is about 4 months
 
     def safe_compare_dates(date1, date2):
         if date1 is None or date2 is None:

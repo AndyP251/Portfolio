@@ -4,9 +4,36 @@
 
 {% block extra_css %}
 <style>
-
+    :root {
+    --bg-color: #121212;
+    --text-color: #f2e3e3;
+    --large-container-bg: #393939;
+    --item-bg: #2a2a2a;
+    --schedule-item-bg: #252525;
+    --recurring-schedule-item-bg: #303030;
+    --table-header-bg: #1a1a1a;
+    --todo-submitted-color: #476b49;
+    --canvas-todo-source-color: #ff5252;
+    --gradescope-todo-source-color: #448aff;
+    --primary-button-color: #2196f3;
+    --secondary-button-color: #64b5f6;
+    --link-color: #2196f3;
+    --dropdown-background-color: #626161;
+    --day-separator-color: #5a5b60;
+    --week-separator-color: #83a8c5;
+    --time-line: #2196f3;
+    --schedule-bg: #535252; /* Lighter background for the schedule area */
+    --item-border-color: #4e4e4e;
+}
+    html, body {
+        background-color: var(--bg-color);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+    }
     .dashboard-container {
         max-width: 1200px;
+        background-color: var(--bg-color);
         margin: 0 auto;
         padding: 20px;
         font-family: Arial, sans-serif;
@@ -19,7 +46,7 @@
     }
     .dashboard-title {
         font-size: 28px;
-        color: #333;
+        color: var(--text-color);
     }
     .dashboard-actions button {
         margin-left: 10px;
@@ -30,7 +57,7 @@
     }
     .todo-list {
         flex: 2;
-        background-color: #f8f9fa;
+        background-color: var(--large-container-bg);
         border-radius: 8px;
         padding: 20px;
         padding-right:10px;
@@ -38,14 +65,14 @@
     }
     .schedule {
         flex: 1;
-        background-color: #f8f9fa;
+        background-color: var(--large-container-bg);
         border-radius: 8px;
         padding: 20px;
         padding-left:10px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     h2 {
-        color: #011425;
+        color: var(--text-color);
         margin-bottom: 15px;
     }
     ul {
@@ -53,7 +80,8 @@
         padding: 0;
     }
     .todo-item, .schedule-item {
-        background-color: #fff;
+        background-color: var(--item-bg);
+        color: var(--text-color);
         border: 1px solid #dee2e6;
         border-radius: 4px;
         padding: 10px;
@@ -67,28 +95,29 @@
     }
     .todo-due, .schedule-time {
         font-size: 0.9em;
-        color: #6c757d;
+        color: var(--text-color);
     }
     .todo-list a {
     text-decoration: underline;
     color: inherit; /* Keeps the text color the same as the surrounding text */
   }
     .todo-item.submitted {
-        background-color: #d4edda; 
+        background-color: var(--todo-submitted-color); 
     }
     .todo-source {
         font-weight: bold;
-        background-color: #f0f0f0; /* Slightly darker white */
-        padding: 2px 4px; /* Add some padding for better readability */
-        border-radius: 3px; /* Optional: Add rounded corners */
+        padding: 2px 4px; 
+        border-radius: 3px;
     }
 
     .todo-source-canvas {
-        color: red;
+        background-color: var(--canvas-todo-source-color);
+        color: var(--text-color);
     }
 
     .todo-source-gradescope {
-        color: blue;
+        background-color: var(--gradescope-todo-source-color);
+        color: var(--text-color);
     }
 
     .todo-title {
@@ -105,11 +134,11 @@
     }
     .btn-primary {
         background-color: #007bff;
-        color: white;
+        color: var(--text-color);
     }
     .btn-secondary {
-        background-color: #6c757d;
-        color: white;
+        background-color: var(--secondary-button-color);
+        color: var(--text-color);
     }
     .btn:hover {
         opacity: 0.9;
@@ -117,7 +146,8 @@
     .dropdown-menu {
         display: none;
         position: absolute;
-        background-color: #f8f9fa;
+        color:var(--text-color);
+        background-color: var(--dropdown-background-color);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         padding: 10px;
         border-radius: 4px;
@@ -131,7 +161,7 @@
         margin-bottom: 10px;
         width: 100%;
         padding: 8px;
-        border: 1px solid #ccc;
+        border: 1px solid var(--item-bg);
         border-radius: 4px;
     }
     .schedule-grid {
@@ -140,12 +170,12 @@
         grid-template-columns: repeat(5, 1fr);
         grid-template-rows: repeat(12, 60px);
         gap: 5px;
-        border: 1px solid #ccc;
+        border: 1px solid var(--item-bg);
     }
     .schedule-item {
         position: absolute;
         flex: 2;
-        background-color: #e0f7fa;
+        background-color: var(--schedule-item-bg);
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         padding: 5px;
@@ -156,28 +186,23 @@
         white-space: nowrap; /* Prevents text from wrapping to the next line */
         text-overflow: ellipsis; /* Adds ellipsis (...) for overflowing text */
     }
+
     .day-separator {
-        border-bottom: 1px solid lightblue; /* Thin line for days */
+        border-bottom: 1px solid var(--day-separator-color); 
+        color: var(--text-color);
         margin: 10px 0;
         padding: 5px 0;
         font-weight: normal; /* Keep text weight normal */
     }
     .week-separator {
-        border-bottom: 2px solid blue; /* Bold line for weeks */
+        border-bottom: 2px solid var(--week-separator-color); /* Bold line for weeks */
+        color: var(--text-color);
         margin: 15px 0;
         padding: 10px 0;
         font-weight: bold; /* Make week text bold */
         font-size: 1.2em;
     }
-    .current-time-line {
-        position: absolute;
-        flex:1;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background-color: #007bff;
-        z-index: 1;
-    }
+
     .schedule-container {
     display: flex;
 }
@@ -190,7 +215,7 @@
 
 .time-slot {
     height: 29.2px; /* 30 minutes height for each slot */
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--item-bg);
     text-align: right;
     padding-right: 5px;
     font-size: 0.8em;
@@ -201,26 +226,17 @@
     position: relative;
     display: grid;
     grid-template-rows: repeat(48, 30px); /* 48 half-hour slots */
-    border-left: 1px solid #ccc;
+    border-left: 1px solid var(--item-border-color);
 }
 
-.schedule-item {
-    position: absolute;
-    background-color: #e0f7fa;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    padding: 5px;
-    text-align: center;
-    left: 0;
-    right: 0;
-}
+
 
 .schedule-item.recurring {
-    background-color: #9fd5dc;
+    background-color: var(--recurring-schedule-item-bg);
 }
 
 .schedule-item::before {
-  content: none; /* This removes the dot */
+  content: none;
 }
    
 .schedule-event {
@@ -239,14 +255,13 @@
         top: 5px;
         display: none;
     }
-/* Increase the width of the dropdown container */
+
 .dropdown-menu {
   width: auto;
   min-width: 300px;
   padding: 15px;
 }
 
-/* Ensure form inputs fit within the container */
 .dropdown-menu .form-control {
   width: 100%;
   max-width: 100%;
@@ -282,20 +297,22 @@
     margin-bottom: 10px;
 }
 
+
 .current-time-line {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: #007bff;
-    z-index: 1;
-}
+        position: absolute;
+        flex:1;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: var(--time-line);
+        z-index: 1;
+    }
 
 .data-source-dropdown {
     margin-left: 10px;
     padding: 5px;
     border-radius: 4px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--item-bg);
 }
 
 </style>
