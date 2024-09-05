@@ -109,27 +109,25 @@ def dashboard(request):
 
     schedule = {
     'Monday': [
-        {'course': 'CS 3710', 'time': '10:00 AM - 10:50 AM', 'location': 'Olsson Hall 120'},
-        {'course': 'COMM 3230', 'time': '12:30 PM - 1:45 PM', 'location': 'Robertson Hall 225'},
-        {'course': 'RELC 1220', 'time': '2:00 PM - 2:50 PM', 'location': 'Wilson Hall 402'},
+        {'id':uuid.uuid4(), 'course': 'CS 3710', 'time': '10:00 AM - 10:50 AM', 'location': 'Olsson Hall 120'},
+        {'id':uuid.uuid4(), 'course': 'COMM 3230', 'time': '12:30 PM - 1:45 PM', 'location': 'Robertson Hall 225'},
+        {'id':uuid.uuid4(), 'course': 'RELC 1220', 'time': '2:00 PM - 2:50 PM', 'location': 'Wilson Hall 402'},
     ],
     'Tuesday': [
-        {'course': 'CS 3240', 'time': '9:30 AM - 10:45 AM', 'location': 'Rice Hall 130'},
-        {'course': 'CS 3100', 'time': '11:00 AM - 11:50 AM', 'location': 'Rice Hall 130'},
-        {'course': 'SPAN 2020', 'time': '3:30 PM - 4:45 PM', 'location': 'New Cabell Hall 364'},
+        {'id':uuid.uuid4(), 'course': 'CS 3100', 'time': '11:00 AM - 11:50 AM', 'location': 'Rice Hall 130'},
+        {'id':uuid.uuid4(), 'course': 'SPAN 2020', 'time': '3:30 PM - 4:45 PM', 'location': 'New Cabell Hall 364'},
     ],
     'Wednesday': [
-        {'course': 'CS 3710', 'time': '10:00 AM - 10:50 AM', 'location': 'Olsson Hall 120'},
-        {'course': 'COMM 3230', 'time': '12:30 PM - 1:45 PM', 'location': 'Robertson Hall 225'},
-        {'course': 'RELC 1220', 'time': '2:00 PM - 2:50 PM', 'location': 'Wilson Hall 402'},
+        {'id':uuid.uuid4(), 'course': 'CS 3710', 'time': '10:00 AM - 10:50 AM', 'location': 'Olsson Hall 120'},
+        {'id':uuid.uuid4(), 'course': 'COMM 3230', 'time': '12:30 PM - 1:45 PM', 'location': 'Robertson Hall 225'},
+        {'id':uuid.uuid4(), 'course': 'RELC 1220', 'time': '2:00 PM - 2:50 PM', 'location': 'Wilson Hall 402'},
     ],
     'Thursday': [
-        {'course': 'CS 3240', 'time': '9:30 AM - 10:45 AM', 'location': 'Rice Hall 130'},
-        {'course': 'CS 3710', 'time': '11:00 AM - 12:15 AM', 'location': 'Olsson Hall 120'},
-        {'course': 'SPAN 2020', 'time': '3:30 PM - 4:45 PM', 'location': 'New Cabell Hall 364'},
+        {'id':uuid.uuid4(), 'course': 'CS 3710', 'time': '11:00 AM - 12:15 AM', 'location': 'Olsson Hall 120'},
+        {'id':uuid.uuid4(), 'course': 'SPAN 2020', 'time': '3:30 PM - 4:45 PM', 'location': 'New Cabell Hall 364'},
     ],
     'Friday': [
-        {'course': 'CS 3710', 'time': '10:00 AM - 10:50 AM', 'location': 'Olsson Hall 120'},
+        {'id':uuid.uuid4(), 'course': 'CS 3710', 'time': '10:00 AM - 10:50 AM', 'location': 'Olsson Hall 120'},
         ]
     }
 

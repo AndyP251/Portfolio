@@ -8,5 +8,5 @@ urlpatterns = [
     path('pull-all-data/', views.pull_combined_data, name='pull-all-data'),
     path('add_schedule/', views.add_schedule, name='add_schedule'),
     path('update_event_layer/', views.update_event_layer, name='update_event_layer'),
-    path('delete_event/', views.delete_event, name='delete_event'),
+    path('delete-event/', views.delete_event, name='delete-event'),
 ]
