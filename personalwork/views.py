@@ -107,30 +107,6 @@ def dashboard(request):
     if not request.session.get('authenticated'):
         return render(request, 'password_protect.html', {'form': form})
 
-    schedule = {
-    'Monday': [
-        {'id':uuid.uuid4(), 'course': 'CS 3710', 'time': '10:00 AM - 10:50 AM', 'location': 'Olsson Hall 120'},
-        {'id':uuid.uuid4(), 'course': 'COMM 3230', 'time': '12:30 PM - 1:45 PM', 'location': 'Robertson Hall 225'},
-        {'id':uuid.uuid4(), 'course': 'RELC 1220', 'time': '2:00 PM - 2:50 PM', 'location': 'Wilson Hall 402'},
-    ],
-    'Tuesday': [
-        {'id':uuid.uuid4(), 'course': 'CS 3100', 'time': '11:00 AM - 11:50 AM', 'location': 'Rice Hall 130'},
-        {'id':uuid.uuid4(), 'course': 'SPAN 2020', 'time': '3:30 PM - 4:45 PM', 'location': 'New Cabell Hall 364'},
-    ],
-    'Wednesday': [
-        {'id':uuid.uuid4(), 'course': 'CS 3710', 'time': '10:00 AM - 10:50 AM', 'location': 'Olsson Hall 120'},
-        {'id':uuid.uuid4(), 'course': 'COMM 3230', 'time': '12:30 PM - 1:45 PM', 'location': 'Robertson Hall 225'},
-        {'id':uuid.uuid4(), 'course': 'RELC 1220', 'time': '2:00 PM - 2:50 PM', 'location': 'Wilson Hall 402'},
-    ],
-    'Thursday': [
-        {'id':uuid.uuid4(), 'course': 'CS 3710', 'time': '11:00 AM - 12:15 AM', 'location': 'Olsson Hall 120'},
-        {'id':uuid.uuid4(), 'course': 'SPAN 2020', 'time': '3:30 PM - 4:45 PM', 'location': 'New Cabell Hall 364'},
-    ],
-    'Friday': [
-        {'id':uuid.uuid4(), 'course': 'CS 3710', 'time': '10:00 AM - 10:50 AM', 'location': 'Olsson Hall 120'},
-        ]
-    }
-
     selected_source = request.GET.get('data_source', 'sum')
 
     todos = read_json(CANVAS_TASKS_FILE) + read_json(GRADESCOPE_TASK_FILE)
@@ -159,8 +135,6 @@ def dashboard(request):
 
     # Get the current day of the week
     current_day = datetime.datetime.now().strftime('%A')
-    daily_schedule = schedule.get(current_day, [])
-
     #Get today's schedules:
     todays_schedule: list = []
     for event in schedules:
@@ -170,7 +144,6 @@ def dashboard(request):
     return render(request, 'dashboard.html', {
         'todos': todos,
         'schedules': todays_schedule,
-        'daily_schedule': daily_schedule,
         'time_slots': time_slots,
         'current_date': datetime.date.today().isoformat(),
     })

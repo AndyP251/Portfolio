@@ -1,1 +1,92 @@
-[]
+[
+    {
+        "id": "07777ff6-a0ff-44b2-90fa-5c97293dca1d",
+        "day": "Friday",
+        "recurring": true,
+        "dateSet": "2024-10-11",
+        "course": "Working",
+        "time": "09:00 PM - 10:00 PM",
+        "location": "Here"
+    },
+    {
+        "id": "dbec6502-f123-431b-8886-be3011c928d4",
+        "day": "Monday",
+        "recurring": true,
+        "dateSet": "2024-10-11",
+        "course": "CS 3710",
+        "time": "10:00 AM - 10:50 AM",
+        "location": "Olsson Hall 120"
+    },
+    {
+        "id": "e5b7d2d0-7d94-4fe9-8937-4533944ee76a",
+        "day": "Monday",
+        "recurring": true,
+        "dateSet": "2024-10-11",
+        "course": "COMM 3230",
+        "time": "12:30 PM - 1:45 PM",
+        "location": "Robertson Hall 225"
+    },
+    {
+        "id": "abf6a01e-de6a-4377-a1f8-44c1b9311b33",
+        "day": "Monday",
+        "recurring": true,
+        "dateSet": "2024-10-11",
+        "course": "RELC 1220",
+        "time": "2:00 PM - 2:50 PM",
+        "location": "Wilson Hall 402"
+    },
+    {
+        "id": "9f17ef26-a002-49dd-9353-1bde75a97251",
+        "day": "Tuesday",
+        "recurring": true,
+        "dateSet": "2024-10-11",
+        "course": "CS 3100",
+        "time": "11:00 AM - 11:50 AM",
+        "location": "Rice Hall 130"
+    },
+    {
+        "id": "b8e9052f-0eb3-4364-a02c-fae239a8adf1",
+        "day": "Tuesday",
+        "recurring": true,
+        "dateSet": "2024-10-11",
+        "course": "SPAN 2020",
+        "time": "3:30 PM - 4:45 PM",
+        "location": "New Cabell Hall 364"
+    },
+    {
+        "id": "d1ae974a-c90e-4dc5-b1da-9d8baaa5838d",
+        "day": "Wednesday",
+        "recurring": true,
+        "dateSet": "2024-10-11",
+        "course": "CS 3710",
+        "time": "10:00 AM - 10:50 AM",
+        "location": "Olsson Hall 120"
+    },
+    {
+        "id": "9f17ef26-a002-mf93-9353-1bde75a97251",
+        "day": "Thurday",
+        "recurring": true,
+        "dateSet": "2024-10-11",
+        "course": "CS 3100",
+        "time": "11:00 AM - 11:50 AM",
+        "location": "Rice Hall 130"
+    },
+    {
+        "id": "b8e9052f-0eb3-fdl3-a02c-fae239a8adf1",
+        "day": "Thursday",
+        "recurring": true,
+        "dateSet": "2024-10-11",
+        "course": "SPAN 2020",
+        "time": "3:30 PM - 4:45 PM",
+        "location": "New Cabell Hall 364"
+    },
+    {
+        "id": "d1ae974a-c90e-9402-b1da-9d8bfaa5838d",
+        "day": "Friday",
+        "recurring": true,
+        "dateSet": "2024-10-11",
+        "course": "CS 3710",
+        "time": "10:00 AM - 10:50 AM",
+        "location": "Olsson Hall 120"
+    }
+]

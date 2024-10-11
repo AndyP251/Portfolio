@@ -3,6 +3,11 @@ import os
 
 from django.core.management.utils import get_random_secret_key
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
@@ -105,7 +110,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True  
 PERPLEXITY_API_TOKEN =os.getenv("PERPLEXITY_API_TOKEN")
 CANVAS_API_TOKEN=os.getenv("CANVAS_API_TOKEN")
-USER_PASSWORD =os.getenv("USER_PASSWORD")
+USER_PASSWORD =os.getenv("USER_PASSWORD", "dev")
 CANVAS_DOMAIN = os.getenv("CANVAS_DOMAIN") 
 GRADESCOPE_USER_KEY = os.getenv("GRADESCOPE_USER_KEY") 
 GRADESCOPE_USER_SECRET = os.getenv("GRADESCOPE_USER_SECRET") 

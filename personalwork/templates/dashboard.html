@@ -409,18 +409,6 @@
                     {% endfor %}
                 </div>
                 <div class="schedule-grid" id="schedule">
-                    {% for cls in daily_schedule %}
-                    <div class="schedule-item" 
-                        style="top: calc({{ cls.start_position }} * 30px); height: calc({{ cls.duration }} * 30px);" 
-                        data-id="{{ cls.id }}" 
-                        onclick="handleEventClick(this)">
-                        <strong>{{ cls.course }}</strong><br>
-                        {{ cls.time }}<br>
-                        {{ cls.location }}
-                        <span class="delete-icon" style="display:none;" onclick="deleteEvent(event, '{{ cls.id }}')">🗑️</span>
-                    </div>
-                    {% endfor %}
-
                     {% for cls in schedules %}
                         {% if cls.recurring or cls.dateSet >= current_date %}
                             <div class="schedule-item {% if cls.recurring == 'True' or cls.recurring %}recurring{% endif %}" 
@@ -472,6 +460,7 @@ function pullCombinedData(event) {
         button.disabled = false;
         button.textContent = 'Update Data';
         sortData()
+        refreshData()
     });
 }
 
@@ -526,6 +515,7 @@ function deleteEvent(event, eventId) {
                 if (eventElement) {
                     eventElement.remove();
                     console.log("Event element removed from DOM");
+                    refreshData()
                 } else {
                     console.error(`Could not find the event element to remove. ID: ${eventId}`);
                 }
