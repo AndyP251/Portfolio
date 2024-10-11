@@ -279,6 +279,19 @@
   display: block;
   margin-bottom: 5px;
 }
+.close-dropdown-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 16px;
+    cursor: pointer;
+}
+.close-dropdown-btn:hover {
+    color: #ff5252; /* Change color on hover for better visibility */
+}
 
 /* Make the dropdown responsive */
 @media (max-width: 768px) {
@@ -316,6 +329,14 @@
     border-radius: 4px;
     border: 1px solid var(--item-bg);
 }
+.selection-box {
+    position: absolute;
+    left: 0;
+    right: 0;
+    background-color: rgba(33, 150, 243, 0.3); /* Semi-transparent blue */
+    border: 1px dashed #2196f3; /* Dashed border */
+    z-index: 1;
+}
 
 </style>
 {% endblock %}
@@ -330,6 +351,7 @@
             <button id="refresh-button" class="btn btn-secondary" onclick="refreshData()">Refresh Data</button>
             <button id="add-schedule-button" class="btn btn-secondary">Add Schedule</button>
                 <div id="schedule-dropdown" class="dropdown-menu p-3" style="width: 300px;">
+                    <button type="button" class="close-dropdown-btn" onclick="closeDropdown()">✖</button>
                     <form id="schedule-form">
                         <div class="mb-3">
                             <label for="day" class="form-label">Day</label>
@@ -434,6 +456,89 @@
 
 
 <script>
+
+function closeDropdown() {
+    const scheduleDropdown = document.getElementById('schedule-dropdown');
+    scheduleDropdown.classList.remove('active');
+}
+
+// Schedule Drag Functionality
+const scheduleGrid = document.getElementById('schedule');
+let isDragging = false;
+let dragStartY = 0;
+let selectionBox = null;
+
+scheduleGrid.addEventListener('mousedown', (event) => {
+    if (event.target.classList.contains('schedule-item')) return; // Ignore if clicking on an existing event
+    
+    isDragging = true;
+    dragStartY = event.offsetY;
+
+    // Create a selection box
+    selectionBox = document.createElement('div');
+    selectionBox.className = 'selection-box';
+    selectionBox.style.top = `${dragStartY}px`;
+    scheduleGrid.appendChild(selectionBox);
+});
+
+scheduleGrid.addEventListener('mousemove', (event) => {
+    if (!isDragging || !selectionBox) return;
+
+    const currentY = event.offsetY;
+    const height = Math.abs(currentY - dragStartY);
+    
+    selectionBox.style.height = `${height}px`;
+    selectionBox.style.top = `${Math.min(dragStartY, currentY)}px`;
+});
+
+scheduleGrid.addEventListener('mouseup', (event) => {
+    if (!isDragging || !selectionBox) return;
+
+    isDragging = false;
+    
+    const dragEndY = event.offsetY;
+    
+    // Calculate start and end times based on the drag
+    const startTimeIndex = Math.floor(Math.min(dragStartY, dragEndY) / 30);
+    const endTimeIndex = Math.ceil(Math.max(dragStartY, dragEndY) / 30);
+
+    const startTime = indexToTime(startTimeIndex);
+    const endTime = indexToTime(endTimeIndex);
+
+    // Trigger the add schedule form with pre-filled times
+    showAddScheduleForm(startTime, endTime);
+
+    // Remove the selection box
+    selectionBox.remove();
+});
+
+function indexToTime(index) {
+    const totalMinutes = index * 30; // Each index represents a half-hour
+    let hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    const period = hours >= 12 ? 'PM' : 'AM';
+
+    if (hours === 0) {
+        hours = 12; // Midnight case
+    } else if (hours > 12) {
+        hours -= 12; // Convert to 12-hour format
+    }
+
+    const formattedHours = String(hours).padStart(2, '0');
+    const formattedMinutes = String(minutes).padStart(2, '0');
+
+    return `${formattedHours}:${formattedMinutes} ${period}`;
+}
+
+function showAddScheduleForm(startTime, endTime) {
+    const scheduleDropdown = document.getElementById('schedule-dropdown');
+    document.getElementById('start_time').value = startTime;
+    document.getElementById('end_time').value = endTime;
+
+    // Display the form
+    scheduleDropdown.classList.add('active');
+}
+
 document.getElementById('pull-all-data').addEventListener('click', pullCombinedData);
 function pullCombinedData(event) {
     const button = event.currentTarget;
@@ -514,11 +619,11 @@ function deleteEvent(event, eventId) {
         .then(data => {
             if (data.status === 'success') {
                 console.log("Event deleted successfully on server");
-                const eventElement = document.querySelector(`.schedule-event[data-id="${eventId}"]`);
+                const eventElement = document.querySelector(`.schedule-item[data-id="${eventId}"]`);
                 if (eventElement) {
                     eventElement.remove();
                     console.log("Event element removed from DOM");
-                    refreshData()
+                    refreshData();
                 } else {
                     console.error(`Could not find the event element to remove. ID: ${eventId}`);
                 }
@@ -704,40 +809,101 @@ function sortData() {
     const todoList = document.getElementById('todo-list');
     const todos = Array.from(todoList.children);
 
+    // Sort todos by date
     todos.sort((a, b) => {
         const dateA = new Date(a.dataset.date);
         const dateB = new Date(b.dataset.date);
         return dateA - dateB;
     });
 
+    const today = new Date();
+    const currentWeekNumber = getWeekNumber(today);
+
     todoList.innerHTML = '';
+
+    // Add button to load previous data at the top
+    const loadPreviousButton = document.createElement('button');
+    loadPreviousButton.textContent = 'Load Previous Weeks';
+    loadPreviousButton.className = 'btn btn-secondary';
+    loadPreviousButton.onclick = () => loadPreviousWeeks(todos, currentWeekNumber, loadPreviousButton);
+    todoList.appendChild(loadPreviousButton);
+
+    let currentDate = null;
+    let currentWeek = null;
+
+    // Filter and display only current and upcoming weeks
+    todos.forEach(todo => {
+        const todoDate = new Date(todo.dataset.date);
+        if (!isNaN(todoDate.getTime())) {
+            const weekNumber = getWeekNumber(todoDate);
+
+            if (weekNumber >= currentWeekNumber) {
+                const formattedDate = todoDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+                if (currentWeek !== weekNumber) {
+                    const weekSeparator = document.createElement('li');
+                    weekSeparator.className = 'week-separator';
+                    weekSeparator.textContent = `Week of ${todoDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
+                    todoList.appendChild(weekSeparator);
+                    currentWeek = weekNumber;
+                }
+
+                if (currentDate !== formattedDate) {
+                    const daySeparator = document.createElement('li');
+                    daySeparator.className = 'day-separator';
+                    daySeparator.textContent = formattedDate;
+                    todoList.appendChild(daySeparator);
+                    currentDate = formattedDate;
+                }
+
+                todoList.appendChild(todo);
+            }
+        }
+    });
+}
+
+function loadPreviousWeeks(todos, currentWeekNumber, button) {
+    const todoList = document.getElementById('todo-list');
+
+    let previousTodosFragment = document.createDocumentFragment();
+    
     let currentDate = null;
     let currentWeek = null;
 
     todos.forEach(todo => {
         const todoDate = new Date(todo.dataset.date);
         if (!isNaN(todoDate.getTime())) {
-            const formattedDate = todoDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
             const weekNumber = getWeekNumber(todoDate);
 
-            if (currentWeek !== weekNumber) {
-                const weekSeparator = document.createElement('li');
-                weekSeparator.className = 'week-separator';
-                weekSeparator.textContent = `Week of ${todoDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
-                todoList.appendChild(weekSeparator);
-                currentWeek = weekNumber;
-            }
+            if (weekNumber < currentWeekNumber) {
+                const formattedDate = todoDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-            if (currentDate !== formattedDate) {
-                const daySeparator = document.createElement('li');
-                daySeparator.className = 'day-separator';
-                daySeparator.textContent = formattedDate;
-                todoList.appendChild(daySeparator);
-                currentDate = formattedDate;
+                if (currentWeek !== weekNumber) {
+                    const weekSeparator = document.createElement('li');
+                    weekSeparator.className = 'week-separator';
+                    weekSeparator.textContent = `Week of ${todoDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
+                    previousTodosFragment.appendChild(weekSeparator);
+                    currentWeek = weekNumber;
+                }
+
+                if (currentDate !== formattedDate) {
+                    const daySeparator = document.createElement('li');
+                    daySeparator.className = 'day-separator';
+                    daySeparator.textContent = formattedDate;
+                    previousTodosFragment.appendChild(daySeparator);
+                    currentDate = formattedDate;
+                }
+
+                previousTodosFragment.appendChild(todo);
             }
         }
-        todoList.appendChild(todo);
     });
+
+    // Insert previous todos before the first child (the button)
+    todoList.insertBefore(previousTodosFragment, button.nextSibling);
+
+    // Remove the button after loading previous weeks
+    button.remove();
 }
 
 function getWeekNumber(d) {
