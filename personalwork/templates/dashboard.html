@@ -49,9 +49,6 @@
         font-size: 28px;
         color: var(--text-color);
     }
-    .dashboard-actions button {
-        margin-left: 10px;
-    }
     .dashboard-content {
         display: flex;
         gap: 20px;
@@ -293,6 +290,12 @@
     color: #ff5252; /* Change color on hover for better visibility */
 }
 
+.dashboard-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px; /* Add space between sections */
+    margin-left: 10px;
+}
 /* General styles for mobile and desktop */
 .dashboard-actions.mobile-only {
     display: none; /* Hide by default */
@@ -302,12 +305,17 @@
     display: flex; /* Show by default */
 }
 
+.action-buttons {
+    margin-top: 10px; /* Space above action buttons */
+}
 
 /* Make the dropdown responsive */
 @media (max-width: 768px) {
     .dashboard-actions.mobile-only {
         display: flex; /* Show only on small screens */
         gap: 10px;
+        flex-direction: column; /* Stack buttons vertically on mobile */
+        align-items: flex-start; /* Align buttons to the left */
     }
 
     .dashboard-actions.desktop-only {
@@ -374,6 +382,15 @@
             <button onclick="toggleView('todo')" id='view-todo' class="btn btn-primary">To-Do List</button>
             <button onclick="toggleView('schedule')" id='view-schedule' class="btn btn-secondary">Schedule</button>
         </div>
+    
+        <!-- Action Buttons -->
+        <div class="dashboard-actions mobile-only action-buttons">
+            <button onclick="pullCombinedData()" id='pull-all-data' class="btn btn-secondary">Pull Data</button>
+            <button onclick="sortData()" id="sort-todos" class="btn btn-secondary">Sort by Date</button>
+            <button id="refresh-button" class="btn btn-secondary" onclick="refreshData()">Refresh Data</button>
+            <button id="add-schedule-button" class="btn btn-secondary">Add Schedule</button>
+        </div>
+
         
         <div class="dashboard-actions desktop-only">
             <button onclick="pullCombinedData()" id='pull-all-data' class="btn btn-primary">Pull Data</button>
@@ -424,9 +441,7 @@
     </div>
     <div class="dashboard-content">
         <div class="todo-list">
-           
             <h2>Assignments</h2>
-
             <form method="GET" id="filter-form">
                 <select name="data_source" id="data-source-dropdown" onchange="document.getElementById('filter-form').submit();">
                     <option value="">Select Data Source</option>
