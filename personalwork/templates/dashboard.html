@@ -293,11 +293,35 @@
     color: #ff5252; /* Change color on hover for better visibility */
 }
 
+/* General styles for mobile and desktop */
+.dashboard-actions.mobile-only {
+    display: none; /* Hide by default */
+}
+
+.dashboard-actions.desktop-only {
+    display: flex; /* Show by default */
+}
+
+
 /* Make the dropdown responsive */
 @media (max-width: 768px) {
-  .dropdown-menu {
-    width: 100%;
-  }
+    .dashboard-actions.mobile-only {
+        display: flex; /* Show only on small screens */
+        gap: 10px;
+    }
+
+    .dashboard-actions.desktop-only {
+        display: none; /* Hide on small screens */
+    }
+
+    .dashboard-content {
+        flex-direction: column;
+    }
+
+    .todo-list, .schedule {
+        width: 100%;
+        margin-bottom: 20px;
+    }
 }
 
 /* Adjust specific inputs if needed */
@@ -345,7 +369,13 @@
 <div class="dashboard-container">
     <div class="dashboard-header">
         <h1 class="dashboard-title">Andrew's Dashboard</h1>
-        <div class="dashboard-actions">
+        
+        <div class="dashboard-actions mobile-only">
+            <button onclick="toggleView('todo')" id='view-todo' class="btn btn-primary">To-Do List</button>
+            <button onclick="toggleView('schedule')" id='view-schedule' class="btn btn-secondary">Schedule</button>
+        </div>
+        
+        <div class="dashboard-actions desktop-only">
             <button onclick="pullCombinedData()" id='pull-all-data' class="btn btn-primary">Pull Data</button>
             <button onclick="sortData()" id="sort-todos" class="btn btn-secondary">Sort by Date</button>
             <button id="refresh-button" class="btn btn-secondary" onclick="refreshData()">Refresh Data</button>
@@ -456,6 +486,48 @@
 
 
 <script>
+    
+    function toggleView(view) {
+    const todoList = document.querySelector('.todo-list');
+    const schedule = document.querySelector('.schedule');
+    
+    // Buttons
+    const sortButton = document.getElementById('sort-todos');
+    const refreshButton = document.getElementById('refresh-button');
+    const addScheduleButton = document.getElementById('add-schedule-button');
+    const pullDataButton = document.getElementById('pull-all-data');
+    
+    if (view === 'todo') {
+        todoList.style.display = 'block';
+        schedule.style.display = 'none';
+        
+        // Show buttons relevant to the To-Do List
+        sortButton.style.display = 'inline-block';
+        refreshButton.style.display = 'inline-block';
+        pullDataButton.style.display = 'inline-block';
+        
+        // Hide buttons not relevant to To-Do List
+        addScheduleButton.style.display = 'none';
+    } else if (view === 'schedule') {
+        todoList.style.display = 'none';
+        schedule.style.display = 'block';
+        
+        // Show buttons relevant to the Schedule
+        addScheduleButton.style.display = 'inline-block';
+        refreshButton.style.display = 'inline-block';
+        
+        // Hide buttons not relevant to Schedule
+        sortButton.style.display = 'none';
+        pullDataButton.style.display = 'none';
+    }
+}
+
+// Set default view to To-Do List on mobile
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.innerWidth <= 768) {
+        toggleView('todo');
+    }
+});
 
 function closeDropdown() {
     const scheduleDropdown = document.getElementById('schedule-dropdown');
