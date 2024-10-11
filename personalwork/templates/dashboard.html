@@ -8,6 +8,7 @@
     --bg-color: #121212;
     --text-color: #f2e3e3;
     --large-container-bg: #393939;
+    --large-container-header-bg: #282727;
     --item-bg: #2a2a2a;
     --schedule-item-bg: #252525;
     --recurring-schedule-item-bg: #303030;
@@ -68,8 +69,11 @@
         background-color: var(--large-container-bg);
         border-radius: 8px;
         padding: 20px;
-        padding-left:10px;
+        padding-left: 10px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        height: 800px;
+        overflow-y: auto;
+        position: relative; /* Ensure relative positioning for child elements */
     }
     h2 {
         color: var(--text-color);
@@ -164,24 +168,22 @@
         border: 1px solid var(--item-bg);
         border-radius: 4px;
     }
-    .schedule-grid {
-        position: relative;
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        grid-template-rows: repeat(12, 60px);
-        gap: 5px;
-        border: 1px solid var(--item-bg);
+
+    .schedule h2 {
+        position: sticky; /* Use sticky positioning */
+        top: 0; /* Stick to the top of its container */
+        background-color: var(--large-container-bg); /* Match container background */
+        z-index: 10;
+        margin-bottom: 10px; /* Add some space below the title */
     }
+
     .schedule-item {
         position: absolute;
-        flex: 2;
         background-color: var(--schedule-item-bg);
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         padding: 5px;
         text-align: center;
-        left: 0;
-        right: 0;
         overflow: hidden; /* Ensures content does not overflow the box */
         white-space: nowrap; /* Prevents text from wrapping to the next line */
         text-overflow: ellipsis; /* Adds ellipsis (...) for overflowing text */
@@ -204,30 +206,30 @@
     }
 
     .schedule-container {
-    display: flex;
-}
+        display: flex;
+    }
 
-.time-scale {
-    width: 60px; 
-    display: flex;
-    flex-direction: column;
-}
+    .time-scale {
+        width: 60px; 
+        display: flex;
+        flex-direction: column;
+    }
 
-.time-slot {
-    height: 29.2px; /* 30 minutes height for each slot */
-    border-bottom: 1px solid var(--item-bg);
-    text-align: right;
-    padding-right: 5px;
-    font-size: 0.8em;
-}
+    .time-slot {
+        height: 24.4px; /* Match each half-hour slot height */
+        border-bottom: 1px solid var(--item-bg);
+        text-align: right;
+        padding-right: 5px;
+        font-size: 0.8em;
+        }
 
-.schedule-grid {
-    flex: 1;
-    position: relative;
-    display: grid;
-    grid-template-rows: repeat(48, 30px); /* 48 half-hour slots */
-    border-left: 1px solid var(--item-border-color);
-}
+    .schedule-grid {
+        flex: 1;
+        position: relative;
+        display: grid;
+        grid-template-rows: repeat(48, 25px); /* Adjusted for half-hour slots */
+        border-left: 1px solid var(--item-border-color);
+    }
 
 
 
@@ -401,6 +403,7 @@
             </ul>
         </div>
         <div class="schedule">
+            
             <h2>Daily Schedule</h2>
             <div class="schedule-container">
                 <div class="time-scale">
@@ -573,16 +576,18 @@ function getCookie(name) {
 
 document.addEventListener('DOMContentLoaded', function() {
     const scheduleItems = document.querySelectorAll('.schedule-item');
+    
     scheduleItems.forEach(item => {
         const time = item.querySelector('strong + br').nextSibling.textContent.trim(); // Get course time
         const [start, end] = time.split(' - ');
         const [startHour, startMinute] = parseTime(start);
         const [endHour, endMinute] = parseTime(end);
-        const startPosition = (startHour * 2) + (startMinute / 30); // Calculate grid position
-        const height = ((endHour * 60 + endMinute) - (startHour * 60 + startMinute)) / 30; // Duration in 30 min slots
 
-        item.style.top = `${startPosition * 30}px`; // Set top position based on start
-        item.style.height = `${height * 30}px`; // Set height based on duration
+        const startPosition = (startHour * 2) + (startMinute / 30); // Calculate grid position in half-hours
+        const height = ((endHour * 60 + endMinute) - (startHour * 60 + startMinute)) / 30; // Duration in half-hour slots
+
+        item.style.top = `${startPosition * 25}px`; // Set top position based on start
+        item.style.height = `${height * 25}px`; // Set height based on duration
     });
 
     updateCurrentTimeLine();
@@ -600,11 +605,14 @@ function parseTime(time) {
 function updateCurrentTimeLine() {
     const now = new Date();
     const currentTime = now.getHours() * 60 + now.getMinutes();
-    const linePosition = currentTime / 30; // Calculate position based on 30-minute slots
+    const linePosition = currentTime / 30; // Calculate position based on half-hour slots
+    
     const currentTimeLine = document.getElementById('current-time-line');
-    currentTimeLine.style.top = `${linePosition * 30}px`;
+    
+    if (currentTimeLine) {
+        currentTimeLine.style.top = `${linePosition * 25}px`;
+    }
 }
-
 
 document.addEventListener('DOMContentLoaded', function() {
     const addScheduleButton = document.getElementById('add-schedule-button');
