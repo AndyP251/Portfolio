@@ -384,19 +384,19 @@
         </div>
     
         <!-- Action Buttons -->
-        <div class="dashboard-actions mobile-only action-buttons">
-            <button onclick="pullCombinedData()" id='pull-all-data' class="btn btn-secondary">Pull Data</button>
+        <div class="dashboard-actions mobile-only action-buttons">  
+            <button onclick="pullCombinedData()" id='pull-all-data-mobile' class="btn btn-secondary">Pull Data</button>
             <button onclick="sortData()" id="sort-todos" class="btn btn-secondary">Sort by Date</button>
             <button id="refresh-button" class="btn btn-secondary" onclick="refreshData()">Refresh Data</button>
-            <button id="add-schedule-button" class="btn btn-secondary">Add Schedule</button>
+            <button id="add-schedule-button-mobile" class="btn btn-secondary">Add Schedule</button>
         </div>
-
         
-        <div class="dashboard-actions desktop-only">
-            <button onclick="pullCombinedData()" id='pull-all-data' class="btn btn-primary">Pull Data</button>
+        
+        <div class="dashboard-actions desktop-only"> 
+            <button onclick="pullCombinedData()" id='pull-all-data-desktop' class="btn btn-primary">Pull Data</button>
             <button onclick="sortData()" id="sort-todos" class="btn btn-secondary">Sort by Date</button>
             <button id="refresh-button" class="btn btn-secondary" onclick="refreshData()">Refresh Data</button>
-            <button id="add-schedule-button" class="btn btn-secondary">Add Schedule</button>
+            <button id="add-schedule-button-desktop" class="btn btn-secondary" onclick="showAddScheduleForm()">Add Schedule</button>
                 <div id="schedule-dropdown" class="dropdown-menu p-3" style="width: 300px;">
                     <button type="button" class="close-dropdown-btn" onclick="closeDropdown()">✖</button>
                     <form id="schedule-form">
@@ -437,7 +437,7 @@
                         <button id="submit-schedule" type="submit" class="btn btn-primary w-100">Save</button>
                     </form>
                 </div>
-        </div>
+        </div>  
     </div>
     <div class="dashboard-content">
         <div class="todo-list">
@@ -509,8 +509,8 @@
     // Buttons
     const sortButton = document.getElementById('sort-todos');
     const refreshButton = document.getElementById('refresh-button');
-    const addScheduleButton = document.getElementById('add-schedule-button');
-    const pullDataButton = document.getElementById('pull-all-data');
+    const addScheduleButton = document.getElementById('add-schedule-button-mobile');
+    const pullDataButton = document.getElementById('pull-all-data-mobile');
     
     if (view === 'todo') {
         todoList.style.display = 'block';
@@ -539,6 +539,7 @@
 
 // Set default view to To-Do List on mobile
 document.addEventListener('DOMContentLoaded', function() {
+    closeDropdown()
     if (window.innerWidth <= 768) {
         toggleView('todo');
     }
@@ -626,7 +627,20 @@ function showAddScheduleForm(startTime, endTime) {
     scheduleDropdown.classList.add('active');
 }
 
-document.getElementById('pull-all-data').addEventListener('click', pullCombinedData);
+function showAddScheduleFormBasicMobile() {
+    const scheduleDropdown = document.getElementById('schedule-dropdown');
+    scheduleDropdown.classList.add('active');
+}
+function showAddScheduleFormBasicDesktop() {
+    const scheduleDropdown = document.getElementById('schedule-dropdown');
+    scheduleDropdown.classList.add('active');
+}
+
+document.getElementById('add-schedule-button-mobile').addEventListener('click', showAddScheduleFormBasicMobile);
+document.getElementById('add-schedule-button-desktop').addEventListener('click', showAddScheduleFormBasicDesktop);
+
+document.getElementById('pull-all-data-desktop').addEventListener('click', pullCombinedData);
+document.getElementById('pull-all-data-mobile').addEventListener('click', pullCombinedData);
 function pullCombinedData(event) {
     const button = event.currentTarget;
     button.disabled = true;
@@ -807,13 +821,8 @@ function updateCurrentTimeLine() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    const addScheduleButton = document.getElementById('add-schedule-button');
     const scheduleDropdown = document.getElementById('schedule-dropdown');
     const scheduleForm = document.getElementById('schedule-form');
-
-    addScheduleButton.addEventListener('click', function() {
-        scheduleDropdown.classList.toggle('active');
-    });
 
     scheduleForm.addEventListener('submit', function(event) {
         event.preventDefault();
