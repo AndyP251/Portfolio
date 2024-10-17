@@ -145,15 +145,23 @@
         opacity: 0.9;
     }
     .dropdown-menu {
-        display: none;
-        position: absolute;
-        color:var(--text-color);
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 300px;
+        z-index: 1050;
         background-color: var(--dropdown-background-color);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        padding: 10px;
-        border-radius: 4px;
-        z-index: 1000;
-    }
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        display: none;
+
+        /* width: auto;
+        min-width: 300px;
+        padding: 15px; */
+        }
     .dropdown-menu.active {
         display: block;
     }
@@ -164,6 +172,35 @@
         padding: 8px;
         border: 1px solid var(--item-bg);
         border-radius: 4px;
+    }
+    
+    .dropdown-menu .form-control {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    }
+
+    /* Adjust padding and margins of form elements */
+    .dropdown-menu .form-group {
+    margin-bottom: 10px;
+    }
+
+    .dropdown-menu label {
+    display: block;
+    margin-bottom: 5px;
+    }
+    .close-dropdown-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: none;
+        border: none;
+        color: var(--text-color);
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .close-dropdown-btn:hover {
+        color: #ff5252; /* Change color on hover for better visibility */
     }
 
     .schedule h2 {
@@ -255,40 +292,6 @@
         display: none;
     }
 
-.dropdown-menu {
-  width: auto;
-  min-width: 300px;
-  padding: 15px;
-}
-
-.dropdown-menu .form-control {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-/* Adjust padding and margins of form elements */
-.dropdown-menu .form-group {
-  margin-bottom: 10px;
-}
-
-.dropdown-menu label {
-  display: block;
-  margin-bottom: 5px;
-}
-.close-dropdown-btn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: none;
-    border: none;
-    color: var(--text-color);
-    font-size: 16px;
-    cursor: pointer;
-}
-.close-dropdown-btn:hover {
-    color: #ff5252; /* Change color on hover for better visibility */
-}
 
 .dashboard-actions {
     display: flex;
@@ -329,6 +332,9 @@
     .todo-list, .schedule {
         width: 100%;
         margin-bottom: 20px;
+    }
+    .dropdown-menu {
+        width: 95%;
     }
 }
 
@@ -397,7 +403,7 @@
             <button onclick="sortData()" id="sort-todos" class="btn btn-secondary">Sort by Date</button>
             <button id="refresh-button" class="btn btn-secondary" onclick="refreshData()">Refresh Data</button>
             <button id="add-schedule-button-desktop" class="btn btn-secondary" onclick="showAddScheduleForm()">Add Schedule</button>
-                <div id="schedule-dropdown" class="dropdown-menu p-3" style="width: 300px;">
+                <div id="schedule-dropdown" class="dropdown-menu">
                     <button type="button" class="close-dropdown-btn" onclick="closeDropdown()">✖</button>
                     <form id="schedule-form">
                         <div class="mb-3">
@@ -535,20 +541,15 @@
         sortButton.style.display = 'none';
         pullDataButton.style.display = 'none';
     }
+    closeDropdown();
 }
 
 // Set default view to To-Do List on mobile
 document.addEventListener('DOMContentLoaded', function() {
-    closeDropdown()
     if (window.innerWidth <= 768) {
         toggleView('todo');
     }
 });
-
-function closeDropdown() {
-    const scheduleDropdown = document.getElementById('schedule-dropdown');
-    scheduleDropdown.classList.remove('active');
-}
 
 // Schedule Drag Functionality
 const scheduleGrid = document.getElementById('schedule');
@@ -618,26 +619,50 @@ function indexToTime(index) {
     return `${formattedHours}:${formattedMinutes} ${period}`;
 }
 
+function closeDropdown() {
+    const scheduleDropdown = document.getElementById('schedule-dropdown');
+    scheduleDropdown.classList.remove('active');
+    document.body.style.overflow = ''; // Restore scrolling
+}
+
 function showAddScheduleForm(startTime, endTime) {
     const scheduleDropdown = document.getElementById('schedule-dropdown');
-    document.getElementById('start_time').value = startTime;
-    document.getElementById('end_time').value = endTime;
+    const startTimeInput = document.getElementById('start_time');
+    const endTimeInput = document.getElementById('end_time');
 
-    // Display the form
+    if (startTime && endTime) {
+        startTimeInput.value = startTime;
+        endTimeInput.value = endTime;
+    } else {
+        startTimeInput.value = '';
+        endTimeInput.value = '';
+    }
+
     scheduleDropdown.classList.add('active');
+    document.body.style.overflow = 'hidden'; // Prevent scrolling when dropdown is open
 }
 
-function showAddScheduleFormBasicMobile() {
+document.getElementById('add-schedule-button-mobile').addEventListener('click', () => showAddScheduleForm());
+document.getElementById('add-schedule-button-desktop').addEventListener('click', () => showAddScheduleForm());
+
+//event listener to close dropdown when clicking outside
+document.addEventListener('click', (event) => {
     const scheduleDropdown = document.getElementById('schedule-dropdown');
-    scheduleDropdown.classList.add('active');
-}
-function showAddScheduleFormBasicDesktop() {
-    const scheduleDropdown = document.getElementById('schedule-dropdown');
-    scheduleDropdown.classList.add('active');
-}
+    const addScheduleButtons = [
+        document.getElementById('add-schedule-button-mobile'),
+        document.getElementById('add-schedule-button-desktop')
+    ];
 
-document.getElementById('add-schedule-button-mobile').addEventListener('click', showAddScheduleFormBasicMobile);
-document.getElementById('add-schedule-button-desktop').addEventListener('click', showAddScheduleFormBasicDesktop);
+    if (!scheduleDropdown.contains(event.target) && !addScheduleButtons.some(button => button.contains(event.target))) {
+        closeDropdown();
+    }
+});
+
+//Prevent closing when clicking inside the dropdown
+document.getElementById('schedule-dropdown').addEventListener('click', (event) => {
+    event.stopPropagation();
+});
+
 
 document.getElementById('pull-all-data-desktop').addEventListener('click', pullCombinedData);
 document.getElementById('pull-all-data-mobile').addEventListener('click', pullCombinedData);
@@ -840,6 +865,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Schedule added successfully!');
                 scheduleDropdown.classList.remove('active');
                 scheduleForm.reset();
+                document.body.style.overflow = ''; // Restore scrolling
             }
         })
         .catch(error => {
