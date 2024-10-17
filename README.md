@@ -1,6 +1,6 @@
 ### CURRENT BUGS
  - Deletion of all schedule events upon pulling combined data
-  - Event Listeners between duplicate add schedule and pull data buttons
+  - Add Schedule non-functional on mobile
    - schedule drag selection glitch
 
 
