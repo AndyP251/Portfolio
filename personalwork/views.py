@@ -12,10 +12,16 @@ import requests
 from django.conf import settings
 from gradescopeapi.classes.connection import GSConnection
 from .forms import PasswordForm, ScheduleForm
-from .utils import GRADESCOPE_TASK_FILE, read_json, write_json, append_json, CANVAS_TASKS_FILE, SCHEDULE_JSON_FILE
+from .utils import (
+    get_todays_schedule,
+    read_json, 
+    write_json, 
+    append_json, 
+    GRADESCOPE_TASK_FILE, 
+    CANVAS_TASKS_FILE, 
+    SCHEDULE_JSON_FILE)
 
 logger = logging.getLogger(__name__)
-
 
 def delete_event(request):
     if request.method == 'POST':
@@ -113,9 +119,6 @@ def dashboard(request):
     
     if selected_source:
         todos = [todo for todo in todos if todo['source'] == selected_source or selected_source == 'sum']
-        
-
-    schedules = read_json(SCHEDULE_JSON_FILE)
 
     # Convert date strings to datetime objects and handle missing dates
     for todo in todos:
@@ -129,17 +132,14 @@ def dashboard(request):
 
     # Generate time slots for the schedule
     time_slots = []
-    for hour in range(0, 24):
-        time_slots.append(f"{hour % 12 or 12}:00 {'AM' if hour < 12 else 'PM'}")
-        time_slots.append(f"{hour % 12 or 12}:30 {'AM' if hour < 12 else 'PM'}")
+    # for hour in range(0, 24):
+    #     time_slots.append(f"{hour % 12 or 12}:00 {'AM' if hour < 12 else 'PM'}")
+    #     time_slots.append(f"{hour % 12 or 12}:30 {'AM' if hour < 12 else 'PM'}")
 
-    # Get the current day of the week
-    current_day = datetime.datetime.now().strftime('%A')
-    #Get today's schedules:
-    todays_schedule: list = []
-    for event in schedules:
-        if event.get("day", None) == current_day:
-            todays_schedule.append(event)
+    
+    schedules = read_json(SCHEDULE_JSON_FILE)
+    todays_schedule: list = get_todays_schedule(schedules)
+    print(f"todays schedule - {todays_schedule}")
 
     return render(request, 'dashboard.html', {
         'todos': todos,
