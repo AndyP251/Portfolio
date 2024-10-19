@@ -12,7 +12,7 @@ import requests
 from django.conf import settings
 from gradescopeapi.classes.connection import GSConnection
 from .forms import PasswordForm, ScheduleForm
-from .utils import GRADESCOPE_TASK_FILE, read_json, write_json, CANVAS_TASKS_FILE, SCHEDULE_JSON_FILE
+from .utils import GRADESCOPE_TASK_FILE, read_json, write_json, append_json, CANVAS_TASKS_FILE, SCHEDULE_JSON_FILE
 
 logger = logging.getLogger(__name__)
 
@@ -224,7 +224,6 @@ def pull_canvas_data(request):
         else:
             url = None
     todos = []
-    schedules = []
     cutoff_date = datetime.datetime.strptime("2024-01-01T10:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
 
     for course in courses:
@@ -253,21 +252,58 @@ def pull_canvas_data(request):
                     'submitted': assignment['has_submitted_submissions'],
                     'html_link': assignment['html_url']
                 })
-        schedule_url = f'https://{canvas_domain}/api/v1/courses/{course["id"]}/calendar_events'
-        schedule_response = requests.get(schedule_url, headers=headers)
-        if schedule_response.status_code == 200:
-            events = schedule_response.json()
-            for event in events:
-                schedules.append({
-                    'title': event['title'],
-                    'start_time': event['start_at'],
-                    'end_time': event['end_at']
-                })
-    write_json(CANVAS_TASKS_FILE, todos)
-    write_json(SCHEDULE_JSON_FILE, schedules)
-    
+    write_json(CANVAS_TASKS_FILE, todos)    
+    try:
+        pull_canvas_calendar_events(canvas_domain=canvas_domain,
+                                    headers=headers)
+    except:
+        print(f"Exception occured when pulling Canvas calendar events")
     return JsonResponse({'status': 'success', 'message': 'Canvas data pulled and saved successfully.'})
 
+def pull_canvas_calendar_events(canvas_domain, headers):
+    url = f'https://{canvas_domain}/api/v1/calendar_events'
+    params = {
+        'type': 'event',
+        'per_page': 100,  
+        'all_events': 'true'
+    }
+    all_events = []
+    while url:
+        response = requests.get(url, headers=headers, params=params)
+        response.raise_for_status()  # Raise an exception for bad responses
+        
+        events = response.json()
+        all_events.extend(events)
+        
+        # Check for pagination
+        url = response.links.get('next', {}).get('url')
+        params = {}  
+
+    event_data = []
+    for event in all_events:
+        event_info = {
+            'id': event.get('id'),
+            'title': event.get('title'),
+            'start_at': event.get('start_at'),
+            'end_at': event.get('end_at'),
+            'description': event.get('description'),
+            'location_name': event.get('location_name'),
+            'location_address': event.get('location_address'),
+            'context_code': event.get('context_code'),
+            'workflow_state': event.get('workflow_state'),
+            'html_url': event.get('html_url'),
+            'created_at': event.get('created_at'),
+            'updated_at': event.get('updated_at'),
+            'all_day': event.get('all_day'),
+            'all_day_date': event.get('all_day_date'),
+            'important_dates': event.get('important_dates'),
+            'series_uuid': event.get('series_uuid'),
+            'rrule': event.get('rrule'),
+            'blackout_date': event.get('blackout_date')
+        }
+        event_data.append(event_info)
+    print(f"Event Data: {event_data}")
+    write_json(SCHEDULE_JSON_FILE, event_data)
 
 def ai_interface(request):
     if request.method == 'POST':

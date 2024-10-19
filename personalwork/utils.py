@@ -19,6 +19,18 @@ def write_json(file_path, data):
     with open(file_path, 'w') as file:
         json.dump(data, file, indent=4)
 
+def append_json(file_path, data):
+    try:
+        with open(file_path, 'r') as file:
+            existing_data = json.load(file)
+    except FileNotFoundError:
+        existing_data = []
+
+    existing_data.append(data)
+
+    with open(file_path, 'w') as file:
+        json.dump(existing_data, file, indent=4)
+
 def combine_existing_jsons(file_paths: list, output_file: str):
     collection : list[dict] = []
     for file_path in file_paths:
