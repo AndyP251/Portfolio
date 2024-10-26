@@ -1,15 +1,19 @@
-from datetime import datetime, time, timezone
+from datetime import time, timezone
+import datetime
 import json
 import logging
 import pytz
 
 logger = logging.getLogger(__name__)
 
-# Define file paths for JSON storage
+# JSON TESTING FILE PATH's
 CANVAS_TASKS_FILE = 'canvasTasks.json'
 GRADESCOPE_TASK_FILE = 'gradescopeTasks.json'
 COLLECTIVE_TASK_FILE = 'collectiveTasks.json'
 SCHEDULE_JSON_FILE = 'Schedule.json'
+
+# HOLISTIC DATA FILE PATH's
+USERS_FILE = 'users.json'
 
 # Function to read from JSON files
 def read_json(file_path):
@@ -45,17 +49,17 @@ def combine_existing_jsons(file_paths: list, output_file: str):
 
 def get_todays_schedule(schedules):
     todays_schedule = []
-    current_date = datetime.now().date()
+    current_date = datetime.datetime.now().date()
 
     for event in schedules:
         start_at_str = event["start_at"].rsplit('+', 1)[0].rstrip('Z')
-        start_at = datetime.strptime(start_at_str, "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone.utc)
+        start_at = datetime.datetime.strptime(start_at_str, "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone.utc)
         end_at_str = event["end_at"].rsplit('+', 1)[0].rstrip('Z')
-        end_at = datetime.strptime(end_at_str, "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone.utc)
+        end_at = datetime.datetime.strptime(end_at_str, "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone.utc)
         if start_at.date() <= current_date <= end_at.date():
             # If the event starts on a previous day but ends today or later, reset start time to 12 AM
             if start_at.date() < current_date:
-                start_at = datetime.combine(current_date, time(0, 0))
+                start_at = datetime.datetime.combine(current_date, time(0, 0))
             
             todays_schedule.append({**event, "start_at": start_at.isoformat(), "end_at": end_at.isoformat()})
 
@@ -72,7 +76,7 @@ def update_event_timezones(event):
         dt_string = dt_string.split('+')[0].rstrip('Z')
     
         # Parse the datetime string without timezone information
-        dt = datetime.strptime(dt_string, "%Y-%m-%dT%H:%M:%S")
+        dt = datetime.datetime.strptime(dt_string, "%Y-%m-%dT%H:%M:%S")
         
         # Set the timezone to UTC
         dt = dt.replace(tzinfo=timezone.utc)
@@ -93,3 +97,33 @@ def update_event_timezones(event):
     event["end_at"] = end_at.strftime("%Y-%m-%dT%H:%M:%S")
 
     return event
+
+def convert_schedule_to_datetime_objects(schedule):
+    for event in schedule:
+        start_time = datetime.datetime.strptime(event['start_at'], '%Y-%m-%dT%H:%M:%S')
+        end_time = datetime.datetime.strptime(event['end_at'], '%Y-%m-%dT%H:%M:%S')
+        # Calculate top position (in pixels)
+        minutes_since_midnight = start_time.hour * 60 + start_time.minute
+        event['top_position'] = (minutes_since_midnight // 30) * 25
+
+        # Calculate height (in pixels)
+        duration_minutes = (end_time - start_time).total_seconds() / 60
+        event['height'] = (duration_minutes / 30) * 25
+
+        event['start_at'] = start_time
+        event['end_at'] = end_time
+    return schedule
+
+def convert_todos_to_datetime_objects(todos):
+    for todo in todos:
+        if 'due_date' in todo and todo['due_date']:
+            if todo['source'] == 'canvas':
+                todo['due_date'] = datetime.datetime.strptime(todo['due_date'], '%Y-%m-%dT%H:%M:%SZ')
+            elif todo['source'] == 'gradescope':
+                todo['due_date'] = datetime.datetime.strptime(todo['due_date'], '%Y-%m-%d %H:%M:%S%z')
+        else:
+            todo['due_date'] = None
+    return todos
+
+def generate_timeslots_for_schedule():
+    return [datetime.time(hour=h, minute=m).strftime('%H:%M') for h in range(24) for m in (0, 30)]

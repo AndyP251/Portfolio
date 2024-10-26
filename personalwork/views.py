@@ -1,27 +1,89 @@
 import datetime
 from datetime import timedelta
 import uuid
-from django.utils.dateformat import DateFormat
 import logging
-import os
-from django.utils import timezone
 from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate
 from django.http import JsonResponse
 import pytz
 import requests
 from django.conf import settings
 from gradescopeapi.classes.connection import GSConnection
-from .forms import PasswordForm, ScheduleForm, LoginForm
+from .forms import ScheduleForm, LoginForm, SignUpForm
 from .utils import (
     get_todays_schedule,
+    convert_schedule_to_datetime_objects,
+    convert_todos_to_datetime_objects,
+    generate_timeslots_for_schedule,
     read_json, 
     write_json, 
     append_json, 
     GRADESCOPE_TASK_FILE, 
     CANVAS_TASKS_FILE, 
-    SCHEDULE_JSON_FILE)
+    SCHEDULE_JSON_FILE,
+    USERS_FILE)
+
+from .models import S3Utils
 
 logger = logging.getLogger(__name__)
+
+def dashboard(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data['password'] == settings.USER_PASSWORD:
+                request.session['authenticated'] = True
+                return redirect('dashboard')  # Redirect to the same view
+            else:
+                form.add_error('password', 'Incorrect password')
+    else:
+        form = LoginForm()
+
+    if not request.session.get('authenticated'):
+        return render(request, 'password_protect.html', {'form': form})
+
+    selected_source = request.GET.get('data_source', 'sum')
+
+    # implement data base user query here for data
+    users_data = S3Utils().read_json_from_s3(USERS_FILE)
+
+    todos = read_json(CANVAS_TASKS_FILE) + read_json(GRADESCOPE_TASK_FILE)
+    
+    if selected_source:
+        todos = [todo for todo in todos if todo['source'] == selected_source or selected_source == 'sum']
+
+    # Convert date strings to datetime objects and handle missing dates
+    todos = convert_todos_to_datetime_objects(todos)
+    time_slots = generate_timeslots_for_schedule()
+    
+    schedules = read_json(SCHEDULE_JSON_FILE)
+
+    todays_schedule: list = get_todays_schedule(schedules)
+    todays_schedule = convert_schedule_to_datetime_objects(todays_schedule)
+
+    return render(request, 'dashboard.html', {
+        'todos': todos,
+        'schedules': todays_schedule,
+        'time_slots': time_slots,
+        'current_date': datetime.date.today().isoformat(),
+    })
+
+
+def signup_view(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            print("\n\nREDIRECTING TO DASHBOARD\n\n")
+            return redirect('dashboard') 
+    else:
+        form = SignUpForm()
+    return render(request, 'signup.html', {'form': form})
+
 
 def delete_event(request):
     if request.method == 'POST':
@@ -95,71 +157,6 @@ def add_schedule(request):
         logger.debug('Received non-POST request.')
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
     
-
-def dashboard(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            if form.cleaned_data['password'] == settings.USER_PASSWORD:
-                request.session['authenticated'] = True
-                return redirect('dashboard')  # Redirect to the same view
-            else:
-                form.add_error('password', 'Incorrect password')
-    else:
-        form = LoginForm()
-
-    if not request.session.get('authenticated'):
-        return render(request, 'password_protect.html', {'form': form})
-
-    selected_source = request.GET.get('data_source', 'sum')
-
-    # implement data base user query here for data
-
-
-    todos = read_json(CANVAS_TASKS_FILE) + read_json(GRADESCOPE_TASK_FILE)
-    
-    if selected_source:
-        todos = [todo for todo in todos if todo['source'] == selected_source or selected_source == 'sum']
-
-    # Convert date strings to datetime objects and handle missing dates
-    for todo in todos:
-        if 'due_date' in todo and todo['due_date']:
-            if todo['source'] == 'canvas':
-                todo['due_date'] = datetime.datetime.strptime(todo['due_date'], '%Y-%m-%dT%H:%M:%SZ')
-            elif todo['source'] == 'gradescope':
-                todo['due_date'] = datetime.datetime.strptime(todo['due_date'], '%Y-%m-%d %H:%M:%S%z')
-        else:
-            todo['due_date'] = None
-
-    # Generate time slots for the schedule
-    time_slots = [datetime.time(hour=h, minute=m).strftime('%H:%M') for h in range(24) for m in (0, 30)]
-    
-    schedules = read_json(SCHEDULE_JSON_FILE)
-    todays_schedule: list = get_todays_schedule(schedules)
-
-    # Convert schedule times to datetime objects
-    for event in todays_schedule:
-        start_time = datetime.datetime.strptime(event['start_at'], '%Y-%m-%dT%H:%M:%S')
-        end_time = datetime.datetime.strptime(event['end_at'], '%Y-%m-%dT%H:%M:%S')
-        # Calculate top position (in pixels)
-        minutes_since_midnight = start_time.hour * 60 + start_time.minute
-        event['top_position'] = (minutes_since_midnight // 30) * 25
-
-        # Calculate height (in pixels)
-        duration_minutes = (end_time - start_time).total_seconds() / 60
-        event['height'] = (duration_minutes / 30) * 25
-
-        event['start_at'] = start_time
-        event['end_at'] = end_time
-
-    # print(f"todays schedule - {todays_schedule}")
-
-    return render(request, 'dashboard.html', {
-        'todos': todos,
-        'schedules': todays_schedule,
-        'time_slots': time_slots,
-        'current_date': datetime.date.today().isoformat(),
-    })
 
 
 def pull_combined_data(request):
