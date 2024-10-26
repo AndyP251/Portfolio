@@ -1,7 +1,9 @@
-import datetime
+from datetime import datetime, time, timezone
 import json
-
+import logging
 import pytz
+
+logger = logging.getLogger(__name__)
 
 # Define file paths for JSON storage
 CANVAS_TASKS_FILE = 'canvasTasks.json'
@@ -43,28 +45,43 @@ def combine_existing_jsons(file_paths: list, output_file: str):
 
 def get_todays_schedule(schedules):
     todays_schedule = []
-    current_date = datetime.datetime.now().date()
+    current_date = datetime.now().date()
 
     for event in schedules:
-        start_at = datetime.datetime.strptime(event["start_at"], "%Y-%m-%dT%H:%M:%SZ")
-        end_at = datetime.datetime.strptime(event["end_at"], "%Y-%m-%dT%H:%M:%SZ")
+        start_at_str = event["start_at"].rsplit('+', 1)[0].rstrip('Z')
+        start_at = datetime.strptime(start_at_str, "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone.utc)
+        end_at_str = event["end_at"].rsplit('+', 1)[0].rstrip('Z')
+        end_at = datetime.strptime(end_at_str, "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone.utc)
         if start_at.date() <= current_date <= end_at.date():
             # If the event starts on a previous day but ends today or later, reset start time to 12 AM
             if start_at.date() < current_date:
-                start_at = datetime.datetime.combine(current_date, datetime.time(0, 0))
+                start_at = datetime.combine(current_date, time(0, 0))
             
-            todays_schedule.append({**event, "start_at": start_at.isoformat()})
+            todays_schedule.append({**event, "start_at": start_at.isoformat(), "end_at": end_at.isoformat()})
 
     timezone_updated_schedules = []
     for event in todays_schedule:
         timezone_updated_schedules.append(update_event_timezones(event))
-
+        # timezone_updated_schedules.append(event)
+    logging.warning(f"\n\n\n\n time zone updated fields = {timezone_updated_schedules}")
     return timezone_updated_schedules
 
 
 def update_event_timezones(event):
-    start_at = datetime.datetime.fromisoformat(event["start_at"])
-    end_at = datetime.datetime.fromisoformat(event["end_at"])
+    def parse_datetime(dt_string):
+        dt_string = dt_string.split('+')[0].rstrip('Z')
+    
+        # Parse the datetime string without timezone information
+        dt = datetime.strptime(dt_string, "%Y-%m-%dT%H:%M:%S")
+        
+        # Set the timezone to UTC
+        dt = dt.replace(tzinfo=timezone.utc)
+        
+        return dt
+
+    # Parse start_at and end_at
+    start_at = parse_datetime(event["start_at"])
+    end_at = parse_datetime(event["end_at"])
 
     # Convert to Eastern Time
     eastern_timezone = pytz.timezone("US/Eastern")
@@ -72,7 +89,7 @@ def update_event_timezones(event):
     end_at = end_at.astimezone(eastern_timezone)
 
     # Update the event dictionary with the new timestamps
-    event["start_at"] = start_at.isoformat()
-    event["end_at"] = end_at.isoformat()
+    event["start_at"] = start_at.strftime("%Y-%m-%dT%H:%M:%S")
+    event["end_at"] = end_at.strftime("%Y-%m-%dT%H:%M:%S")
 
     return event

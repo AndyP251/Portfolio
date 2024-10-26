@@ -11,7 +11,7 @@ import pytz
 import requests
 from django.conf import settings
 from gradescopeapi.classes.connection import GSConnection
-from .forms import PasswordForm, ScheduleForm
+from .forms import PasswordForm, ScheduleForm, LoginForm
 from .utils import (
     get_todays_schedule,
     read_json, 
@@ -66,30 +66,28 @@ def add_schedule(request):
         form = ScheduleForm(request.POST)
         if form.is_valid():
             logger.info('Form is valid, processing data...')
+            start_at = form.cleaned_data['start_at'].strftime("%Y-%m-%dT%H:%M:%S")
+            end_at = form.cleaned_data['end_at'].strftime("%Y-%m-%dT%H:%M:%S")
+            event = form.cleaned_data['event']
+            location = form.cleaned_data['location']
+            recurring = form.cleaned_data['recurring']
 
-            schedule = read_json(SCHEDULE_JSON_FILE)
-
-            start_time = form.cleaned_data['start_time']
-            end_time = form.cleaned_data['end_time']
-            formatted_start_time = start_time.strftime('%I:%M %p')
-            formatted_end_time = end_time.strftime('%I:%M %p')
-            new_entry = {
+            new_schedule = {
                 'id': str(uuid.uuid4()),
-                'day': form.cleaned_data['day'],
-                'recurring': form.cleaned_data['recurring'],
-                'dateSet': datetime.date.today().isoformat(),
-                'course': form.cleaned_data['event'],  # Changed from 'course' to 'event'
-                'time': f'{formatted_start_time} - {formatted_end_time}',
-                'location': form.cleaned_data['location']
+                'title': event,
+                'start_at': start_at,
+                'end_at': end_at,
+                'location_name': location,
+                'recurring': recurring
             }
 
-            schedule.append(new_entry)
-            logger.info('New schedule entry added: %s', new_entry)
+            schedules = read_json(SCHEDULE_JSON_FILE)
+            schedules.append(new_schedule)
+            write_json(SCHEDULE_JSON_FILE, schedules)
 
-            write_json(SCHEDULE_JSON_FILE, schedule)
             logger.info('Schedule data saved successfully.')
 
-            return JsonResponse({'status': 'success', 'id': new_entry['id']})
+            return JsonResponse({'status': 'success', 'id': new_schedule['id']})
         else:
             logger.warning('Form is invalid: %s', form.errors)
             return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
@@ -100,7 +98,7 @@ def add_schedule(request):
 
 def dashboard(request):
     if request.method == 'POST':
-        form = PasswordForm(request.POST)
+        form = LoginForm(request.POST)
         if form.is_valid():
             if form.cleaned_data['password'] == settings.USER_PASSWORD:
                 request.session['authenticated'] = True
@@ -108,12 +106,15 @@ def dashboard(request):
             else:
                 form.add_error('password', 'Incorrect password')
     else:
-        form = PasswordForm()
+        form = LoginForm()
 
     if not request.session.get('authenticated'):
         return render(request, 'password_protect.html', {'form': form})
 
     selected_source = request.GET.get('data_source', 'sum')
+
+    # implement data base user query here for data
+
 
     todos = read_json(CANVAS_TASKS_FILE) + read_json(GRADESCOPE_TASK_FILE)
     
@@ -131,15 +132,27 @@ def dashboard(request):
             todo['due_date'] = None
 
     # Generate time slots for the schedule
-    time_slots = []
-    # for hour in range(0, 24):
-    #     time_slots.append(f"{hour % 12 or 12}:00 {'AM' if hour < 12 else 'PM'}")
-    #     time_slots.append(f"{hour % 12 or 12}:30 {'AM' if hour < 12 else 'PM'}")
-
+    time_slots = [datetime.time(hour=h, minute=m).strftime('%H:%M') for h in range(24) for m in (0, 30)]
     
     schedules = read_json(SCHEDULE_JSON_FILE)
     todays_schedule: list = get_todays_schedule(schedules)
-    print(f"todays schedule - {todays_schedule}")
+
+    # Convert schedule times to datetime objects
+    for event in todays_schedule:
+        start_time = datetime.datetime.strptime(event['start_at'], '%Y-%m-%dT%H:%M:%S')
+        end_time = datetime.datetime.strptime(event['end_at'], '%Y-%m-%dT%H:%M:%S')
+        # Calculate top position (in pixels)
+        minutes_since_midnight = start_time.hour * 60 + start_time.minute
+        event['top_position'] = (minutes_since_midnight // 30) * 25
+
+        # Calculate height (in pixels)
+        duration_minutes = (end_time - start_time).total_seconds() / 60
+        event['height'] = (duration_minutes / 30) * 25
+
+        event['start_at'] = start_time
+        event['end_at'] = end_time
+
+    # print(f"todays schedule - {todays_schedule}")
 
     return render(request, 'dashboard.html', {
         'todos': todos,
@@ -342,6 +355,8 @@ def call_perplexity_api(prompt, api_key):
     except requests.RequestException as e:
         return f"An error occurred: {str(e)}\nStatus code: {e.response.status_code if e.response else 'N/A'}\nResponse text: {e.response.text if e.response else 'N/A'}"
     
+
+
 
 
 
