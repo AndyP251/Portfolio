@@ -1,7 +1,6 @@
 import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 import json
-
 from projectWebsite.settings import BUCKET_NAME, ACCOUNT_ID, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
 class S3Utils:
@@ -23,7 +22,36 @@ class S3Utils:
             print('Credentials not available.')
         except Exception as e:
             print(f'Error occurred: {e}')
-
+    def upload_data_to_s3(self, data, object_name):
+        """Upload data to the S3 bucket."""
+        try:
+            # Convert data to JSON string if it's a dict or list
+            if isinstance(data, (dict, list)):
+                data = json.dumps(data)
+            
+            # Ensure data is encoded as bytes
+            if isinstance(data, str):
+                data = data.encode('utf-8')
+                
+            response = self.s3_client.put_object(
+                Body=data,
+                Bucket=self.bucket_name,
+                Key=object_name,
+                ContentType='application/json'  # Specify content type
+            )
+            
+            # Check if upload was successful
+            if response['ResponseMetadata']['HTTPStatusCode'] == 200:
+                print(f'Successfully uploaded data to {self.bucket_name}/{object_name}')
+                return True
+            else:
+                print(f'Upload failed with response: {response}')
+                return False
+                
+        except Exception as e:
+            print(f'Error occurred: {e}')
+            return False
+    
     def upload_to_s3(self, file_name, object_name=None):
         """Upload a file to the S3 bucket."""
         if object_name is None:
@@ -115,3 +143,43 @@ class S3Utils:
             print('Credentials not available.')
         except Exception as e:
             print(f'Error occurred: {e}')
+    def initialize_user_directory(self, user_id):
+        """Initialize a directory structure for a user with empty JSON files."""
+        try:
+            # Define the directory path using the user_id
+            user_directory = f'users/{user_id}/'
+            
+            # List of files to create in the user's directory
+            files_to_create = [
+                'schedule.json',
+                'gradescopeTasks.json',
+                'canvasTasks.json'
+            ]
+            
+            # Initialize empty array as JSON string
+            empty_array = json.dumps([])
+            
+            # Create each file in the user's directory
+            for file_name in files_to_create:
+                try:
+                    # Combine directory path with file name
+                    file_path = f'{user_directory}{file_name}'
+                    
+                    # Upload empty array as JSON to S3
+                    self.s3_client.put_object(
+                        Body=empty_array,
+                        Bucket=self.bucket_name,
+                        Key=file_path,
+                        ContentType='application/json'
+                    )
+                    print(f'Successfully created {file_path} in {self.bucket_name}')
+                    
+                except Exception as e:
+                    print(f'Error creating {file_path}: {e}')
+                    return False
+                    
+            return True
+            
+        except Exception as e:
+            print(f'Error in initialize_user_directory: {e}')
+            return False

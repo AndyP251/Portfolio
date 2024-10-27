@@ -37,6 +37,33 @@
     },
     {
         "source": "canvas",
+        "course": "111439",
+        "courseName": "RELC 1220",
+        "title": "10-21-24 In-class writing assignment",
+        "due_date": "2024-10-22T00:00:00Z",
+        "submitted": true,
+        "html_link": "https://canvas.its.virginia.edu/courses/111439/assignments/581522"
+    },
+    {
+        "source": "canvas",
+        "course": "111439",
+        "courseName": "RELC 1220",
+        "title": "in-class extra credit ",
+        "due_date": "2024-10-24T00:00:00Z",
+        "submitted": true,
+        "html_link": "https://canvas.its.virginia.edu/courses/111439/assignments/582556"
+    },
+    {
+        "source": "canvas",
+        "course": "111439",
+        "courseName": "RELC 1220",
+        "title": "Week 8: John",
+        "due_date": "2024-10-19T03:59:59Z",
+        "submitted": true,
+        "html_link": "https://canvas.its.virginia.edu/courses/111439/assignments/579898"
+    },
+    {
+        "source": "canvas",
         "course": "111463",
         "courseName": "RELC 1220",
         "title": "Week 1 Activity",
@@ -94,9 +121,27 @@
         "course": "111463",
         "courseName": "RELC 1220",
         "title": "Week 7 Activity",
-        "due_date": "2024-10-12T03:59:59Z",
+        "due_date": "2024-10-14T03:59:59Z",
         "submitted": true,
         "html_link": "https://canvas.its.virginia.edu/courses/111463/assignments/576654"
+    },
+    {
+        "source": "canvas",
+        "course": "111463",
+        "courseName": "RELC 1220",
+        "title": "Week 8 Activity",
+        "due_date": "2024-10-19T03:59:59Z",
+        "submitted": true,
+        "html_link": "https://canvas.its.virginia.edu/courses/111463/assignments/580264"
+    },
+    {
+        "source": "canvas",
+        "course": "111463",
+        "courseName": "RELC 1220",
+        "title": "Week 9 Activity",
+        "due_date": "2024-10-26T03:59:59Z",
+        "submitted": true,
+        "html_link": "https://canvas.its.virginia.edu/courses/111463/assignments/582522"
     },
     {
         "source": "canvas",
@@ -149,7 +194,7 @@
         "courseName": "CS 3710",
         "title": "Lab #5 - Injection",
         "due_date": "2024-10-26T03:59:59Z",
-        "submitted": false,
+        "submitted": true,
         "html_link": "https://canvas.its.virginia.edu/courses/117250/assignments/520345"
     },
     {
@@ -158,7 +203,7 @@
         "courseName": "CS 3710",
         "title": "Lab #6 - Cryptography",
         "due_date": "2024-11-02T03:59:59Z",
-        "submitted": false,
+        "submitted": true,
         "html_link": "https://canvas.its.virginia.edu/courses/117250/assignments/520346"
     },
     {
@@ -328,7 +373,7 @@
         "course": "117164",
         "courseName": "CS 3100",
         "title": "PS5",
-        "due_date": "2024-10-10T03:59:59Z",
+        "due_date": "2024-10-24T03:59:59Z",
         "submitted": false,
         "html_link": "https://canvas.its.virginia.edu/courses/117164/assignments/550088"
     },
@@ -337,7 +382,7 @@
         "course": "117164",
         "courseName": "CS 3100",
         "title": "PS6",
-        "due_date": "2024-10-17T03:59:59Z",
+        "due_date": "2024-10-24T03:59:59Z",
         "submitted": false,
         "html_link": "https://canvas.its.virginia.edu/courses/117164/assignments/550089"
     },
@@ -346,7 +391,7 @@
         "course": "117164",
         "courseName": "CS 3100",
         "title": "PS7",
-        "due_date": "2024-10-24T03:59:59Z",
+        "due_date": "2024-10-31T03:59:59Z",
         "submitted": false,
         "html_link": "https://canvas.its.virginia.edu/courses/117164/assignments/550090"
     },
@@ -355,7 +400,7 @@
         "course": "117164",
         "courseName": "CS 3100",
         "title": "PS8",
-        "due_date": "2024-10-31T03:59:59Z",
+        "due_date": "2024-11-07T04:59:59Z",
         "submitted": false,
         "html_link": "https://canvas.its.virginia.edu/courses/117164/assignments/550091"
     },
@@ -364,7 +409,7 @@
         "course": "117164",
         "courseName": "CS 3100",
         "title": "PS9",
-        "due_date": "2024-11-07T04:59:59Z",
+        "due_date": "2024-11-14T04:59:59Z",
         "submitted": false,
         "html_link": "https://canvas.its.virginia.edu/courses/117164/assignments/550092"
     },
@@ -453,9 +498,9 @@
         "source": "canvas",
         "course": "111360",
         "courseName": "SPAN 2020 - Fall 2024",
-        "title": "Actividad de pr\u00e1ctica - Discusi\u00f3n",
-        "due_date": "2024-09-12T21:00:00Z",
+        "title": "Lectura 2 TR",
+        "due_date": "2024-10-22T12:00:00Z",
         "submitted": true,
-        "html_link": "https://canvas.its.virginia.edu/courses/111360/assignments/552580"
+        "html_link": "https://canvas.its.virginia.edu/courses/111360/assignments/579827"
     }
 ]

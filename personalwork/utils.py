@@ -1,4 +1,7 @@
 from datetime import time, timezone
+from django.contrib.auth.hashers import make_password, check_password
+from .models import S3Utils
+from uuid import uuid4
 import datetime
 import json
 import logging
@@ -127,3 +130,64 @@ def convert_todos_to_datetime_objects(todos):
 
 def generate_timeslots_for_schedule():
     return [datetime.time(hour=h, minute=m).strftime('%H:%M') for h in range(24) for m in (0, 30)]
+
+
+#Account Utils
+
+def is_current_user(username):
+    user_data = S3Utils().read_json_from_s3(USERS_FILE)
+    if isinstance(user_data, list):
+        for user in user_data:
+            if isinstance(user, dict) and user.get('username') == username:
+                return True
+    elif user_data[username]:
+        return True
+    return False
+
+def passwords_match(pass1, pass2):
+    if pass1 == pass2:
+        return True
+    return False
+
+def create_user(user, password):
+    try:
+        user_data = S3Utils().read_json_from_s3(USERS_FILE)
+        if user_data is None:
+            user_data = []
+            
+        hashed_password = make_password(password)
+        new_user = {
+            'id': str(uuid4()),
+            'username': user,
+            'hash': hashed_password
+        }
+        user_data.append(new_user)
+        s3_utils = S3Utils()
+        success = s3_utils.upload_data_to_s3(user_data, USERS_FILE)
+        s3_utils.initialize_user_directory(new_user['id'])
+        
+        if not success:
+            print("Failed to upload user data to S3")
+            return False
+            
+        return True
+        
+    except Exception as e:
+        print(f"Error in create_user: {e}")
+        return False
+    
+def verify_user(username, password):
+    try:
+        user_data = S3Utils().read_json_from_s3(USERS_FILE)
+        
+        # Find the user in the list
+        for user in user_data:
+            if user['username'] == username:
+                # Use Django's check_password to verify the hash
+                return check_password(password, user['hash'])
+        
+        return False
+        
+    except Exception as e:
+        print(f"Error in verify_user: {e}")
+        return False

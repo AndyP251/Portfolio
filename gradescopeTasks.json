@@ -48,9 +48,54 @@
         "source": "gradescope",
         "course": "835161",
         "courseName": "CS 3100",
+        "title": "PS5",
+        "due_date": "2024-10-23 23:59:00-04:00",
+        "submitted": true,
+        "html_link": "https://www.gradescope.com/courses/835161/assignments/4802790"
+    },
+    {
+        "source": "gradescope",
+        "course": "835161",
+        "courseName": "CS 3100",
+        "title": "PS6",
+        "due_date": "2024-10-30 23:59:00-04:00",
+        "submitted": false,
+        "html_link": "https://www.gradescope.com/courses/835161/assignments/4802803"
+    },
+    {
+        "source": "gradescope",
+        "course": "835161",
+        "courseName": "CS 3100",
+        "title": "PS7",
+        "due_date": "2024-10-23 23:59:00-04:00",
+        "submitted": false,
+        "html_link": "https://www.gradescope.com/courses/835161/assignments/4802806"
+    },
+    {
+        "source": "gradescope",
+        "course": "835161",
+        "courseName": "CS 3100",
         "title": "PA1",
         "due_date": "2024-09-27 23:59:00-04:00",
         "submitted": true,
         "html_link": "https://www.gradescope.com/courses/835161/assignments/4809643"
+    },
+    {
+        "source": "gradescope",
+        "course": "835161",
+        "courseName": "CS 3100",
+        "title": "PA2",
+        "due_date": "2024-10-18 23:59:00-04:00",
+        "submitted": true,
+        "html_link": "https://www.gradescope.com/courses/835161/assignments/5172401"
+    },
+    {
+        "source": "gradescope",
+        "course": "835161",
+        "courseName": "CS 3100",
+        "title": "PA3: Weighing Children",
+        "due_date": "2024-11-01 23:59:00-04:00",
+        "submitted": false,
+        "html_link": "https://www.gradescope.com/courses/835161/assignments/5198873"
     }
 ]

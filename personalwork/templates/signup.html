@@ -43,11 +43,23 @@
     .signup-container button:hover {
         background-color: #218838;
     }
-    .signup-container .errorlist {
-        color: #ff0000;
-        font-size: 14px;
-        margin-top: -10px;
-        margin-bottom: 10px;
+    .error-message {
+        color: #dc3545;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        text-align: left;
+    }
+    .success-message {
+        color: #155724;
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        text-align: left;
     }
 </style>
 {% endblock %}
@@ -55,6 +67,15 @@
 {% block content %}
 <div class="signup-container">
     <h2>Create Account</h2>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="{% if message.tags == 'error' %}error-message{% else %}success-message{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}

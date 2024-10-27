@@ -4,6 +4,8 @@ import uuid
 import logging
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
+from django.contrib import messages
+from django.db import IntegrityError
 from django.http import JsonResponse
 import pytz
 import requests
@@ -15,6 +17,10 @@ from .utils import (
     convert_schedule_to_datetime_objects,
     convert_todos_to_datetime_objects,
     generate_timeslots_for_schedule,
+    verify_user,
+    passwords_match,
+    is_current_user,
+    create_user,
     read_json, 
     write_json, 
     append_json, 
@@ -24,16 +30,28 @@ from .utils import (
     USERS_FILE)
 
 from .models import S3Utils
-
 logger = logging.getLogger(__name__)
 
 def dashboard(request):
+    current_user = "Anonymous"
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            if form.cleaned_data['password'] == settings.USER_PASSWORD:
+            
+            email = form.cleaned_data['email']
+            if not is_current_user(email):
+                form.add_error('email', 'Account not found.')
+
+            password = form.cleaned_data['password']
+            if verify_user(email, password):
                 request.session['authenticated'] = True
-                return redirect('dashboard')  # Redirect to the same view
+                current_user = email
+                return redirect('dashboard')
+            else:
+                form.add_error('password', 'Incorrect Login Credentials')
+            if password == settings.USER_PASSWORD:
+                request.session['authenticated'] = True
+                return redirect('dashboard')  
             else:
                 form.add_error('password', 'Incorrect password')
     else:
@@ -46,8 +64,9 @@ def dashboard(request):
 
     # implement data base user query here for data
     users_data = S3Utils().read_json_from_s3(USERS_FILE)
-
+    # TODO - replace with query to s3 for user id data files
     todos = read_json(CANVAS_TASKS_FILE) + read_json(GRADESCOPE_TASK_FILE)
+    canvas_data = S3Utils().read_json_from_s3()
     
     if selected_source:
         todos = [todo for todo in todos if todo['source'] == selected_source or selected_source == 'sum']
@@ -66,6 +85,7 @@ def dashboard(request):
         'schedules': todays_schedule,
         'time_slots': time_slots,
         'current_date': datetime.date.today().isoformat(),
+        'user': current_user
     })
 
 
@@ -73,17 +93,22 @@ def signup_view(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            print("\n\nREDIRECTING TO DASHBOARD\n\n")
-            return redirect('dashboard') 
+            username = form.cleaned_data["email"]
+            password1 = form.cleaned_data["password1"]
+            password2 = form.cleaned_data["password2"]
+
+            if is_current_user(username):
+                messages.error(request, "This email is already registered.")
+                return render(request, 'signup.html', {'form': form})
+            if not passwords_match(password1, password2):
+                messages.error(request, "Passwords do not match.")
+                return render(request, 'signup.html', {'form': form})
+            create_user(username, password1)
+            messages.success(request, "Welcome! Your account has been created successfully.")
+            return redirect('dashboard')  
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
-
 
 def delete_event(request):
     if request.method == 'POST':
