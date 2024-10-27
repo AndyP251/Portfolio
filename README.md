@@ -18,3 +18,7 @@
  - Light mode toggle
   - Data Analytics, e.g. pull more fields and run analytics on grade behavior 
   
+
+  ## TODO 
+  - Query User Based Task / Schedule Files, Switch to use their school credentials
+- Make query process much more efficient - very slow currently
