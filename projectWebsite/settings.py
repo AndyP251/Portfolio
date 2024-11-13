@@ -4,10 +4,7 @@ import os
 from django.core.management.utils import get_random_secret_key
 
 from dotenv import load_dotenv
-
 load_dotenv()
-
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
@@ -15,7 +12,10 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 # DEBUG = True
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost, 172.27.80.1").split(",")
 DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
+
+
 INSTALLED_APPS = [
+    'storages',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -35,7 +35,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
@@ -58,6 +57,7 @@ TEMPLATES = [
     },
 ]
 WSGI_APPLICATION = 'projectWebsite.wsgi.application'
+# SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_ENGINE = 'django.contrib.sessions.backends.file'
 SESSION_FILE_PATH = BASE_DIR
 AUTH_PASSWORD_VALIDATORS = [
@@ -74,11 +74,17 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGGING = {
     'version': 1,
@@ -114,3 +120,21 @@ USER_PASSWORD =os.getenv("USER_PASSWORD", "dev")
 CANVAS_DOMAIN = os.getenv("CANVAS_DOMAIN") 
 GRADESCOPE_USER_KEY = os.getenv("GRADESCOPE_USER_KEY") 
 GRADESCOPE_USER_SECRET = os.getenv("GRADESCOPE_USER_SECRET") 
+# AWS
+BUCKET_NAME = os.getenv("BUCKET_NAME")
+ACCOUNT_ID = os.getenv("ACCOUNT_ID")
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+AWS_S3_CUSTOM_DOMAIN = f'{BUCKET_NAME}.s3.amazonaws.com'
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_DEFAULT_ACL = 'public-read'
+AWS_LOCATION = 'static'
+
+if not DEBUG:
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
