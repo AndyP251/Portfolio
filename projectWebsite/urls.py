@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
+from django.views.generic.base import TemplateView
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/information', permanent=True)),
@@ -24,4 +25,5 @@ urlpatterns = [
     path("information/", include("information.urls")),
     path('personalwork/', include('personalwork.urls')),
     path('ai/', include('personalwork.ai_urls')),
+    path('robots.txt', TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
 ]
