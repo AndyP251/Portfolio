@@ -32,8 +32,10 @@ from .utils import (
 from .models import S3Utils
 logger = logging.getLogger(__name__)
 
+user_id = None
+
 def dashboard(request):
-    current_user = "Anonymous"
+    current_user = request.session.get('user_email', 'Anonymous')
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -45,6 +47,7 @@ def dashboard(request):
             password = form.cleaned_data['password']
             if verify_user(email, password):
                 request.session['authenticated'] = True
+                request.session['user_email'] = email
                 current_user = email
                 return redirect('dashboard')
             else:
@@ -52,8 +55,6 @@ def dashboard(request):
             if password == settings.USER_PASSWORD:
                 request.session['authenticated'] = True
                 return redirect('dashboard')  
-            else:
-                form.add_error('password', 'Incorrect password')
     else:
         form = LoginForm()
 
@@ -64,10 +65,29 @@ def dashboard(request):
 
     # implement data base user query here for data
     users_data = S3Utils().read_json_from_s3(USERS_FILE)
-    # TODO - replace with query to s3 for user id data files
-    todos = read_json(CANVAS_TASKS_FILE) + read_json(GRADESCOPE_TASK_FILE)
-    canvas_data = S3Utils().read_json_from_s3()
+    print(f"Users Data: {users_data}")
+
+    # Get user ID from the users data list
+    print(f"Current User (email): {current_user}")
+    user_data = next((user for user in users_data if user['username'].strip().lower() == current_user.strip().lower()), None)
+    if not user_data:
+        print(f"No user found matching username: {current_user}")
+        return JsonResponse({'error': 'User not found'}, status=404)
     
+    request.session['user_id'] = user_data['id']
+    print(f"User ID: {request.session['user_id']}")
+
+    # Use user_id for file paths
+    user_canvas_file = f"users/{request.session['user_id']}/{CANVAS_TASKS_FILE}"
+    user_gradescope_file = f"users/{request.session['user_id']}/{GRADESCOPE_TASK_FILE}"
+
+    # Read files with default empty lists if they don't exist
+    canvas_data = S3Utils().read_json_from_s3(user_canvas_file) or []
+    gradescope_data = S3Utils().read_json_from_s3(user_gradescope_file) or []
+    todos = canvas_data + gradescope_data
+
+    print(f"Canvas Data: {canvas_data}")
+
     if selected_source:
         todos = [todo for todo in todos if todo['source'] == selected_source or selected_source == 'sum']
 
@@ -197,6 +217,11 @@ def pull_combined_data(request):
 
 
 def pull_gradescope_data(request):
+    user_id = request.session.get('user_id')
+    if user_id is None:
+        return JsonResponse({'status': 'error', 'message': 'User not authenticated'}, status=401)
+    
+    print(f"Pulling Gradescope Data")
     connection = GSConnection()
     connection.login(settings.GRADESCOPE_USER_KEY, settings.GRADESCOPE_USER_SECRET)
     courses = connection.account.get_courses()
@@ -235,12 +260,30 @@ def pull_gradescope_data(request):
                     print(f"  Error processing assignment: {e}")
         except Exception as e:
             print(f"Error fetching assignments for course {course_id}: {e}")
+
+    if user_id is not None:
+        user_gradescope_file = f"users/{user_id}/{GRADESCOPE_TASK_FILE}"
+    else:
+        print(f"Error: User ID is None")
+        return JsonResponse({'status': 'error', 'message': 'User ID is None'}, status=400)
+        
+    print(f"Uploading {len(collected_data)} tasks to {user_gradescope_file}")
+        
+    S3Utils().upload_data_to_s3(collected_data, user_gradescope_file)
     
-    write_json(GRADESCOPE_TASK_FILE, collected_data)
+    # deprecated -- used for static data
+    # write_json(GRADESCOPE_TASK_FILE, collected_data)
+
+    print(f"Wrote {len(collected_data)} tasks to {user_gradescope_file}") 
     
     return JsonResponse({'status': 'success', 'message': 'Gradescope data pulled and saved successfully.'})
 
 def pull_canvas_data(request):
+    user_id = request.session.get('user_id')
+    if user_id is None:
+        return JsonResponse({'status': 'error', 'message': 'User not authenticated'}, status=401)
+    
+    print(f"Pulling Canvas Data")
     access_token = settings.CANVAS_API_TOKEN
     canvas_domain = settings.CANVAS_DOMAIN
     headers = {
@@ -259,10 +302,14 @@ def pull_canvas_data(request):
         else:
             url = None
     todos = []
-    cutoff_date = datetime.datetime.strptime("2024-01-01T10:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
+    current_date = datetime.datetime.now(pytz.UTC)
+    cutoff_date = current_date - timedelta(days=90)  # adjust the number of days as needed
 
     for course in courses:
+        # Convert course_created_at to UTC timezone-aware datetime
         course_created_at = datetime.datetime.strptime(course["created_at"], "%Y-%m-%dT%H:%M:%SZ")
+        course_created_at = pytz.UTC.localize(course_created_at)
+        
         if course_created_at < cutoff_date:
             continue
         assignments_url = f'https://{canvas_domain}/api/v1/courses/{course["id"]}/assignments'
@@ -287,7 +334,22 @@ def pull_canvas_data(request):
                     'submitted': assignment['has_submitted_submissions'],
                     'html_link': assignment['html_url']
                 })
-    write_json(CANVAS_TASKS_FILE, todos)    
+    # TODO: Implement S3 upload of data
+    if user_id is not None:
+        user_canvas_file = f"users/{user_id}/{CANVAS_TASKS_FILE}"
+    else:
+        print(f"Error: User ID is None")
+        return JsonResponse({'status': 'error', 'message': 'User ID is None'}, status=400)
+        
+    print(f"Uploading {len(todos)} tasks to {user_canvas_file}")
+
+    S3Utils().upload_data_to_s3(todos, user_canvas_file)
+    
+    # deprecated -- used for static data
+    # write_json(CANVAS_TASKS_FILE, todos) 
+
+    print(f"Wrote {len(todos)} tasks to {user_canvas_file}") 
+      
     try:
         pull_canvas_calendar_events(canvas_domain=canvas_domain,
                                     headers=headers)
